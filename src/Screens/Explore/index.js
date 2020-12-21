@@ -6,12 +6,12 @@ import { Mic } from "../../Assets/Icons";
 import { SvgXml } from "react-native-svg";
 import { Typography, Colors } from "../../Styles";
 
-const Explore = () => {
+const Explore = ({ navigation }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
             <ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: '#2C2939', flex: 1, }}>
-                <TouchableOpacity style={{ position: 'absolute', top: 20, left: 10, width: 130, flexDirection: 'row', alignItems: 'center', }}>
+                <TouchableOpacity onPress={() => { navigation.goBack() }} style={{ position: 'absolute', top: 20, left: 10, width: 130, flexDirection: 'row', alignItems: 'center', }}>
                     <View style={{ width: 50, height: 50, }}>
                         <Image style={{ width: '100%', height: '100%', resizeMode: 'contain', }} source={require('../../Assets/images/login_logo.png')} />
                     </View>
@@ -33,13 +33,13 @@ const Explore = () => {
 
                 </View>
 
-                <FlatList keyExtractor={index => index} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} contentContainerStyle={{ alignItems:'center', justifyContent: 'space-around', padding: 15, flexDirection: 'row', flexWrap: 'wrap' }} data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,]} renderItem={({ index, item }) => {
+                <FlatList keyExtractor={index => index} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} contentContainerStyle={{ alignItems: 'center', justifyContent: 'space-around', padding: 15, flexDirection: 'row', flexWrap: 'wrap' }} data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,]} renderItem={({ index, item }) => {
                     return (
-                        <View style={{ borderRadius:10, marginHorizontal:5, marginVertical:10,}}>
-                            <Image style={{width:100, height:140, resizeMode:'contain'}} source={index % 2 == 0 ? require('../../Assets/images/design.png') : require('../../Assets/images/pray.png') } />
-                            <Text style={{marginTop:5, color: '#E6E6E6', fontFamily: Typography.FONT_FAMILY_BOLD, fontSize: 14, }}>{index % 2 == 0 ? 'REPEAT SHOW' : 'PRAY PER DAY'}</Text>
+                        <TouchableOpacity onPress={()=>{navigation.navigate('Player')}} style={{ borderRadius: 10, marginHorizontal: 5, marginVertical: 10, }}>
+                            <Image style={{ width: 100, height: 140, resizeMode: 'contain' }} source={index % 2 == 0 ? require('../../Assets/images/design.png') : require('../../Assets/images/pray.png')} />
+                            <Text style={{ marginTop: 5, color: '#E6E6E6', fontFamily: Typography.FONT_FAMILY_BOLD, fontSize: 14, }}>{index % 2 == 0 ? 'REPEAT SHOW' : 'PRAY PER DAY'}</Text>
                             <Text style={{ color: '#E8E8E850', fontFamily: Typography.FONT_FAMILY_SEMI_BOLD, fontSize: 12, }}>2.5K</Text>
-                        </View>
+                        </TouchableOpacity>
                     )
                 }} />
 

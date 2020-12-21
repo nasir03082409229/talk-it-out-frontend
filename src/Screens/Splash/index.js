@@ -1,16 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Image, StatusBar } from "react-native";
 import { Text } from "../../Common";
 import { logo } from "../../Assets/images";
 import { Typography, Colors } from "../../Styles";
 
-const Splash = () => {
+const Splash = ({ navigation }) => {
+
+    useEffect(() => {
+
+        setTimeout(()=>{
+            navigation.navigate('Login');
+        },1000)
+
+    }, []);
+
     return (
         <View style={{
             backgroundColor: '#2C2939',
             flex: 1, justifyContent: 'space-around', alignItems: 'center'
         }}>
-            <StatusBar backgroundColor='#2C2939'/>
+            <StatusBar backgroundColor='#2C2939' />
             <Image
                 style={{
                     flex: 1, width: '100%', height: '100%'

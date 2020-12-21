@@ -6,7 +6,7 @@ import { SignInLeftArrow } from "../../Assets/Icons";
 import { SvgXml } from "react-native-svg";
 import { Typography, Colors } from "../../Styles";
 
-const Login = () => {
+const Login = ({ navigation }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
@@ -27,7 +27,7 @@ const Login = () => {
                         <TextInput secureTextEntry placeholder={'Password'} placeholderTextColor={'#707070'} style={{ paddingLeft: 25, fontSize: 14, color: '#FFF' }} />
                     </View>
 
-                    <TouchableOpacity style={{ borderWidth: 1, borderColor: '#FFFFFF20', borderRadius: 40, width: 55, height: 55, alignSelf: 'center', marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
+                    <TouchableOpacity onPress={() => { navigation.navigate('BottomStackComp') }} style={{ borderWidth: 1, borderColor: '#FFFFFF20', borderRadius: 40, width: 55, height: 55, alignSelf: 'center', marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
                         <SvgXml xml={SignInLeftArrow} />
                     </TouchableOpacity>
 
