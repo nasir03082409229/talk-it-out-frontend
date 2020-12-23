@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import { FlatList, View, Image, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
@@ -11,37 +11,67 @@ import SoundPlayer from 'react-native-sound-player'
 
 
 
+var currentTimerLocal = 0;
 const Playing = ({ navigation }) => {
     const [isPlay, setIsPlay] = useState(false);
+    const [duration, setDuration] = useState(0);
+    const timerToClearSomewhere = useRef(null)
+    // const [currentTime, setCurrentTime] = useState(0);
     SoundPlayer.loadSoundFile('birdsound', 'mp3');
-    useEffect(() => {   
+    var intervalTimer;
+    useEffect(() => {
+        init()
+    }, []);
+
+    const init = async () => {
+        const info = await SoundPlayer.getInfo() // Also, you need to await this because it is async
+        console.log('getInfo init', info)
+        setDuration(info.duration)
+        // setCurrentTime(info.currentTime)
+    }
+
+    useEffect(() => {
 
         console.log('effect', isPlay);
-
         if (isPlay) {
-            // AudioPlay();
-        SoundPlayer.pause()
+            timerToClearSomewhere.current = setInterval(() => {
+                console.log('in inter', currentTimerLocal);
+                currentTimerLocal = currentTimerLocal + 1;
+                
+                // setCurrentTimse(currentTimerLocal + 1)
+            }, 1000);
+            AudioPlay();
+            // SoundPlayer.stop()
+            SoundPlayer.seek(currentTimerLocal)
 
         } else {
-            // AudioStop();
-        SoundPlayer.resume()
+            console.log('else', currentTimerLocal);
+            clearInterval(timerToClearSomewhere.current)
+            AudioStop();
+            // SoundPlayer.resume()
 
         }
 
     }, [isPlay]);
 
+    console.log(currentTimerLocal);
 
     const AudioPlay = () => {
         // setTimeout(() => {
         //     setIsPlay(true);
         // }, 3000)
-        SoundPlayer.resume()
+        // SoundPlayer.resume()
+        SoundPlayer.play()
     }
-    const AudioStop = () => {
+    const AudioStop = async () => {
         // setTimeout(() => {
         //     setIsPlay(false);
         // }, 1000)
         SoundPlayer.pause();
+        const info = await SoundPlayer.getInfo() // Also, you need to await this because it is async
+        console.log('getInfo in STOP', info)
+
+
     }
 
     return (
@@ -90,14 +120,14 @@ const Playing = ({ navigation }) => {
                                 <Slider
                                     style={{}}
                                     minimumValue={0}
-                                    maximumValue={1}
+                                    maximumValue={duration}
                                     minimumTrackTintColor="#707070"
                                     maximumTrackTintColor="#707070"
                                 />
                             </View>
                             <View style={{ marginHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
-                                <Text style={{ color: '#FFFFFF', fontFamily: Typography.FONT_FAMILY_SEMI_BOLD, fontSize: 12, }}>1:02:50</Text>
-                                <Text style={{ color: '#FFFFFF', fontFamily: Typography.FONT_FAMILY_SEMI_BOLD, fontSize: 12, }}>1:02:50</Text>
+                                <Text style={{ color: '#FFFFFF', fontFamily: Typography.FONT_FAMILY_SEMI_BOLD, fontSize: 12, }}>{currentTimerLocal}</Text>
+                                <Text style={{ color: '#FFFFFF', fontFamily: Typography.FONT_FAMILY_SEMI_BOLD, fontSize: 12, }}>{duration}</Text>
                             </View>
 
 
