@@ -66,7 +66,7 @@ const App = () => {
 
         <NavigationContainer>
 
-            <Stack.Navigator initialRouteName='Splash' headerMode={'none'}>
+            <Stack.Navigator initialRouteName='Playing' headerMode={'none'}>
 
                 <Stack.Screen name="Splash" component={Splash} options={MyTransition} />
                 <Stack.Screen name="Login" component={Login} options={MyTransition} />

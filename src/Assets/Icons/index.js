@@ -8,6 +8,7 @@ import PodcastsMinusIcon from "./podcastsminusicon";
 import SettingIcon from "./settingicon";
 import PlayIcon from "./playicon";
 import Pause from "./pause";
+import PauseActive from "./pauseactive";
 import SeekLeft from "./seekleft";
 import SeekRight from "./seekright";
 import Loop from "./loop";
@@ -34,6 +35,7 @@ export {
     SettingIcon,
     PlayIcon,
     Pause,
+    PauseActive,
     SeekLeft,
     SeekRight,
     Loop,
