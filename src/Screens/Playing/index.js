@@ -14,12 +14,18 @@ import SoundPlayer from 'react-native-sound-player'
 const Playing = ({ navigation }) => {
     const [isPlay, setIsPlay] = useState(false);
     SoundPlayer.loadSoundFile('birdsound', 'mp3');
-    useEffect(() => {
+    useEffect(() => {   
+
+        console.log('effect', isPlay);
 
         if (isPlay) {
-            AudioPlay();
+            // AudioPlay();
+        SoundPlayer.pause()
+
         } else {
-            AudioStop();
+            // AudioStop();
+        SoundPlayer.resume()
+
         }
 
     }, [isPlay]);
@@ -29,7 +35,7 @@ const Playing = ({ navigation }) => {
         // setTimeout(() => {
         //     setIsPlay(true);
         // }, 3000)
-        SoundPlayer.play()
+        SoundPlayer.resume()
     }
     const AudioStop = () => {
         // setTimeout(() => {

@@ -5,7 +5,7 @@ import { SvgXml } from "react-native-svg";
 
 
 const BottomBar = ({ state, navigation }) => {
-    console.log(state.state.index);
+    // console.log(state.state.index);
 
     return (
         <View style={styles.main}>

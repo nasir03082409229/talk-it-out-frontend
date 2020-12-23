@@ -41,21 +41,15 @@ const BottomStackComp = () => {
 
     return (
         <BottomStack.Navigator
-            tabBar={( state ) => <BottomBar state={state} navigation={state.navigation} />}
+            tabBar={(state) => <BottomBar state={state} navigation={state.navigation} />}
             screenOptions={{
                 headerShown: false
             }}
             initialRouteName="Explore">
-            {/* <BottomStack.Screen name="Splash" component={Splash} options={MyTransition} /> */}
-            {/* <BottomStack.Screen name="Login" component={Login} options={MyTransition} /> */}
             <BottomStack.Screen name="Explore" component={Explore} options={MyTransition} />
             <BottomStack.Screen name="Podcasts" component={Podcasts} options={MyTransition} />
             <BottomStack.Screen name="Downloads" component={Downloads} options={MyTransition} />
             <BottomStack.Screen name="Store" component={Store} options={MyTransition} />
-            {/* <BottomStack.Screen name="SignUp" component={SignUp} options={MyTransition} /> */}
-            {/* <BottomStack.Screen name="Pray" component={Pray} options={MyTransition} /> */}
-            {/* <BottomStack.Screen name="Playing" component={Playing} options={MyTransition} /> */}
-            {/* <BottomStack.Screen name="Player" component={Player} options={MyTransition} /> */}
         </BottomStack.Navigator>
     );
 };
