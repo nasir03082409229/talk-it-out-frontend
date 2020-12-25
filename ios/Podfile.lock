@@ -1,6 +1,8 @@
 PODS:
   - boost-for-react-native (1.63.0)
-  - CocoaAsyncSocket (7.6.4)
+  - BVLinearGradient (2.5.6):
+    - React
+  - CocoaAsyncSocket (7.6.5)
   - CocoaLibEvent (1.0.0)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.63.4)
@@ -236,6 +238,10 @@ PODS:
     - React-cxxreact (= 0.63.4)
     - React-jsi (= 0.63.4)
   - React-jsinspector (0.63.4)
+  - react-native-safe-area-context (3.1.9):
+    - React-Core
+  - react-native-slider (3.0.3):
+    - React
   - React-RCTActionSheet (0.63.4):
     - React-Core/RCTActionSheetHeaders (= 0.63.4)
   - React-RCTAnimation (0.63.4):
@@ -296,11 +302,24 @@ PODS:
     - React-Core (= 0.63.4)
     - React-cxxreact (= 0.63.4)
     - React-jsi (= 0.63.4)
+  - RNCMaskedView (0.1.10):
+    - React
+  - RNGestureHandler (1.9.0):
+    - React-Core
+  - RNReanimated (1.13.2):
+    - React-Core
+  - RNScreens (2.16.1):
+    - React-Core
+  - RNSoundPlayer (0.10.5):
+    - React
+  - RNSVG (12.1.0):
+    - React
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
 
 DEPENDENCIES:
+  - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
@@ -337,6 +356,8 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -347,6 +368,12 @@ DEPENDENCIES:
   - React-RCTText (from `../node_modules/react-native/Libraries/Text`)
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
+  - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSoundPlayer (from `../node_modules/react-native-sound-player`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -365,6 +392,8 @@ SPEC REPOS:
     - YogaKit
 
 EXTERNAL SOURCES:
+  BVLinearGradient:
+    :path: "../node_modules/react-native-linear-gradient"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   FBLazyVector:
@@ -395,6 +424,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-safe-area-context:
+    :path: "../node_modules/react-native-safe-area-context"
+  react-native-slider:
+    :path: "../node_modules/@react-native-community/slider"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -415,12 +448,25 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNCMaskedView:
+    :path: "../node_modules/@react-native-community/masked-view"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
+  RNScreens:
+    :path: "../node_modules/react-native-screens"
+  RNSoundPlayer:
+    :path: "../node_modules/react-native-sound-player"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
-  CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
+  BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
+  CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   CocoaLibEvent: 2fab71b8bd46dd33ddb959f7928ec5909f838e3f
   DoubleConversion: cde416483dac037923206447da6e1454df403714
   FBLazyVector: 3bb422f41b18121b71783a905c10e58606f7dc3e
@@ -445,6 +491,8 @@ SPEC CHECKSUMS:
   React-jsi: a0418934cf48f25b485631deb27c64dc40fb4c31
   React-jsiexecutor: 93bd528844ad21dc07aab1c67cb10abae6df6949
   React-jsinspector: 58aef7155bc9a9683f5b60b35eccea8722a4f53a
+  react-native-safe-area-context: 86612d2c9a9e94e288319262d10b5f93f0b395f5
+  react-native-slider: b733e17fdd31186707146debf1f04b5d94aa1a93
   React-RCTActionSheet: 89a0ca9f4a06c1f93c26067af074ccdce0f40336
   React-RCTAnimation: 1bde3ecc0c104c55df246eda516e0deb03c4e49b
   React-RCTBlob: a97d378b527740cc667e03ebfa183a75231ab0f0
@@ -455,9 +503,15 @@ SPEC CHECKSUMS:
   React-RCTText: 5c51df3f08cb9dedc6e790161195d12bac06101c
   React-RCTVibration: ae4f914cfe8de7d4de95ae1ea6cc8f6315d73d9d
   ReactCommon: 73d79c7039f473b76db6ff7c6b159c478acbbb3b
+  RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
+  RNGestureHandler: 9b7e605a741412e20e13c512738a31bd1611759b
+  RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
+  RNScreens: 45c457af3d2ee9e08fc01e70da87e653d46b1198
+  RNSoundPlayer: fd4dbbff120c76f22718c4d831a13c40fc5e9efd
+  RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
 PODFILE CHECKSUM: 37cb3362ba08889abc4cdea38ed96b51fc26e525
 
-COCOAPODS: 1.9.0.beta.2
+COCOAPODS: 1.10.0
