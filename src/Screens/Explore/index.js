@@ -7,6 +7,46 @@ import { SvgXml } from "react-native-svg";
 import { Typography, Colors } from "../../Styles";
 
 const Explore = ({ navigation }) => {
+
+    const item = [
+        {
+            name : 'LIVE /MUSIC',
+            views : '208',
+            route: 'Player',
+            image : require('../../Assets/images/live.png'),
+        },
+        {
+            name : "ELDERLY'S",
+            views : '2.5K',
+            route: 'Playing',
+            image : require('../../Assets/images/elder.png'),
+        },
+        {
+            name : 'SHADE OF DAY',
+            views : '1.5K',
+            route: 'Playing',
+            image : require('../../Assets/images/shade.png'),
+        },
+        {
+            name : 'REPEAT SHOW',
+            views : '208',
+            route: 'Playing',
+            image : require('../../Assets/images/design.png'),
+        },
+        {
+            name : 'PRAY PER DAY',
+            views : '2.5K',
+            route: 'Pray',
+            image : require('../../Assets/images/pray.png'),
+        },
+        {
+            name : 'SHOP MERCH',
+            views : '1.5K',
+            route: 'Store',
+            image : require('../../Assets/images/shop.png'),
+        },
+    ]
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
@@ -20,8 +60,8 @@ const Explore = ({ navigation }) => {
                 <Image style={styles.design} source={require('../../Assets/images/transparentDesign.png')} />
 
                 <View style={styles.headview}>
-                    <Text style={styles.downTxt}>DOWNLOADS</Text>
-                    <Text style={styles.subHead}>Listen to all your playlists {'\n'}offline right here.</Text>
+                    <Text style={styles.downTxt}>EXPLORE</Text>
+                    <Text style={styles.subHead}>all your favourite {'\n'} features under one roof!</Text>
                 </View>
 
                 <View style={styles.searchView}>
@@ -33,12 +73,12 @@ const Explore = ({ navigation }) => {
 
                 </View>
 
-                <FlatList keyExtractor={index => index} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.listCont} data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,]} renderItem={({ index, item }) => {
+                <FlatList keyExtractor={index => index} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.listCont} data={item} renderItem={({ index, item }) => {
                     return (
-                        <TouchableOpacity onPress={() => { navigation.navigate('Player') }} style={styles.itemTou}>
-                            <Image style={styles.itemImg} source={index % 2 == 0 ? require('../../Assets/images/design.png') : require('../../Assets/images/pray.png')} />
-                            <Text style={styles.name}>{index % 2 == 0 ? 'REPEAT SHOW' : 'PRAY PER DAY'}</Text>
-                            <Text style={styles.viewsTxt}>2.5K</Text>
+                        <TouchableOpacity onPress={() => { navigation.navigate(item.route) }} style={styles.itemTou}>
+                            <Image style={styles.itemImg} source={item.image} />
+                            <Text style={styles.name}>{item.name}</Text>
+                            <Text style={styles.viewsTxt}>{item.views}</Text>
                         </TouchableOpacity>
                     )
                 }} />
@@ -61,8 +101,8 @@ const styles = StyleSheet.create({
     searchView: { flexDirection: 'row', marginHorizontal: 20, alignItems: 'center', borderColor: '#707070', borderWidth: 1, marginVertical: 20, borderRadius: 60, height: 50, },
     input: { flex: 1, paddingLeft: 25, fontSize: 14, color: '#FFF' },
     icoView: { justifyContent: 'center', alignItems: 'center', marginRight: 10, width: 40, height: 40, },
-    listCont: { alignItems: 'center', justifyContent: 'space-around', padding: 15, flexDirection: 'row', flexWrap: 'wrap' },
-    itemTou: { borderRadius: 10, marginHorizontal: 5, marginVertical: 10, },
+    listCont: { alignItems: 'center', justifyContent: 'space-around', padding: 15, paddingBottom:30, flexDirection: 'row', flexWrap: 'wrap' },
+    itemTou: { borderRadius: 10, marginHorizontal: 4, marginVertical: 10, },
     itemImg: { width: 100, height: 140, resizeMode: 'contain' },
     name: { marginTop: 5, color: '#E6E6E6', fontFamily: Typography.FONT_FAMILY_BOLD, fontSize: 14, },
     viewsTxt: { color: '#E8E8E850', fontFamily: Typography.FONT_FAMILY_SEMI_BOLD, fontSize: 12, },

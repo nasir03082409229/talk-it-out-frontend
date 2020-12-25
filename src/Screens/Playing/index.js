@@ -1,5 +1,5 @@
-import React, { useState, useEffect,useRef } from "react";
-import { FlatList, View, Image, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { FlatList, View, Image, StatusBar, SafeAreaView, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { PlayIcon, SettingIcon, Cross, PauseActive } from "../../Assets/Icons";
@@ -16,7 +16,7 @@ const Playing = ({ navigation }) => {
     const [isPlay, setIsPlay] = useState(false);
     const [duration, setDuration] = useState(0);
     const timerToClearSomewhere = useRef(null)
-    // const [currentTime, setCurrentTime] = useState(0);
+    const [currentTime, setCurrentTime] = useState(0);
     SoundPlayer.loadSoundFile('birdsound', 'mp3');
     var intervalTimer;
     useEffect(() => {
@@ -37,8 +37,9 @@ const Playing = ({ navigation }) => {
             timerToClearSomewhere.current = setInterval(() => {
                 console.log('in inter', currentTimerLocal);
                 currentTimerLocal = currentTimerLocal + 1;
-                
-                // setCurrentTimse(currentTimerLocal + 1)
+                setTimeout(() => {
+                    setCurrentTime(currentTimerLocal)
+                }, 0);
             }, 1000);
             AudioPlay();
             // SoundPlayer.stop()
@@ -80,34 +81,26 @@ const Playing = ({ navigation }) => {
             <ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: '#2C2939', flex: 1, }}>
 
 
-                <View style={{
-
-                    top: 0, left: 0, right: 0,
-                    height: 300,
-                }}>
+                <View style={styles.backImgView}>
                     <Image
-                        style={{ resizeMode: 'stretch', backgroundColor: '#000', width: '100%', height: '100%', }}
+                        style={styles.backImg}
                         source={require('../../Assets/images/pray.png')}
                     />
 
 
-                    <LinearGradient colors={['rgba(44,41,57,0)', 'rgba(44,41,57,0.01)', 'rgba(44,41,57,0.1)', 'rgba(44,41,57,0.2)', 'rgba(44,41,57,0.5)', 'rgba(44,41,57,0.9)', 'rgba(44,41,57,0.99)', 'rgba(44,41,57,1)',]} style={{ justifyContent: 'flex-end', paddingBottom: 150, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>
+                    <LinearGradient colors={['rgba(44,41,57,0)', 'rgba(44,41,57,0.01)', 'rgba(44,41,57,0.1)', 'rgba(44,41,57,0.2)', 'rgba(44,41,57,0.5)', 'rgba(44,41,57,0.9)', 'rgba(44,41,57,0.99)', 'rgba(44,41,57,1)',]}
+                        style={styles.linGrad}>
 
-                        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, }}>
-                            <Text style={{ marginHorizontal: 20, borderRadius: 10, backgroundColor: '#2C2939', width: 100, textAlign: 'center', fontFamily: Typography.FONT_FAMILY_SEMI_BOLD, fontSize: 12, color: '#50E3C2', textAlignVertical: 'center' }}>NOW PLAYING</Text>
-                            <View style={{ marginHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
+                        <View style={styles.main}>
+                            <Text style={styles.noePlay}>NOW PLAYING</Text>
+                            <View style={styles.detailView}>
                                 <View>
-                                    <Text style={{ color: '#fff', fontFamily: Typography.FONT_FAMILY_BOLD, fontSize: 18, }}>Lets Pray</Text>
-                                    <Text style={{ color: '#FFFFFF80', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 14, }}>EPISODE - 14</Text>
+                                    <Text style={styles.title}>Lets Pray</Text>
+                                    <Text style={styles.epi}>EPISODE - 14</Text>
                                 </View>
                                 <TouchableOpacity onPress={() => {
-                                    if (isPlay) {
-                                        setIsPlay(false);
-                                    } else {
-                                        setIsPlay(true);
-                                    }
-
-                                }} style={{ borderWidth: 1, borderColor: '#FFFFFF20', borderRadius: 40, width: 55, height: 55, justifyContent: 'center', alignItems: 'center' }}>
+                                        navigation.navigate('Player')
+                                }} style={styles.controls}>
                                     {
                                         isPlay ?
                                             <SvgXml xml={PauseActive} />
@@ -116,18 +109,18 @@ const Playing = ({ navigation }) => {
                                     }
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ marginHorizontal: 8, marginTop: 10, }}>
+                            <View style={styles.sliderView}>
                                 <Slider
-                                    style={{}}
+                                    value={currentTimerLocal}
                                     minimumValue={0}
                                     maximumValue={duration}
                                     minimumTrackTintColor="#707070"
                                     maximumTrackTintColor="#707070"
                                 />
                             </View>
-                            <View style={{ marginHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
-                                <Text style={{ color: '#FFFFFF', fontFamily: Typography.FONT_FAMILY_SEMI_BOLD, fontSize: 12, }}>{currentTimerLocal}</Text>
-                                <Text style={{ color: '#FFFFFF', fontFamily: Typography.FONT_FAMILY_SEMI_BOLD, fontSize: 12, }}>{duration}</Text>
+                            <View style={styles.durationView}>
+                                <Text style={styles.duration}>{0}</Text>
+                                <Text style={styles.duration}>{duration}</Text>
                             </View>
 
 
@@ -136,49 +129,72 @@ const Playing = ({ navigation }) => {
                     </LinearGradient>
                 </View>
 
-                <View style={{ right: 0, left: 0, position: 'absolute', top: 20, paddingHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
-                    <TouchableOpacity onPress={() => { navigation.goBack() }} style={{ alignItems: 'center', flexDirection: 'row' }}>
-                        <View style={{ width: 50, height: 50, }}>
-                            <Image style={{ width: '100%', height: '100%', resizeMode: 'contain', }} source={require('../../Assets/images/login_logo.png')} />
+                <View style={styles.topBackView}>
+                    <TouchableOpacity onPress={() => { navigation.goBack() }} style={styles.topBackTho}>
+                        <View style={styles.topBackImgView}>
+                            <Image style={styles.topBackImg} source={require('../../Assets/images/login_logo.png')} />
                         </View>
-                        <Text style={{ marginLeft: 10, color: '#fff', fontFamily: Typography.FONT_FAMILY_EXTRA_BOLD, fontSize: 18, }}>BACK</Text>
+                        <Text style={styles.topBackTxt}>BACK</Text>
                     </TouchableOpacity>
                 </View>
-                <Text style={{ marginLeft: 20, marginTop: 5, color: '#9B9B9B', fontFamily: Typography.FONT_FAMILY_BOLD, fontSize: 14, }}>UP NEXT</Text>
+                <Text style={styles.nextTxt}>UP NEXT</Text>
 
                 <FlatList keyExtractor={index => index.toString()} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40, }} data={[1, 2, 3, 4, 5, 6,]} renderItem={({ index, item }) => {
                     return (
-                        <View style={{ marginVertical: 10, alignItems: 'center', flexDirection: 'row', }}>
-                            <TouchableOpacity style={{ borderWidth: 1, borderColor: '#FFFFFF20', borderRadius: 40, width: 55, height: 55, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>
+                        <View style={styles.listMainView}>
+                            <TouchableOpacity style={styles.playIco}>
                                 <SvgXml xml={PlayIcon} />
                             </TouchableOpacity>
-                            <View style={{ marginLeft: 20, flex: 1, }}>
-                                <Text style={{ color: '#E6E6E6', fontFamily: Typography.FONT_FAMILY_BOLD, fontSize: 14, }}>Episode 148</Text>
-                                <Text style={{ color: '#E6E6E640', fontFamily: Typography.FONT_FAMILY_SEMI_BOLD, fontSize: 12, }}>Martin Garrix Show</Text>
-                                <Text style={{ color: '#E6E6E640', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 12, }}>1:42:00</Text>
+                            <View style={styles.detailTxt}>
+                                <Text style={styles.epiTxt}>Episode 148</Text>
+                                <Text style={styles.title}>Martin Garrix Show</Text>
+                                <Text style={styles.durationTxt}>1:42:00</Text>
                             </View>
-                            <TouchableOpacity style={{ width: 55, height: 55, justifyContent: 'center', alignItems: 'center' }}>
+                            <TouchableOpacity style={styles.setTou}>
                                 <SvgXml xml={SettingIcon} />
                             </TouchableOpacity>
                         </View>
                     )
                 }} />
 
-                <View style={{ position: 'absolute', bottom: 15, alignSelf: 'center', backgroundColor: '#FFFFFF20', borderRadius: 40, width: 30, height: 30, justifyContent: 'center', alignItems: 'center' }}>
+                <View style={styles.crossView}>
                     <SvgXml xml={Cross} />
                 </View>
-
-                {/* <LinearGradient colors={['#00000000', '#00000030', '#000000EE', '#000000']} style={{ justifyContent: 'flex-end', paddingBottom: 150, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>
-                    <View style={{ marginTop: 300, marginLeft: 20, paddingRight: 20, }}>
-                        <Text style={{ color: '#fff', fontFamily: Typography.FONT_FAMILY_BOLD, fontSize: 18, }}>PRAYER OF THE DAY</Text>
-                        <Text style={{ color: '#E6E6E6', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 14, }}>Grant us patience, O Lord, to follow the road you have taken. Let our confidence not rest in our own understanding but in your guiding hand; let our desires not be for our own comfort, but for the joy of your kingdom; for your cross is our hope and our joy now and unto the day of eternity. Amen.</Text>
-                    </View>
-                </LinearGradient> */}
-
-
+                
             </ScrollView>
         </SafeAreaView>
     )
 }
+
+const styles = StyleSheet.create({
+    backImgView: { top: 0, left: 0, right: 0, height: 300, },
+    backImg: { resizeMode: 'stretch', backgroundColor: '#000', width: '100%', height: '100%', },
+    linGrad: { justifyContent: 'flex-end', paddingBottom: 150, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 },
+    main: { position: 'absolute', bottom: 0, left: 0, right: 0, },
+    noePlay: { marginHorizontal: 20, borderRadius: 10, backgroundColor: '#2C2939', width: 100, textAlign: 'center', fontFamily: Typography.FONT_FAMILY_SEMI_BOLD, fontSize: 12, color: '#50E3C2', textAlignVertical: 'center' },
+    detailView: { marginHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', },
+    title: { color: '#fff', fontFamily: Typography.FONT_FAMILY_BOLD, fontSize: 18, },
+    epi: { color: '#FFFFFF80', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 14, },
+    controls: { borderWidth: 1, borderColor: '#FFFFFF20', borderRadius: 40, width: 55, height: 55, justifyContent: 'center', alignItems: 'center' },
+    sliderView: { marginHorizontal: 8, marginTop: 10, },
+    durationView: { marginHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', },
+    duration: { color: '#FFFFFF', fontFamily: Typography.FONT_FAMILY_SEMI_BOLD, fontSize: 12, },
+    topBackView: { right: 0, left: 0, position: 'absolute', top: 20, paddingHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', },
+    topBackTho: { alignItems: 'center', flexDirection: 'row' },
+    topBackImgView: { width: 50, height: 50, },
+    topBackImg: { width: '100%', height: '100%', resizeMode: 'contain', },
+    topBackTxt: { marginLeft: 10, color: '#fff', fontFamily: Typography.FONT_FAMILY_EXTRA_BOLD, fontSize: 18, },
+    nextTxt: { marginLeft: 20, marginTop: 5, color: '#9B9B9B', fontFamily: Typography.FONT_FAMILY_BOLD, fontSize: 14, },
+    listMainView: { marginVertical: 10, alignItems: 'center', flexDirection: 'row', },
+    playIco: { borderWidth: 1, borderColor: '#FFFFFF20', borderRadius: 40, width: 55, height: 55, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' },
+    detailTxt: { marginLeft: 20, flex: 1, },
+    epiTxt: { color: '#E6E6E6', fontFamily: Typography.FONT_FAMILY_BOLD, fontSize: 14, },
+    title: { color: '#E6E6E640', fontFamily: Typography.FONT_FAMILY_SEMI_BOLD, fontSize: 12, },
+    durationTxt: { color: '#E6E6E640', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 12, },
+    setTou: { width: 55, height: 55, justifyContent: 'center', alignItems: 'center' },
+    crossView: { position: 'absolute', bottom: 15, alignSelf: 'center', backgroundColor: '#FFFFFF20', borderRadius: 40, width: 30, height: 30, justifyContent: 'center', alignItems: 'center' },
+
+
+})
 
 export default Playing;

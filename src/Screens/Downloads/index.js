@@ -28,7 +28,7 @@ const Downloads = ({ navigation }) => {
 
                 <FlatList keyExtractor={index => index} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} contentContainerStyle={{ padding: 15, }} data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,]} renderItem={({ index, item }) => {
                     return (
-                        <TouchableOpacity onPress={() => { navigation.navigate('Pray') }} style={styles.listTouch}>
+                        <TouchableOpacity onPress={() => { }} style={styles.listTouch}>
                             <TouchableOpacity style={styles.playIcoTou}>
                                 <SvgXml xml={PlayIcon} />
                             </TouchableOpacity>
