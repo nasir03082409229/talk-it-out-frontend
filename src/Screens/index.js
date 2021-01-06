@@ -9,9 +9,16 @@ import Pray from "./Pray";
 import Store from "./Store";
 import Playing from "./Playing";
 import Player from "./Player";
+import LoginPremium from "./LoginPremium";
+import SubscriptionPremium from "./SubscriptionPremium";
+import PlayingPremium from "./PlayingPremium";
+import PlayerPremium from "./PlayerPremium";
+import CardsPremium from "./CardsPremium";
 
 export {
     Navigator, Splash, Login, Explore, SignUp, Podcasts,
-    Downloads, Pray, Store, Playing, Player
+    Downloads, Pray, Store, Playing, Player, LoginPremium,
+    SubscriptionPremium, PlayingPremium, PlayerPremium,
+    CardsPremium, 
 };
 

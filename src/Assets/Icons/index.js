@@ -23,6 +23,7 @@ import Bottom1IconActive from "./bottom1iconactive";
 import Bottom2IconActive from "./bottom2iconactive";
 import Bottom3IconActive from "./bottom3iconactive";
 import Bottom4IconActive from "./bottom4iconactive";
+import AddIconPlaying from "./addIconPlaying";
 
 export {
     history_blue,
@@ -50,5 +51,6 @@ export {
     Bottom2IconActive,
     Bottom3IconActive,
     Bottom4IconActive,
+    AddIconPlaying,
 };
 

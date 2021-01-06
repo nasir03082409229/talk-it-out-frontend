@@ -10,40 +10,40 @@ const Explore = ({ navigation }) => {
 
     const item = [
         {
-            name : 'LIVE /MUSIC',
-            views : '208',
+            name: 'LIVE /MUSIC',
+            views: '208',
             route: 'Player',
-            image : require('../../Assets/images/live.png'),
+            image: require('../../Assets/images/live.png'),
         },
         {
-            name : "ELDERLY'S",
-            views : '2.5K',
+            name: "ELDERLY'S",
+            views: '2.5K',
             route: 'Playing',
-            image : require('../../Assets/images/elder.png'),
+            image: require('../../Assets/images/elder.png'),
         },
         {
-            name : 'SHADE OF DAY',
-            views : '1.5K',
+            name: 'SHADE OF DAY',
+            views: '1.5K',
             route: 'Playing',
-            image : require('../../Assets/images/shade.png'),
+            image: require('../../Assets/images/shade.png'),
         },
         {
-            name : 'REPEAT SHOW',
-            views : '208',
+            name: 'REPEAT SHOW',
+            views: '208',
             route: 'Playing',
-            image : require('../../Assets/images/design.png'),
+            image: require('../../Assets/images/design.png'),
         },
         {
-            name : 'PRAY PER DAY',
-            views : '2.5K',
+            name: 'PRAY PER DAY',
+            views: '2.5K',
             route: 'Pray',
-            image : require('../../Assets/images/pray.png'),
+            image: require('../../Assets/images/pray.png'),
         },
         {
-            name : 'SHOP MERCH',
-            views : '1.5K',
+            name: 'SHOP MERCH',
+            views: '1.5K',
             route: 'Store',
-            image : require('../../Assets/images/shop.png'),
+            image: require('../../Assets/images/shop.png'),
         },
     ]
 
@@ -64,14 +64,14 @@ const Explore = ({ navigation }) => {
                     <Text style={styles.subHead}>all your favourite {'\n'} features under one roof!</Text>
                 </View>
 
-                <View style={styles.searchView}>
-                    <TextInput placeholder={'Search'} placeholderTextColor={'#707070'} style={styles.input} />
+                <TouchableOpacity  style={styles.searchView}>
+                    <TextInput onTouchStart={() => { navigation.navigate('SubscriptionPremium') }} placeholder={'Search'} placeholderTextColor={'#707070'} style={styles.input} />
 
-                    <TouchableOpacity style={styles.icoView}>
+                    <TouchableOpacity  style={styles.icoView}>
                         <SvgXml xml={Mic} />
                     </TouchableOpacity>
 
-                </View>
+                </TouchableOpacity>
 
                 <FlatList keyExtractor={index => index} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.listCont} data={item} renderItem={({ index, item }) => {
                     return (
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     searchView: { flexDirection: 'row', marginHorizontal: 20, alignItems: 'center', borderColor: '#707070', borderWidth: 1, marginVertical: 20, borderRadius: 60, height: 50, },
     input: { flex: 1, paddingLeft: 25, fontSize: 14, color: '#FFF' },
     icoView: { justifyContent: 'center', alignItems: 'center', marginRight: 10, width: 40, height: 40, },
-    listCont: { alignItems: 'center', justifyContent: 'space-around', padding: 15, paddingBottom:30, flexDirection: 'row', flexWrap: 'wrap' },
+    listCont: { alignItems: 'center', justifyContent: 'space-around', padding: 15, paddingBottom: 30, flexDirection: 'row', flexWrap: 'wrap' },
     itemTou: { borderRadius: 10, marginHorizontal: 4, marginVertical: 10, },
     itemImg: { width: 100, height: 140, resizeMode: 'contain' },
     name: { marginTop: 5, color: '#E6E6E6', fontFamily: Typography.FONT_FAMILY_BOLD, fontSize: 14, },
