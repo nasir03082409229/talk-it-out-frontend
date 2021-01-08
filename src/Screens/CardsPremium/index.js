@@ -7,8 +7,35 @@ import { SvgXml } from "react-native-svg";
 import { Typography, Colors } from "../../Styles";
 import LinearGradient from 'react-native-linear-gradient';
 import Slider from '@react-native-community/slider';
+import Carousel from 'react-native-snap-carousel';
+
 
 const CardsPremium = ({ navigation }) => {
+
+    let cards = [
+        {
+            image: require('../../Assets/images/shade.png'),
+        },
+        {
+            image: require('../../Assets/images/pray.png'),
+        },
+        {
+            image: require('../../Assets/images/design.png'),
+        },
+        {
+            image: require('../../Assets/images/shop.png'),
+        },
+    ]
+
+    let _carousel;
+    const _renderItem = ({ item, index }) => {
+        return (
+            <TouchableOpacity onPress={() => { navigation.navigate('PlayingPremium') }} activeOpacity={1} style={[styles.card, { width: Dimensions.get('screen').width - 0 }]}>
+                <Image style={styles.img} source={item.image} />
+            </TouchableOpacity>
+        );
+    }
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
@@ -19,10 +46,20 @@ const CardsPremium = ({ navigation }) => {
                     <Text style={styles.preTxt}>PREMIUM</Text>
                 </View>
 
+                <Carousel
+                    layout={'tinder'} layoutCardOffset={`30`}
+                    ref={(c) => { _carousel = c; }}
+                    data={cards}
+                    renderItem={_renderItem}
+                    sliderWidth={Dimensions.get('screen').width}
+                    itemWidth={Dimensions.get('screen').width}
+                />
                 <View style={styles.cardView}>
-                    <TouchableOpacity onPress={() => { navigation.navigate('PlayingPremium') }} activeOpacity={1} style={[styles.card, { width: Dimensions.get('screen').width - 0 }]}>
+
+
+                    {/* <TouchableOpacity onPress={() => { navigation.navigate('PlayingPremium') }} activeOpacity={1} style={[styles.card, { width: Dimensions.get('screen').width - 0 }]}>
                         <Image style={styles.img} source={require('../../Assets/images/shade.png')} />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     {/* <TouchableOpacity style={[styles.card, { marginTop: -160, width: Dimensions.get('screen').width - 20, marginLeft: 10, }]}>
                         <Image style={styles.img} source={require('../../Assets/images/pray.png')} />
                     </TouchableOpacity>
@@ -45,7 +82,7 @@ const styles = StyleSheet.create({
     main: { justifyContent: 'center', alignItems: 'center', marginTop: 45, marginBottom: 50, },
     card: { padding: 10, },
     img: { width: '100%', height: 200, resizeMode: 'stretch', borderRadius: 0, },
-    cardView: {  },
+    cardView: {},
 
 })
 
