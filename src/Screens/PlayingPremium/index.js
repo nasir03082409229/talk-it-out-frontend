@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Animated, FlatList, View, Image, StatusBar, SafeAreaView, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
+import { Animated, FlatList, View, Image, StatusBar, Easing, SafeAreaView, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { PlayIcon, DownloadIcon, Cross, PauseActive, AddIconPlaying } from "../../Assets/Icons";
@@ -16,6 +16,8 @@ const PlayingPremium = ({ navigation }) => {
 
     const [isPlay, setIsPlay] = useState(false);
     const [duration, setDuration] = useState(0);
+    const [isTapped, setIsTapped] = useState(false);
+
     const timerToClearSomewhere = useRef(null)
     const [currentTime, setCurrentTime] = useState(0);
     SoundPlayer.loadSoundFile('birdsound', 'mp3');
@@ -79,11 +81,49 @@ const PlayingPremium = ({ navigation }) => {
     }
 
     const [animation, setAnimation] = useState(new Animated.Value(0));
+    const [opacityVal, setOpacityVal] = useState(new Animated.Value(0));
+    const [spinAnimation, setSpinAnimation] = useState(new Animated.Value(0));
 
     const startAnimation = () => {
+        setIsTapped(true);
+        startSpinAnimation()
+        Animated.timing(opacityVal, {
+            toValue: 1,
+            duration: 100
+        }).start()
         Animated.timing(animation, {
-            toValue: -50,
-            duration: 1000
+            toValue: -40,
+            duration: 500
+        }).start()
+
+    }
+    const startSpinAnimation = () => {
+        Animated.timing(spinAnimation, {
+            toValue: 1,
+            duration: 400,
+            easing: Easing.linear, // Easing is an additional import from react-native
+            useNativeDriver: false  // To make use of native driver for performance
+        }).start()
+    }
+    const reverseSpinAnimation = () => {
+        Animated.timing(spinAnimation, {
+            toValue: 0,
+            duration: 400,
+            easing: Easing.linear, // Easing is an additional import from react-native
+            useNativeDriver: false  // To make use of native driver for performance
+        }).start()
+    }
+    const reverseAnimation = () => {
+        setIsTapped(false);
+        // alert(isTapped);
+        reverseSpinAnimation();
+        Animated.timing(animation, {
+            toValue: 0,
+            duration: 700
+        }).start()
+        Animated.timing(opacityVal, {
+            toValue: 0,
+            duration: 500
         }).start()
 
     }
@@ -93,7 +133,12 @@ const PlayingPremium = ({ navigation }) => {
 
     // }, 500);
 
+    const spin = spinAnimation.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['0deg', '45deg']
+    })
 
+    console.log('isTapped', isTapped);
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -159,45 +204,68 @@ const PlayingPremium = ({ navigation }) => {
                 </View>
                 <Text style={styles.nextTxt}>UP NEXT</Text>
 
-                <FlatList keyExtractor={index => index.toString()} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40, }} data={[1, 2, 3, 4, 5, 6,]} renderItem={({ index, item }) => {
-                    return (
-                        <View style={styles.listMainView}>
-                            <TouchableOpacity style={styles.playIco}>
-                                <SvgXml xml={PlayIcon} />
-                            </TouchableOpacity>
-                            <View style={styles.detailTxt}>
-                                <Text style={styles.epiTxt}>Episode 148</Text>
-                                <Text style={styles.title}>Martin Garrix Show</Text>
-                                <Text style={styles.durationTxt}>1:42:00</Text>
-                            </View>
-
-                            <View style={{ backgroundColor: 'rgba(0,0,255,0)', width: 55, height: 55, justifyContent: 'center', alignItems: 'center' }}>
-                                <View style={{ position: 'absolute' }}>
-                                    <TouchableOpacity style={[styles.setTou, { backgroundColor: 'rgba(0,255,0,0)', }]}>
-                                        <SvgXml xml={AddIconPlaying} />
-                                    </TouchableOpacity>
+                <FlatList keyExtractor={index => index.toString()}
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
+                    data={[1, 2]} renderItem={({ index, item }) => {
+                        return (
+                            <View style={styles.listMainView}>
+                                <TouchableOpacity style={styles.playIco}>
+                                    <SvgXml xml={PlayIcon} />
+                                </TouchableOpacity>
+                                <View style={styles.detailTxt}>
+                                    <Text style={styles.epiTxt}>Episode 148</Text>
+                                    <Text style={styles.title}>Martin Garrix Show</Text>
+                                    <Text style={styles.durationTxt}>1:42:00</Text>
                                 </View>
-                                <Animated.View
 
-                                    style={[
-                                        { position: 'absolute', top:animation },
+                                <View style={{ backgroundColor: 'rgba(0,0,255,0)', width: 55, height: 55, justifyContent: 'center', alignItems: 'center' }}>
 
-                                        // {
-                                        //     transform: [{
-                                        //         translateY: animation,
-                                        //     }]
-                                        // }
-                                    ]}>
-                                    <TouchableOpacity onPress={()=>{startAnimation()}}
-                                     style={styles.setTou, { backgroundColor: 'rgba(255,0,0,0)', width: 55, height: 55, justifyContent: 'center', alignItems: 'center', }}>
-                                        <SvgXml xml={AddIconPlaying} />
-                                    </TouchableOpacity>
-                                </Animated.View>
+                                    <Animated.View
+
+                                        style={[
+
+                                            {
+                                                position: 'absolute', zIndex: 11111111111,
+                                                top: animation,
+                                                opacity: opacityVal,
+                                            },
+
+                                            // {
+                                            //     transform: [{
+                                            //         translateY: animation,
+                                            //     }]
+                                            // }
+                                        ]}>
+
+                                        <TouchableOpacity onPress={() => { isTapped ? reverseAnimation() : startAnimation() }}
+                                            style={styles.setTou, { zIndex: -10000000000000, }, {
+                                                backgroundColor: 'rgba(255,0,0,0)', width: 55, height: 55, justifyContent: 'center', alignItems: 'center',
+                                            }}>
+                                            <SvgXml xml={DownloadIcon} />
+                                        </TouchableOpacity>
+                                    </Animated.View>
+
+
+                                    <Animated.View style={[
+                                        {
+                                            transform: [
+                                                { rotate: spin }
+                                            ]
+                                        },
+                                        { position: 'absolute' }]}>
+                                        <TouchableOpacity activeOpacity={1} onPress={() => { isTapped ? reverseAnimation() : startAnimation() }} style={[styles.setTou, { backgroundColor: 'rgba(0,255,0,0)', }]}>
+                                            <SvgXml xml={AddIconPlaying} />
+                                        </TouchableOpacity>
+                                    </Animated.View>
+
+
+                                </View>
+
                             </View>
-
-                        </View>
-                    )
-                }} />
+                        )
+                    }} />
 
                 <View style={styles.crossView}>
                     <SvgXml xml={Cross} />
@@ -227,7 +295,7 @@ const styles = StyleSheet.create({
     topBackImg: { width: '100%', height: '100%', resizeMode: 'contain', },
     topBackTxt: { marginLeft: 10, color: '#fff', fontFamily: Typography.FONT_FAMILY_EXTRA_BOLD, fontSize: 18, },
     nextTxt: { marginLeft: 20, marginTop: 5, color: '#9B9B9B', fontFamily: Typography.FONT_FAMILY_BOLD, fontSize: 14, },
-    listMainView: { marginVertical: 10, alignItems: 'center', flexDirection: 'row', },
+    listMainView: { marginVertical: 25, alignItems: 'center', flexDirection: 'row', },
     playIco: { borderWidth: 1, borderColor: '#FFFFFF20', borderRadius: 40, width: 55, height: 55, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' },
     detailTxt: { marginLeft: 20, flex: 1, },
     epiTxt: { color: '#E6E6E6', fontFamily: Typography.FONT_FAMILY_BOLD, fontSize: 14, },
