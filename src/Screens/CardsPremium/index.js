@@ -14,13 +14,13 @@ const CardsPremium = ({ navigation }) => {
 
     let cards = [
         {
-            image: require('../../Assets/images/shade.png'),
+            image: require('../../Assets/images/design.png'),
         },
         {
             image: require('../../Assets/images/pray.png'),
         },
         {
-            image: require('../../Assets/images/design.png'),
+            image: require('../../Assets/images/elder.png'),
         },
         {
             image: require('../../Assets/images/shop.png'),
@@ -30,7 +30,7 @@ const CardsPremium = ({ navigation }) => {
     let _carousel;
     const _renderItem = ({ item, index }) => {
         return (
-            <TouchableOpacity onPress={() => { navigation.navigate('PlayingPremium') }} activeOpacity={1} style={[styles.card, { width: Dimensions.get('screen').width - 0 }]}>
+            <TouchableOpacity onPress={() => { navigation.navigate('PlayingPremium') }} activeOpacity={1} style={[styles.card, { width: Dimensions.get('screen').width, }]}>
                 <Image style={styles.img} source={item.image} />
             </TouchableOpacity>
         );
@@ -47,12 +47,14 @@ const CardsPremium = ({ navigation }) => {
                 </View>
 
                 <Carousel
-                    layout={'tinder'} layoutCardOffset={`30`}
+                    layout={'default'}
                     ref={(c) => { _carousel = c; }}
                     data={cards}
                     renderItem={_renderItem}
                     sliderWidth={Dimensions.get('screen').width}
                     itemWidth={Dimensions.get('screen').width}
+                    itemHeight={Dimensions.get('screen').height}
+                    height={500}
                 />
                 <View style={styles.cardView}>
 
@@ -81,7 +83,7 @@ const styles = StyleSheet.create({
     preTxt: { color: '#1592E6', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 23, marginTop: -15, },
     main: { justifyContent: 'center', alignItems: 'center', marginTop: 45, marginBottom: 50, },
     card: { padding: 10, },
-    img: { width: '100%', height: 200, resizeMode: 'stretch', borderRadius: 0, },
+    img: { width: '100%', height: '100%', resizeMode: 'stretch', borderRadius: 0, },
     cardView: {},
 
 })

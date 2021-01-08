@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View, TouchableOpacity, Image } from "react-native";
-import { Bottom1Icon, Bottom2Icon, Bottom3Icon, Bottom4Icon, Bottom1IconActive, Bottom2IconActive, Bottom3IconActive, Bottom4IconActive } from "../../Assets/Icons";
+import { Bottom1Icon, Bottom2Icon, Bottom3IconSetting, Bottom3Icon, Bottom4Icon, Bottom1IconActive, Bottom2IconActive, Bottom3IconActive, Bottom4IconActive } from "../../Assets/Icons";
 import { SvgXml } from "react-native-svg";
 
 
@@ -25,15 +25,19 @@ const BottomBar = ({ state, navigation }) => {
                         <SvgXml xml={Bottom2Icon} />
                 }
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconview} onPress={() => { navigation.navigate('Downloads') }} style={styles.iconview}>
+            <TouchableOpacity style={styles.iconview} onPress={() => {
+                //  navigation.navigate('Downloads')
+            }} style={styles.iconview}>
                 {
                     state.state.index === 2 ?
-                        <SvgXml xml={Bottom3IconActive} />
+                        <SvgXml xml={Bottom3IconSetting} />
                         :
-                        <SvgXml xml={Bottom3Icon} />
+                        <SvgXml xml={Bottom3IconSetting} />
                 }
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconview} onPress={() => { navigation.navigate('Store') }} style={styles.iconview}>
+            <TouchableOpacity style={styles.iconview} onPress={() => {
+                //  navigation.navigate('Store')
+            }} style={styles.iconview}>
                 {
                     state.state.index === 3 ?
                         <SvgXml xml={Bottom4IconActive} />

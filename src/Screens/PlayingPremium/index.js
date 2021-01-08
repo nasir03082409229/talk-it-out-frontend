@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FlatList, View, Image, StatusBar, SafeAreaView, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
+import { Animated, FlatList, View, Image, StatusBar, SafeAreaView, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
-import { PlayIcon, SettingIcon, Cross, PauseActive, AddIconPlaying } from "../../Assets/Icons";
+import { PlayIcon, DownloadIcon, Cross, PauseActive, AddIconPlaying } from "../../Assets/Icons";
 import { SvgXml } from "react-native-svg";
 import { Typography, Colors } from "../../Styles";
 import LinearGradient from 'react-native-linear-gradient';
@@ -13,6 +13,7 @@ import SoundPlayer from 'react-native-sound-player'
 
 var currentTimerLocal = 0;
 const PlayingPremium = ({ navigation }) => {
+
     const [isPlay, setIsPlay] = useState(false);
     const [duration, setDuration] = useState(0);
     const timerToClearSomewhere = useRef(null)
@@ -29,6 +30,8 @@ const PlayingPremium = ({ navigation }) => {
         setDuration(info.duration)
         // setCurrentTime(info.currentTime)
     }
+
+
 
     useEffect(() => {
 
@@ -75,6 +78,23 @@ const PlayingPremium = ({ navigation }) => {
 
     }
 
+    const [animation, setAnimation] = useState(new Animated.Value(0));
+
+    const startAnimation = () => {
+        Animated.timing(animation, {
+            toValue: -50,
+            duration: 1000
+        }).start()
+
+    }
+
+    // setTimeout(() => {
+    //     startAnimation();
+
+    // }, 500);
+
+
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
@@ -99,7 +119,7 @@ const PlayingPremium = ({ navigation }) => {
                                     <Text style={styles.epi}>PREMIUM EPISODE - 14</Text>
                                 </View>
                                 <TouchableOpacity onPress={() => {
-                                        navigation.navigate('PlayerPremium')
+                                    navigation.navigate('PlayerPremium')
                                 }} style={styles.controls}>
                                     {
                                         isPlay ?
@@ -150,9 +170,31 @@ const PlayingPremium = ({ navigation }) => {
                                 <Text style={styles.title}>Martin Garrix Show</Text>
                                 <Text style={styles.durationTxt}>1:42:00</Text>
                             </View>
-                            <TouchableOpacity style={styles.setTou}>
-                                <SvgXml xml={AddIconPlaying} />
-                            </TouchableOpacity>
+
+                            <View style={{ backgroundColor: 'rgba(0,0,255,0)', width: 55, height: 55, justifyContent: 'center', alignItems: 'center' }}>
+                                <View style={{ position: 'absolute' }}>
+                                    <TouchableOpacity style={[styles.setTou, { backgroundColor: 'rgba(0,255,0,0)', }]}>
+                                        <SvgXml xml={AddIconPlaying} />
+                                    </TouchableOpacity>
+                                </View>
+                                <Animated.View
+
+                                    style={[
+                                        { position: 'absolute', top:animation },
+
+                                        // {
+                                        //     transform: [{
+                                        //         translateY: animation,
+                                        //     }]
+                                        // }
+                                    ]}>
+                                    <TouchableOpacity onPress={()=>{startAnimation()}}
+                                     style={styles.setTou, { backgroundColor: 'rgba(255,0,0,0)', width: 55, height: 55, justifyContent: 'center', alignItems: 'center', }}>
+                                        <SvgXml xml={AddIconPlaying} />
+                                    </TouchableOpacity>
+                                </Animated.View>
+                            </View>
+
                         </View>
                     )
                 }} />
@@ -160,7 +202,7 @@ const PlayingPremium = ({ navigation }) => {
                 <View style={styles.crossView}>
                     <SvgXml xml={Cross} />
                 </View>
-                
+
             </ScrollView>
         </SafeAreaView>
     )
