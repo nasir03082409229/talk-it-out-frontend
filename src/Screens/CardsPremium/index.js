@@ -54,7 +54,7 @@ const CardsPremium = ({ navigation }) => {
                     renderItem={_renderItem}
                     sliderWidth={Dimensions.get('window').width}
                     itemWidth={Dimensions.get('window').width *.75}
-                    itemHeight={Dimensions.get('screen').height}
+                    itemHeight={Dimensions.get('screen').height-100}
                     height={500}
                     // layoutCardOffset={100}
                 />
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     preTxt: { color: '#1592E6', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 23, marginTop: -15, },
     main: { justifyContent: 'center', alignItems: 'center', marginTop: 45, marginBottom: 50, },
     card: { },
-    img: { width: '100%', height: '100%', resizeMode: 'stretch', borderRadius: 0, },
+    img: { width: '100%', height: '92%', resizeMode: 'stretch', borderRadius: 0, },
     cardView: {},
 
 })

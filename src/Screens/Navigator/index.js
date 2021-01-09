@@ -54,6 +54,7 @@ const BottomStackComp = () => {
             <BottomStack.Screen name="Podcasts" component={SubscriptionPremium} options={MyTransition} />
             <BottomStack.Screen name="Downloads" component={Downloads} options={MyTransition} />
             <BottomStack.Screen name="Store" component={Store} options={MyTransition} />
+            <BottomStack.Screen name="CardsPremium" component={CardsPremium} options={MyTransition} />
         </BottomStack.Navigator>
         </SafeAreaView>
 
@@ -66,13 +67,13 @@ const App = () => {
         <SafeAreaView style={{ flex:1, backgroundColor : '#2C2939' }}>
 
         <NavigationContainer>
-            <Stack.Navigator initialRouteName='CardsPremium' headerMode={'none'}>
+            <Stack.Navigator initialRouteName='Splash' headerMode={'none'}>
                 <Stack.Screen name="Splash" component={Splash} options={MyTransition} />
                 <Stack.Screen name="LoginPremium" component={LoginPremium} options={MyTransition} />
                 <Stack.Screen name="SubscriptionPremium" component={SubscriptionPremium} options={MyTransition} />
                 <Stack.Screen name="PlayingPremium" component={PlayingPremium} options={MyTransition} />
                 <Stack.Screen name="PlayerPremium" component={PlayerPremium} options={MyTransition} />
-                <Stack.Screen name="CardsPremium" component={CardsPremium} options={MyTransition} />
+                {/* <Stack.Screen name="CardsPremium" component={CardsPremium} options={MyTransition} /> */}
                 <Stack.Screen name="Login" component={Login} options={MyTransition} />
                 <Stack.Screen name="BottomStackComp" component={BottomStackComp} options={MyTransition} />
                 <BottomStack.Screen name="SignUp" component={SignUp} options={MyTransition} />
