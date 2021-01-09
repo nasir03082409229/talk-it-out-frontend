@@ -30,7 +30,7 @@ const CardsPremium = ({ navigation }) => {
     let _carousel;
     const _renderItem = ({ item, index }) => {
         return (
-            <TouchableOpacity onPress={() => { navigation.navigate('PlayingPremium') }} activeOpacity={1} style={[styles.card, { width: Dimensions.get('screen').width*.8, }]}>
+            <TouchableOpacity onPress={() => { navigation.navigate('PlayingPremium') }} activeOpacity={1} style={[styles.card, { width: '100%', }]}>
                 <Image style={styles.img} source={item.image} />
             </TouchableOpacity>
         );
@@ -56,7 +56,6 @@ const CardsPremium = ({ navigation }) => {
                     itemWidth={Dimensions.get('window').width *.75}
                     itemHeight={Dimensions.get('screen').height}
                     height={500}
-                    style={{ }}
                     // layoutCardOffset={100}
                 />
                 {/* <View style={styles.cardView}> */}
@@ -85,7 +84,7 @@ const styles = StyleSheet.create({
     headTxt: { color: '#FFFFFF', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 25, },
     preTxt: { color: '#1592E6', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 23, marginTop: -15, },
     main: { justifyContent: 'center', alignItems: 'center', marginTop: 45, marginBottom: 50, },
-    card: { padding: 10, },
+    card: { },
     img: { width: '100%', height: '100%', resizeMode: 'stretch', borderRadius: 0, },
     cardView: {},
 
