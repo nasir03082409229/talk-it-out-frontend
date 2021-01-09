@@ -30,7 +30,7 @@ const CardsPremium = ({ navigation }) => {
     let _carousel;
     const _renderItem = ({ item, index }) => {
         return (
-            <TouchableOpacity onPress={() => { navigation.navigate('PlayingPremium') }} activeOpacity={1} style={[styles.card, { width: Dimensions.get('screen').width, }]}>
+            <TouchableOpacity onPress={() => { navigation.navigate('PlayingPremium') }} activeOpacity={1} style={[styles.card, { width: Dimensions.get('screen').width*.8, }]}>
                 <Image style={styles.img} source={item.image} />
             </TouchableOpacity>
         );
@@ -47,16 +47,19 @@ const CardsPremium = ({ navigation }) => {
                 </View>
 
                 <Carousel
-                    layout={'default'}
+                    // layout={'default'}
                     ref={(c) => { _carousel = c; }}
                     data={cards}
+                    hasParallaxImages
                     renderItem={_renderItem}
-                    sliderWidth={Dimensions.get('screen').width}
-                    itemWidth={Dimensions.get('screen').width}
+                    sliderWidth={Dimensions.get('window').width}
+                    itemWidth={Dimensions.get('window').width *.75}
                     itemHeight={Dimensions.get('screen').height}
                     height={500}
+                    style={{ }}
+                    // layoutCardOffset={100}
                 />
-                <View style={styles.cardView}>
+                {/* <View style={styles.cardView}> */}
 
 
                     {/* <TouchableOpacity onPress={() => { navigation.navigate('PlayingPremium') }} activeOpacity={1} style={[styles.card, { width: Dimensions.get('screen').width - 0 }]}>
@@ -68,7 +71,7 @@ const CardsPremium = ({ navigation }) => {
                     <TouchableOpacity style={[styles.card, { marginTop: -160, }]}>
                         <Image style={styles.img} source={require('../../Assets/images/elder.png')} />
                     </TouchableOpacity> */}
-                </View>
+                {/* </View> */}
 
 
 
