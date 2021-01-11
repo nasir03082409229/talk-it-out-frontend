@@ -14,16 +14,16 @@ const CardsPremium = ({ navigation }) => {
 
     let cards = [
         {
-            image: require('../../Assets/images/design.png'),
+            image: require('../../Assets/images/card1.png'),
         },
         {
-            image: require('../../Assets/images/pray.png'),
+            image: require('../../Assets/images/card2.png'),
         },
         {
-            image: require('../../Assets/images/elder.png'),
+            image: require('../../Assets/images/card3.png'),
         },
         {
-            image: require('../../Assets/images/shop.png'),
+            image: require('../../Assets/images/card5.png'),
         },
     ]
 
