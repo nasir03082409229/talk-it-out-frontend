@@ -23,6 +23,8 @@ const CardsPremium = ({ navigation }) => {
             image: require('../../Assets/images/card3.png'),
         },
         {
+            image: require('../../Assets/images/card4.png'),
+        },{
             image: require('../../Assets/images/card5.png'),
         },
     ]
