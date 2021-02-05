@@ -14,11 +14,16 @@ import SubscriptionPremium from "./SubscriptionPremium";
 import PlayingPremium from "./PlayingPremium";
 import PlayerPremium from "./PlayerPremium";
 import CardsPremium from "./CardsPremium";
+import AboutUs from "./AboutUs";
+import Profile from "./Profile";
+import UpdateProfile from "./UpdateProfile";
+import ForgetPassword from "./ForgetPassword";
 
 export {
     Navigator, Splash, Login, Explore, SignUp, Podcasts,
     Downloads, Pray, Store, Playing, Player, LoginPremium,
     SubscriptionPremium, PlayingPremium, PlayerPremium,
-    CardsPremium, 
+    CardsPremium, AboutUs, Profile, UpdateProfile,
+    ForgetPassword,
 };
 

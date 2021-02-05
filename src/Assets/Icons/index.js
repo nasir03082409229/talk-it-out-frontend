@@ -26,6 +26,14 @@ import Bottom4IconActive from "./bottom4iconactive";
 import Bottom3IconSetting from "./bottom3iconsetting";
 import AddIconPlaying from "./addIconPlaying";
 import DownloadIcon from "./downloadIcon";
+import CrossDrawer from "./crossdrawer";
+import HomeDra from "./homeDra";
+import AboutDra from "./aboutDra";
+import NotifDra from "./notifDra";
+import ShareDra from "./shareDra";
+import ProfileDra from "./profileDra";
+import ForgetPasswordDra from "./forgetPasswordDra";
+import Switch from "./switch";
 
 export {
     history_blue,
@@ -56,5 +64,13 @@ export {
     AddIconPlaying,
     DownloadIcon,
     Bottom3IconSetting,
+    CrossDrawer,
+    HomeDra,
+    AboutDra,
+    NotifDra,
+    ShareDra,
+    ProfileDra,
+    ForgetPasswordDra,
+    Switch,
 };
 
