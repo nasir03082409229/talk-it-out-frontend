@@ -1,7 +1,7 @@
 import { NavigationContainer, } from '@react-navigation/native';
 import { View, StyleSheet, TouchableOpacity, Image, Touchable } from "react-native";
 import { createStackNavigator, HeaderStyleInterpolators, TransitionSpecs } from '@react-navigation/stack';
-import React from 'react';
+import React, { useState } from 'react';
 import { Splash, AboutUs, Login, Explore, SignUp, Profile, UpdateProfile, ForgetPassword, Podcasts, Downloads, Pray, Store, Playing, Player, LoginPremium, SubscriptionPremium, PlayingPremium, PlayerPremium, CardsPremium } from '..';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomBar, Text } from "../../Common";
@@ -9,7 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Typography, Colors } from "../../Styles";
 import { SvgXml } from "react-native-svg";
-import { CrossDrawer, HomeDra, Switch, AboutDra, NotifDra, ShareDra, ProfileDra, ForgetPasswordDra } from "../../Assets/Icons";
+import { CrossDrawer, SwitchActive, HomeDra, Switch, AboutDra, NotifDra, ShareDra, ProfileDra, ForgetPasswordDra } from "../../Assets/Icons";
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -58,6 +58,7 @@ const BottomStackComp = () => {
                 <BottomStack.Screen name="Explore" component={Explore} options={MyTransition} />
                 <BottomStack.Screen name="Podcasts" component={SubscriptionPremium} options={MyTransition} />
                 <BottomStack.Screen name="Downloads" component={Downloads} options={MyTransition} />
+                <BottomStack.Screen name="AboutUs" component={AboutUs} options={MyTransition} />
                 <BottomStack.Screen name="Store" component={Store} options={MyTransition} />
                 <BottomStack.Screen name="CardsPremium" component={CardsPremium} options={MyTransition} />
             </BottomStack.Navigator>
@@ -92,6 +93,7 @@ const Home = () => {
 
 const App = ({ navigation }) => {
 
+    const [active, setActive] = useState(false);
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#2C2939' }}>
             <NavigationContainer>
@@ -116,11 +118,16 @@ const App = ({ navigation }) => {
                                 <SvgXml xml={AboutDra} />
                                 <Text style={styles.draTxt}>ABOUT</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.draRaow}>
+                            <TouchableOpacity onPress={() => { setActive(!active) }} style={styles.draRaow}>
                                 <SvgXml xml={NotifDra} />
                                 <Text style={styles.draTxt}>NOTIFICATION</Text>
-                                <SvgXml style={{marginTop:-15,}} xml={Switch} />
+                                <SvgXml style={[{ marginTop: -15, }, active ? { marginLeft: 18, } : null]} xml={active ? SwitchActive : Switch} />
                             </TouchableOpacity>
+                            {/* <TouchableOpacity style={styles.draRaow}>
+                                <SvgXml xml={NotifDra} />
+                                <Text style={styles.draTxt}>NOTIFICATION</Text>
+                                <SvgXml style={{ marginTop: -15, marginLeft:18, }} xml={SwitchActive} />
+                            </TouchableOpacity> */}
                             <TouchableOpacity onPress={() => { navigation.navigate('ForgetPassword') }} style={styles.draRaow}>
                                 <SvgXml xml={ForgetPasswordDra} />
                                 <Text style={styles.draTxt}>FORGET PASSWORD</Text>
@@ -138,7 +145,7 @@ const App = ({ navigation }) => {
                     )
                 }} initialRouteName="MainStackBtn">
                     <Drawer.Screen name="Home" component={Home} />
-                    <Drawer.Screen name="AboutUs" component={AboutUs} />
+                    {/* <Drawer.Screen name="AboutUs" component={AboutUs} /> */}
                     <Drawer.Screen name="Share App" component={AboutUs} />
                     <Drawer.Screen name="Notification" component={AboutUs} />
                     <Drawer.Screen name="Profile" component={Profile} />

@@ -26,7 +26,7 @@ const BottomBar = ({ state, navigation }) => {
                 }
             </TouchableOpacity>
             <TouchableOpacity style={styles.iconview} onPress={() => {
-                //  navigation.navigate('Downloads')
+                navigation.openDrawer();
             }} style={styles.iconview}>
                 {
                     state.state.index === 2 ?
@@ -36,7 +36,7 @@ const BottomBar = ({ state, navigation }) => {
                 }
             </TouchableOpacity>
             <TouchableOpacity style={styles.iconview} onPress={() => {
-                //  navigation.navigate('Store')
+                 navigation.navigate('Profile')
             }} style={styles.iconview}>
                 {
                     state.state.index === 3 ?

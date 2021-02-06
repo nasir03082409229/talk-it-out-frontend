@@ -34,6 +34,7 @@ import ShareDra from "./shareDra";
 import ProfileDra from "./profileDra";
 import ForgetPasswordDra from "./forgetPasswordDra";
 import Switch from "./switch";
+import SwitchActive from "./switchactive";
 
 export {
     history_blue,
@@ -72,5 +73,6 @@ export {
     ProfileDra,
     ForgetPasswordDra,
     Switch,
+    SwitchActive,
 };
 
