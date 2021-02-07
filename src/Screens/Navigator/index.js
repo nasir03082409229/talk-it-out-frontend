@@ -1,7 +1,7 @@
 import { NavigationContainer, } from '@react-navigation/native';
-import { View, StyleSheet, TouchableOpacity, Image, Touchable } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Image, Touchable, StatusBar } from "react-native";
 import { createStackNavigator, HeaderStyleInterpolators, TransitionSpecs } from '@react-navigation/stack';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Splash, AboutUs, Login, Explore, SignUp, Profile, UpdateProfile, ForgetPassword, Podcasts, Downloads, Pray, Store, Playing, Player, LoginPremium, SubscriptionPremium, PlayingPremium, PlayerPremium, CardsPremium } from '..';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomBar, Text } from "../../Common";
@@ -94,6 +94,9 @@ const Home = () => {
 const App = ({ navigation }) => {
 
     const [active, setActive] = useState(false);
+    useEffect(() => {
+        StatusBar.setHidden = true;
+    }, [])
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#2C2939' }}>
             <NavigationContainer>

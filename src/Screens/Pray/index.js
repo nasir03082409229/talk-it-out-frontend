@@ -8,14 +8,15 @@ import { Typography, Colors } from "../../Styles";
 import LinearGradient from 'react-native-linear-gradient';
 
 const Pray = ({ navigation }) => {
+    StatusBar.setHidden = false
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <StatusBar backgroundColor='#2C2939' />
-            <ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: '#2C2939', flex: 1, }}>
+            {/* <StatusBar backgroundColor='transparent' /> */}
+            <ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: 'red', flex: 1, }}>
                 <View style={styles.backImgView}>
                     <Image
-                        style={styles.backImg}
-                        source={require('../../Assets/images/lets_pray.png')}
+                        style={{ width: '100%', height: '100%' }}
+                        source={require('../../Assets/images/prayback.png')}
                     />
                 </View>
 
@@ -47,7 +48,7 @@ const Pray = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     backImgView: { top: -20, left: 0, right: 0, bottom: -50, position: 'absolute' },
-    backImg: { width: '100%', height: '100%', resizeMode:'contain' },
+    backImg: { width: '100%', height: '100%', resizeMode: 'contain' },
     backView: { zIndex: +1111, right: 0, left: 0, position: 'absolute', top: 20, paddingHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', },
     touBack: { alignItems: 'center', flexDirection: 'row' },
     topBackView: { width: 50, height: 50, },
