@@ -35,8 +35,10 @@ import ProfileDra from "./profileDra";
 import ForgetPasswordDra from "./forgetPasswordDra";
 import Switch from "./switch";
 import SwitchActive from "./switchactive";
+import plus_icon from "./plus_icon";
 
 export {
+    plus_icon,
     history_blue,
     history_gray,
     edit_black,
