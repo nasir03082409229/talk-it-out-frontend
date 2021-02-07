@@ -15,7 +15,7 @@ const Pray = ({ navigation }) => {
                 <View style={styles.backImgView}>
                     <Image
                         style={styles.backImg}
-                        source={require('../../Assets/images/prayback.png')}
+                        source={require('../../Assets/images/lets_pray.png')}
                     />
                 </View>
 
@@ -47,7 +47,7 @@ const Pray = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     backImgView: { top: -20, left: 0, right: 0, bottom: -50, position: 'absolute' },
-    backImg: { width: '100%', height: '100%', },
+    backImg: { width: '100%', height: '100%', resizeMode:'contain' },
     backView: { zIndex: +1111, right: 0, left: 0, position: 'absolute', top: 20, paddingHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', },
     touBack: { alignItems: 'center', flexDirection: 'row' },
     topBackView: { width: 50, height: 50, },

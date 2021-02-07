@@ -12,11 +12,13 @@ import SoundPlayer from 'react-native-sound-player'
 
 
 var currentTimerLocal = 0;
-const Playing = ({ navigation }) => {
+const Playing = ({ navigation, route }) => {
     const [isPlay, setIsPlay] = useState(false);
     const [duration, setDuration] = useState(0);
     const timerToClearSomewhere = useRef(null)
     const [currentTime, setCurrentTime] = useState(0);
+    const { imageSource, playerImage } = route.params;
+
     SoundPlayer.loadSoundFile('birdsound', 'mp3');
     var intervalTimer;
     useEffect(() => {
@@ -79,18 +81,10 @@ const Playing = ({ navigation }) => {
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
             <ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: '#2C2939', flex: 1, }}>
-
-
                 <View style={styles.backImgView}>
-                    <Image
-                        style={styles.backImg}
-                        source={require('../../Assets/images/pray.png')}
-                    />
-
-
+                    <Image style={styles.backImg} source={imageSource} />
                     <LinearGradient colors={['rgba(44,41,57,0)', 'rgba(44,41,57,0.01)', 'rgba(44,41,57,0.1)', 'rgba(44,41,57,0.2)', 'rgba(44,41,57,0.5)', 'rgba(44,41,57,0.9)', 'rgba(44,41,57,0.99)', 'rgba(44,41,57,1)',]}
                         style={styles.linGrad}>
-
                         <View style={styles.main}>
                             <Text style={styles.noePlay}>NOW PLAYING</Text>
                             <View style={styles.detailView}>
@@ -99,7 +93,7 @@ const Playing = ({ navigation }) => {
                                     <Text style={styles.epi}>EPISODE - 14</Text>
                                 </View>
                                 <TouchableOpacity onPress={() => {
-                                        navigation.navigate('Player')
+                                    navigation.navigate('Player', { imageSource: playerImage })
                                 }} style={styles.controls}>
                                     {
                                         isPlay ?
@@ -160,7 +154,7 @@ const Playing = ({ navigation }) => {
                 <View style={styles.crossView}>
                     <SvgXml xml={Cross} />
                 </View>
-                
+
             </ScrollView>
         </SafeAreaView>
     )

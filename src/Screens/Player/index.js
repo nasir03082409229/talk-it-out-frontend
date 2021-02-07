@@ -7,8 +7,10 @@ import { SvgXml } from "react-native-svg";
 import { Typography, Colors } from "../../Styles";
 import LinearGradient from 'react-native-linear-gradient';
 import Slider from '@react-native-community/slider';
-
-const Player = ({ navigation }) => {
+import { useNavigation } from "@react-navigation/native";
+const Player = ({ route }) => {
+    const navigation = useNavigation()
+    const { imageSource } = route.params;
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
@@ -16,11 +18,9 @@ const Player = ({ navigation }) => {
                 <View style={styles.backImgView}>
                     <Image
                         style={styles.backImg}
-                        source={require('../../Assets/images/prayback.png')}
+                        source={imageSource}
                     />
                 </View>
-
-
                 <View style={styles.backView}>
                     <TouchableOpacity onPress={() => { navigation.goBack() }} style={styles.touBack}>
                         <View style={styles.topBackView}>

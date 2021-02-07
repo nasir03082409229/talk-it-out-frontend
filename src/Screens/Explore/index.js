@@ -13,24 +13,31 @@ const Explore = ({ navigation }) => {
             name: 'LIVE /MUSIC',
             views: '208',
             route: 'Player',
+            imageSource: require('../../Assets/images/player_image1.png'),
             image: require('../../Assets/images/live.png'),
         },
         {
             name: "ELDERLY'S",
             views: '2.5K',
             route: 'Playing',
+            imageSource: require('../../Assets/images/elderlys_cover.png'),
+            playerImage: require('../../Assets/images/elderly_player.png'),
             image: require('../../Assets/images/elder.png'),
         },
         {
             name: 'SHADE OF DAY',
             views: '1.5K',
             route: 'Playing',
+            imageSource: require('../../Assets/images/shades_of_day_cover.png'),
+            playerImage: require('../../Assets/images/shads_of_day_player.png'),
             image: require('../../Assets/images/shade.png'),
         },
         {
             name: 'REPEAT SHOW',
             views: '208',
             route: 'Playing',
+            imageSource: require('../../Assets/images/player_cover1.png'),
+            playerImage: require('../../Assets/images/repeated_show_player.png'),
             image: require('../../Assets/images/design.png'),
         },
         {
@@ -43,6 +50,7 @@ const Explore = ({ navigation }) => {
             name: 'SHOP MERCH',
             views: '1.5K',
             route: 'Store',
+            imageSource: require('../../Assets/images/shop_merch.png'),
             image: require('../../Assets/images/shop.png'),
         },
     ]
@@ -50,7 +58,7 @@ const Explore = ({ navigation }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
-            <ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: '#2C2939', flex: 1, }}>
+            <ScrollView style={{ backgroundColor: '#2C2939', flex: 1, }}>
                 <TouchableOpacity onPress={() => { navigation.goBack() }} style={styles.backTouch}>
                     <View style={styles.backTouView}>
                         <Image style={styles.img} source={require('../../Assets/images/login_logo.png')} />
@@ -58,16 +66,15 @@ const Explore = ({ navigation }) => {
                     <Text style={styles.backtxt}>BACK</Text>
                 </TouchableOpacity>
                 <Image style={styles.design} source={require('../../Assets/images/transparentDesign.png')} />
-
                 <View style={styles.headview}>
                     <Text style={styles.downTxt}>EXPLORE</Text>
                     <Text style={styles.subHead}>all your favourite {'\n'} features under one roof!</Text>
                 </View>
 
-                <TouchableOpacity  style={styles.searchView}>
+                <TouchableOpacity style={styles.searchView}>
                     <TextInput onTouchStart={() => { navigation.navigate('SubscriptionPremium') }} placeholder={'Search'} placeholderTextColor={'#707070'} style={styles.input} />
 
-                    <TouchableOpacity  style={styles.icoView}>
+                    <TouchableOpacity style={styles.icoView}>
                         <SvgXml xml={Mic} />
                     </TouchableOpacity>
 
@@ -75,7 +82,7 @@ const Explore = ({ navigation }) => {
 
                 <FlatList keyExtractor={index => index} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.listCont} data={item} renderItem={({ index, item }) => {
                     return (
-                        <TouchableOpacity onPress={() => { navigation.navigate(item.route) }} style={styles.itemTou}>
+                        <TouchableOpacity onPress={() => { navigation.navigate(item.route, { imageSource: item.imageSource, playerImage: item.playerImage }) }} style={styles.itemTou}>
                             <Image style={styles.itemImg} source={item.image} />
                             <Text style={styles.name}>{item.name}</Text>
                             <Text style={styles.viewsTxt}>{item.views}</Text>
