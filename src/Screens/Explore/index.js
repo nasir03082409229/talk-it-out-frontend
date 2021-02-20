@@ -11,14 +11,14 @@ const Explore = ({ navigation }) => {
     const item = [
         {
             name: 'LIVE /MUSIC',
-            views: '208',
+            //views: '208',
             route: 'Player',
             imageSource: require('../../Assets/images/player_image1.png'),
             image: require('../../Assets/images/live.png'),
         },
         {
             name: "ELDERLY'S",
-            views: '2.5K',
+            //views: '2.5K',
             route: 'Playing',
             imageSource: require('../../Assets/images/elderlys_cover.png'),
             playerImage: require('../../Assets/images/elderly_player.png'),
@@ -26,7 +26,7 @@ const Explore = ({ navigation }) => {
         },
         {
             name: 'SHADE OF DAY',
-            views: '1.5K',
+            //views: '1.5K',
             route: 'Playing',
             imageSource: require('../../Assets/images/shades_of_day_cover.png'),
             playerImage: require('../../Assets/images/shads_of_day_player.png'),
@@ -34,7 +34,7 @@ const Explore = ({ navigation }) => {
         },
         {
             name: 'REPEAT SHOW',
-            views: '208',
+            //views: '208',
             route: 'Playing',
             imageSource: require('../../Assets/images/player_cover1.png'),
             playerImage: require('../../Assets/images/repeated_show_player.png'),
@@ -42,13 +42,13 @@ const Explore = ({ navigation }) => {
         },
         {
             name: 'PRAY PER DAY',
-            views: '2.5K',
+            //views: '2.5K',
             route: 'Pray',
             image: require('../../Assets/images/pray.png'),
         },
         {
-            name: 'SHOP MERCH',
-            views: '1.5K',
+            name: 'B.O.T.D',
+            //views: '1.5K',
             route: 'Store',
             imageSource: require('../../Assets/images/shop_merch.png'),
             image: require('../../Assets/images/shop.png'),

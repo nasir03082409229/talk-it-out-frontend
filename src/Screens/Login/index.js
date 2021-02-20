@@ -32,7 +32,7 @@ const Login = ({ navigation }) => {
                     </TouchableOpacity>
 
                     <TouchableOpacity>
-                        <Text style={styles.subTxt}>SUBSCRIBE</Text>
+                        <Text style={styles.subTxt}>LOGIN</Text>
                     </TouchableOpacity>
 
 
