@@ -2,7 +2,12 @@ import { NavigationContainer, } from '@react-navigation/native';
 import { View, StyleSheet, TouchableOpacity, Image, Touchable, StatusBar } from "react-native";
 import { createStackNavigator, HeaderStyleInterpolators, TransitionSpecs } from '@react-navigation/stack';
 import React, { useState, useEffect } from 'react';
-import { Splash, AboutUs, Login, Explore, SignUp, Profile, UpdateProfile, ForgetPassword, Podcasts, Downloads, Pray, Store, Playing, Player, LoginPremium, SubscriptionPremium, PlayingPremium, PlayerPremium, CardsPremium } from '..';
+import {
+    Splash, AboutUs, Login, Explore, SignUp, Profile, UpdateProfile, ForgetPassword,
+    Podcasts, Downloads, Pray, Store, Playing, Player, LoginPremium, SubscriptionPremium,
+    PlayingPremium, PlayerPremium, CardsPremium, PostTimeLine, CreatePost, PostDetails,
+    CommentsList, 
+} from '..';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomBar, Text } from "../../Common";
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -45,7 +50,7 @@ const MyTransition = {
 };
 
 const BottomStackComp = () => {
-
+    
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#2C2939' }}>
 
@@ -54,13 +59,17 @@ const BottomStackComp = () => {
                 screenOptions={{
                     headerShown: false
                 }}
-                initialRouteName="Explore">
+                initialRouteName="PostTimeLine">
                 <BottomStack.Screen name="Explore" component={Explore} options={MyTransition} />
                 <BottomStack.Screen name="Podcasts" component={SubscriptionPremium} options={MyTransition} />
                 <BottomStack.Screen name="Downloads" component={Downloads} options={MyTransition} />
                 <BottomStack.Screen name="AboutUs" component={AboutUs} options={MyTransition} />
                 <BottomStack.Screen name="Store" component={Store} options={MyTransition} />
                 <BottomStack.Screen name="CardsPremium" component={CardsPremium} options={MyTransition} />
+                <BottomStack.Screen name="PostTimeLine" component={PostTimeLine} options={MyTransition} />
+                <BottomStack.Screen name="CreatePost" component={CreatePost} options={MyTransition} />
+                <BottomStack.Screen name="PostDetails" component={PostDetails} options={MyTransition} />
+                <BottomStack.Screen name="CommentsList" component={CommentsList} options={MyTransition} />
             </BottomStack.Navigator>
         </SafeAreaView>
 
@@ -68,9 +77,9 @@ const BottomStackComp = () => {
 };
 
 const Home = () => {
-
+    
     return (
-        <Stack.Navigator initialRouteName='Splash' headerMode={'none'}>
+        <Stack.Navigator initialRouteName='BottomStackComp' headerMode={'none'}>
             <Stack.Screen name="Splash" component={Splash} options={MyTransition} />
             {/* <Stack.Screen name="AboutUs" component={AboutUs} options={MyTransition} /> */}
             {/* <Stack.Screen name="Profile" component={Profile} options={MyTransition} /> */}

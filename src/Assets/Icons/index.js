@@ -36,6 +36,20 @@ import ForgetPasswordDra from "./forgetPasswordDra";
 import Switch from "./switch";
 import SwitchActive from "./switchactive";
 import plus_icon from "./plus_icon";
+import ArrowLeft from "./arrowleft";
+import CrossIcon from "./crossicon";
+import EmojiIcon from "./emojiicon";
+import SendIcon from "./sendicon";
+import SaveIcon from "./saveicon";
+import UploadIcon from "./uploadicon";
+import InActiveHeart from "./inactiveheart";
+import ActiveHeart from "./activeheart";
+import MessageIcon from "./messageicon";
+import SearchIcon from "./searchicon";
+import PlusIcon from "./plusicon";
+import SettingIconHori from "./settingiconhori";
+import LocationIcon from "./locationicon";
+import ShareIcon from "./shareicon";
 
 export {
     plus_icon,
@@ -76,5 +90,19 @@ export {
     ForgetPasswordDra,
     Switch,
     SwitchActive,
+    ArrowLeft,
+    CrossIcon,
+    EmojiIcon,
+    SendIcon,
+    SaveIcon,
+    UploadIcon,
+    InActiveHeart,
+    ActiveHeart,
+    MessageIcon,
+    SearchIcon,
+    PlusIcon,
+    SettingIconHori,
+    LocationIcon,
+    ShareIcon,
 };
 
