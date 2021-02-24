@@ -7,6 +7,7 @@ import { Typography, Colors } from "../../Styles";
 import { SvgXml } from "react-native-svg";
 
 const PostTimeLine = ({ navigation }) => {
+    const [isActiveHeart, setIsActiveHeart] = useState([{ active: true }, { active: false }, { active: false }, { active: true }, { active: false }]);
     return (
         <SafeAreaView style={{ flex: 1, }}>
             <StatusBar barStyle={'dark-content'} backgroundColor='#FFF' />
@@ -16,11 +17,11 @@ const PostTimeLine = ({ navigation }) => {
                     <TouchableOpacity style={{}}>
                     </TouchableOpacity>
                     <Text style={styles.Createtxt}>Talk it out Wall</Text>
-                    <TouchableOpacity onPress={() => { navigation.goBack() }} style={{}}>
+                    <TouchableOpacity onPress={() => { navigation.goBack() }} style={{padding:5}}>
                         <SvgXml xml={SearchIcon} />
                     </TouchableOpacity>
                 </View>
-                <FlatList keyExtractor={index => index} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 130 }} style={{ flex: 1 }} data={[1, 2, 3, 4, 5]} renderItem={({ index, item }) => {
+                <FlatList keyExtractor={index => index} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 130 }} style={{ flex: 1 }} data={isActiveHeart} renderItem={({ index, item }) => {
                     return (
                         <TouchableOpacity onPress={() => navigation.navigate('PostDetails')} style={styles.maintimelineview}>
                             <View style={styles.titletimeview}>
@@ -39,11 +40,18 @@ const PostTimeLine = ({ navigation }) => {
                                 </View>
 
                                 <View style={{ flexDirection: 'row', }}>
-                                    <TouchableOpacity >
+                                    <TouchableOpacity onPress={() => navigation.navigate('PostDetails')}>
                                         <SvgXml xml={MessageIcon} />
                                     </TouchableOpacity>
-                                    <TouchableOpacity>
-                                        <SvgXml style={{ marginLeft: 10, }} xml={ActiveHeart} />
+                                    <TouchableOpacity onPress={() => {
+                                        let dummyIsActiveHeart = [...isActiveHeart];
+                                        dummyIsActiveHeart[index].active = !dummyIsActiveHeart[index].active;
+                                        console.log('Active Heart Master', isActiveHeart);
+                                        console.log(dummyIsActiveHeart);
+                                        setIsActiveHeart(dummyIsActiveHeart);
+
+                                    }}>
+                                        <SvgXml style={{ marginLeft: 10, }} xml={item.active ? ActiveHeart : InActiveHeart} />
                                     </TouchableOpacity>
                                 </View>
                             </View>

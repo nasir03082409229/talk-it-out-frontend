@@ -17,7 +17,7 @@ const PostDetails = ({ navigation }) => {
             <View style={styles.mainView}>
 
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => { navigation.goBack() }} style={{}}>
+                    <TouchableOpacity onPress={() => { navigation.goBack() }} style={{padding:5}}>
                         <SvgXml xml={ArrowLeft} />
                     </TouchableOpacity>
                     <Text style={styles.Createtxt}>Ms-Lioness Queen Post</Text>

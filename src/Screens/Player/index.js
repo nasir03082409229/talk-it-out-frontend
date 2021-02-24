@@ -82,7 +82,7 @@ const Player = ({ route }) => {
                             </TouchableOpacity>
                         </View>
 
-                        <TouchableOpacity onPress={() => { navigation.navigate('SignUp') }} style={styles.chatView}>
+                        <TouchableOpacity onPress={() => { navigation.navigate('CreateAccount') }} style={styles.chatView}>
                             <SvgXml xml={UpArrow} />
                             <Text style={styles.queTxt}>CHAT</Text>
                         </TouchableOpacity>

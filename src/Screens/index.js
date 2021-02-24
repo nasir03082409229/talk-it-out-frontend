@@ -22,12 +22,14 @@ import PostTimeLine from "./PostTimeLine";
 import CreatePost from "./CreatePost";
 import PostDetails from "./PostDetails";
 import CommentsList from "./CommentsList";
+import CreateAccount from "./CreateAccount";
 
 export {
     Navigator, Splash, Login, Explore, SignUp, Podcasts,
     Downloads, Pray, Store, Playing, Player, LoginPremium,
     SubscriptionPremium, PlayingPremium, PlayerPremium,
     CardsPremium, AboutUs, Profile, UpdateProfile,
-    ForgetPassword, PostTimeLine, CreatePost, PostDetails, CommentsList
+    ForgetPassword, PostTimeLine, CreatePost, PostDetails, CommentsList,
+    CreateAccount, 
 };
 

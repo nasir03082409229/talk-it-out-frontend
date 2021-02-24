@@ -13,7 +13,7 @@ const CreatePost = ({ navigation }) => {
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 70 }} style={{ backgroundColor: '#FFF', flex: 1, }}>
 
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => { navigation.goBack() }} style={{}}>
+                    <TouchableOpacity onPress={() => { navigation.goBack() }} style={{ padding:5}}>
                         <SvgXml xml={ArrowLeft} />
                     </TouchableOpacity>
                     <Text style={styles.Createtxt}>Create Post</Text>

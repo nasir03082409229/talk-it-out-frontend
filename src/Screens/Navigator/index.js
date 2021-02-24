@@ -6,7 +6,7 @@ import {
     Splash, AboutUs, Login, Explore, SignUp, Profile, UpdateProfile, ForgetPassword,
     Podcasts, Downloads, Pray, Store, Playing, Player, LoginPremium, SubscriptionPremium,
     PlayingPremium, PlayerPremium, CardsPremium, PostTimeLine, CreatePost, PostDetails,
-    CommentsList, 
+    CommentsList, CreateAccount, 
 } from '..';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomBar, Text } from "../../Common";
@@ -59,7 +59,7 @@ const BottomStackComp = () => {
                 screenOptions={{
                     headerShown: false
                 }}
-                initialRouteName="PostTimeLine">
+                initialRouteName="Explore">
                 <BottomStack.Screen name="Explore" component={Explore} options={MyTransition} />
                 <BottomStack.Screen name="Podcasts" component={SubscriptionPremium} options={MyTransition} />
                 <BottomStack.Screen name="Downloads" component={Downloads} options={MyTransition} />
@@ -70,6 +70,7 @@ const BottomStackComp = () => {
                 <BottomStack.Screen name="CreatePost" component={CreatePost} options={MyTransition} />
                 <BottomStack.Screen name="PostDetails" component={PostDetails} options={MyTransition} />
                 <BottomStack.Screen name="CommentsList" component={CommentsList} options={MyTransition} />
+                {/* <BottomStack.Screen name="CreateAccount" component={CreateAccount} options={MyTransition} /> */}
             </BottomStack.Navigator>
         </SafeAreaView>
 
@@ -79,7 +80,7 @@ const BottomStackComp = () => {
 const Home = () => {
     
     return (
-        <Stack.Navigator initialRouteName='BottomStackComp' headerMode={'none'}>
+        <Stack.Navigator initialRouteName='Splash' headerMode={'none'}>
             <Stack.Screen name="Splash" component={Splash} options={MyTransition} />
             {/* <Stack.Screen name="AboutUs" component={AboutUs} options={MyTransition} /> */}
             {/* <Stack.Screen name="Profile" component={Profile} options={MyTransition} /> */}
@@ -95,6 +96,7 @@ const Home = () => {
             <BottomStack.Screen name="Pray" component={Pray} options={MyTransition} />
             <BottomStack.Screen name="Playing" component={Playing} options={MyTransition} />
             <BottomStack.Screen name="Player" component={Player} options={MyTransition} />
+            <BottomStack.Screen name="CreateAccount" component={CreateAccount} options={MyTransition} />
         </Stack.Navigator>
     )
 }
