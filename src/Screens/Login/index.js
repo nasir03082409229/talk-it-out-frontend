@@ -1,24 +1,53 @@
 import React, { useState } from "react";
-import { View, Image, StatusBar, SafeAreaView, StyleSheet, ScrollView, TextInput, TouchableOpacity } from "react-native";
+import { View, Image, StatusBar, SafeAreaView, StyleSheet, ScrollView, TextInput, ActivityIndicator, TouchableOpacity } from "react-native";
 import { Text } from "../../Common";
 import { logo } from "../../Assets/images";
 import { SignInLeftArrow } from "../../Assets/Icons";
 import { SvgXml } from "react-native-svg";
 import { Typography, Colors } from "../../Styles";
 import Axios from 'axios'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { CommonActions } from '@react-navigation/native';
+
 
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState('')
     const [emailError, setEmailError] = useState('')
     const [password, setPassword] = useState('')
     const [passwordError, setPasswordError] = useState('')
+    const [loader, setLoader] = useState(false)
 
     const onPressLogin = () => {
+        setEmailError('')
+        setPasswordError('')
+
         if (validateEmail(email)) {
             if (password.length >= 6) {
+                setLoader(true)
+                Axios({
+                    url: 'https://talkitoutqueen.com/dashboard/api/login',
+                    method: 'post',
+                    data: { "email": email, "password": password }
+                }).then(async (response) => {
+                    console.log(response.data)
+                    await AsyncStorage.setItem('@access_token', response.data.access_token)
+                    await AsyncStorage.setItem('@user', JSON.stringify(response.data.user))
+                    setLoader(false)
+                    navigation.dispatch(
+                        CommonActions.reset({
+                            index: 0,
+                            routes: [
+                                { name: 'BottomStackComp' },
+                            ],
+                        })
+                    );
 
+                }).catch((err) => {
+                    setLoader(false)
+                    setPasswordError('Invalid email Or password')
+                })
             } else {
-                setPasswordError('Invalid password')
+                setPasswordError('Invalid email Or password')
             }
         } else {
             setEmailError('Invalid email')
@@ -45,11 +74,13 @@ const Login = ({ navigation }) => {
                     <View style={styles.inputView}>
                         <TextInput value={email} onChangeText={(text) => setEmail(text)} placeholder={'Email'} placeholderTextColor={'#707070'} style={styles.input} />
                     </View>
+                    {emailError.length > 0 && <Text style={{ fontSize: 12, color: 'red', paddingLeft: 10 }}>{emailError}</Text>}
                     <View style={styles.inputView}>
                         <TextInput secureTextEntry value={password} onChangeText={(text) => setPassword(text)} secureTextEntry placeholder={'Password'} placeholderTextColor={'#707070'} style={styles.input} />
                     </View>
-                    <TouchableOpacity onPress={() => { navigation.navigate('BottomStackComp') }} style={styles.signInView}>
-                        <SvgXml xml={SignInLeftArrow} />
+                    {passwordError.length > 0 && <Text style={{ fontSize: 12, color: 'red', paddingLeft: 10 }}>{passwordError}</Text>}
+                    <TouchableOpacity onPress={() => { onPressLogin() }} style={styles.signInView}>
+                        {!loader ? <SvgXml xml={SignInLeftArrow} /> : <ActivityIndicator color={'#fff'} size={20} />}
                     </TouchableOpacity>
                     <TouchableOpacity>
                         <Text style={styles.subTxt}>LOGIN</Text>

@@ -7,11 +7,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { CommonActions } from '@react-navigation/native'
 
 const Splash = ({ navigation }) => {
-
+    // AsyncStorage.clear()
     useEffect(() => {
-
         init()
-
     }, []);
 
     const init = async () => {
