@@ -3,17 +3,39 @@ import { View, Image, StatusBar } from "react-native";
 import { Text } from "../../Common";
 import { logo } from "../../Assets/images";
 import { Typography, Colors } from "../../Styles";
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { CommonActions } from '@react-navigation/native'
 
 const Splash = ({ navigation }) => {
 
     useEffect(() => {
 
-        setTimeout(()=>{
-            navigation.navigate('Login');
-        },1000)
+        init()
 
     }, []);
 
+    const init = async () => {
+        const access_token = await AsyncStorage.getItem('@access_token')
+        if (access_token) {
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [
+                        { name: 'BottomStackComp' },
+                    ],
+                })
+            );
+        } else {
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [
+                        { name: 'Login' },
+                    ],
+                })
+            );
+        }
+    }
     return (
         <View style={{
             backgroundColor: '#2C2939',

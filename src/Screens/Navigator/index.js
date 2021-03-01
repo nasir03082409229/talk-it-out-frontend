@@ -6,7 +6,7 @@ import {
     Splash, AboutUs, Login, Explore, SignUp, Profile, UpdateProfile, ForgetPassword,
     Podcasts, Downloads, Pray, Store, Playing, Player, LoginPremium, SubscriptionPremium,
     PlayingPremium, PlayerPremium, CardsPremium, PostTimeLine, CreatePost, PostDetails,
-    CommentsList, CreateAccount, 
+    CommentsList, CreateAccount, Register
 } from '..';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomBar, Text } from "../../Common";
@@ -20,34 +20,6 @@ const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
-const MyTransition = {
-    gestureDirection: 'vertical',
-    transitionSpec: {
-        open: TransitionSpecs.TransitionIOSSpec,
-        close: TransitionSpecs.TransitionIOSSpec,
-    },
-    headerStyleInterpolator: HeaderStyleInterpolators.forFade,
-    cardStyleInterpolator: ({ current, next, layouts }) => {
-        return {
-            cardStyle: {
-                transform: [
-                    {
-                        translateX: current.progress.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [layouts.screen.width, 0],
-                        }),
-                    },
-                ],
-            },
-            overlayStyle: {
-                opacity: current.progress.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, 0.5],
-                }),
-            },
-        };
-    },
-};
 
 const BottomStackComp = () => {
     
@@ -90,6 +62,7 @@ const Home = () => {
             <Stack.Screen name="PlayingPremium" component={PlayingPremium} options={MyTransition} />
             <Stack.Screen name="PlayerPremium" component={PlayerPremium} options={MyTransition} />
             {/* <Stack.Screen name="CardsPremium" component={CardsPremium} options={MyTransition} /> */}
+            <Stack.Screen name="Register" component={Register} options={MyTransition} />
             <Stack.Screen name="Login" component={Login} options={MyTransition} />
             <Stack.Screen name="BottomStackComp" component={BottomStackComp} options={MyTransition} />
             <BottomStack.Screen name="SignUp" component={SignUp} options={MyTransition} />
@@ -187,3 +160,31 @@ const styles = StyleSheet.create({
 })
 
 export default App;
+const MyTransition = {
+    gestureDirection: 'vertical',
+    transitionSpec: {
+        open: TransitionSpecs.TransitionIOSSpec,
+        close: TransitionSpecs.TransitionIOSSpec,
+    },
+    headerStyleInterpolator: HeaderStyleInterpolators.forFade,
+    cardStyleInterpolator: ({ current, next, layouts }) => {
+        return {
+            cardStyle: {
+                transform: [
+                    {
+                        translateX: current.progress.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [layouts.screen.width, 0],
+                        }),
+                    },
+                ],
+            },
+            overlayStyle: {
+                opacity: current.progress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, 0.5],
+                }),
+            },
+        };
+    },
+};

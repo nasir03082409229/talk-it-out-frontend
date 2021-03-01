@@ -22,6 +22,7 @@ import PostTimeLine from "./PostTimeLine";
 import CreatePost from "./CreatePost";
 import PostDetails from "./PostDetails";
 import CommentsList from "./CommentsList";
+import Register from "./Register";
 import CreateAccount from "./CreateAccount";
 
 export {
@@ -30,6 +31,6 @@ export {
     SubscriptionPremium, PlayingPremium, PlayerPremium,
     CardsPremium, AboutUs, Profile, UpdateProfile,
     ForgetPassword, PostTimeLine, CreatePost, PostDetails, CommentsList,
-    CreateAccount, 
+    CreateAccount, Register
 };
 
