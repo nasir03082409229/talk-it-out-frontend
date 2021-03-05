@@ -1,12 +1,38 @@
-import React from "react";
-import { FlatList, View, Image, StyleSheet, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { FlatList, View, Image, StyleSheet, StatusBar, SafeAreaView, ScrollView, ActivityIndicator, TextInput, TouchableOpacity } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { Mic } from "../../Assets/Icons";
 import { SvgXml } from "react-native-svg";
 import { Typography, Colors } from "../../Styles";
+import Axios from 'axios'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Explore = ({ navigation }) => {
+    const [homeData, setHomeData] = useState(null)
+    const [loader, setLoader] = useState(false)
+
+    useEffect(() => {
+        init();
+    }, [])
+
+    const init = async () => {
+        const access_token = await AsyncStorage.getItem('@access_token')
+        const response = await Axios({
+            url: 'https://talkitoutqueen.com/dashboard/api/home',
+            method: 'get',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+            }
+        })
+        let normalizePages = response.data.pages.map(x => ({ ...x, type: 'page' }))
+        let normalizePodcasts = response.data.podcasts.map(x => ({ ...x, type: 'podcast' }))
+        let normalizeRadios = response.data.radios.map(x => ({ ...x, type: 'radio' }))
+        setHomeData([...normalizePages, ...normalizePodcasts, ...normalizeRadios])
+
+    }
 
     const item = [
         {
@@ -55,6 +81,19 @@ const Explore = ({ navigation }) => {
         },
     ]
 
+    console.log("Home Data", homeData)
+
+    const navigate = (item) => {
+        console.log("🚀 ~ file: index.js ~ line 87 ~ navigate ~ item", item)
+        if (item.type == 'radio') {
+            navigation.navigate('Player', { item: item })
+        } else if (item.type == 'podcast') {
+            navigation.navigate('Playing', { item: item })
+        } else if (item.type == 'page') {
+            navigation.navigate('Pray', { item: item })
+        }
+    }
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
@@ -80,15 +119,20 @@ const Explore = ({ navigation }) => {
 
                 </TouchableOpacity>
 
-                <FlatList keyExtractor={index => index} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.listCont} data={item} renderItem={({ index, item }) => {
-                    return (
-                        <TouchableOpacity onPress={() => { navigation.navigate(item.route, { imageSource: item.imageSource, playerImage: item.playerImage }) }} style={styles.itemTou}>
-                            <Image style={styles.itemImg} source={item.image} />
-                            <Text style={styles.name}>{item.name}</Text>
-                            <Text style={styles.viewsTxt}>{item.views}</Text>
-                        </TouchableOpacity>
-                    )
-                }} />
+                {homeData ? <FlatList showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.listCont}
+                    data={homeData}
+                    numColumns={3}
+                    renderItem={({ index, item }) => {
+                        return (
+                            <TouchableOpacity key={index} onPress={() => { navigate(item) }} style={[styles.itemTou,]}>
+                                <Image style={styles.itemImg} source={{ uri: item.small_photo }} />
+                                <Text style={styles.name}>{item.title}</Text>
+                                {/* <Text style={styles.viewsTxt}>{item.views}</Text> */}
+                            </TouchableOpacity>
+                        )
+                    }} /> : <ActivityIndicator color={'#fff'} size={20} style={{ alignSelf: 'center' }} />}
 
             </ScrollView>
         </SafeAreaView>
@@ -108,7 +152,14 @@ const styles = StyleSheet.create({
     searchView: { flexDirection: 'row', marginHorizontal: 20, alignItems: 'center', borderColor: '#707070', borderWidth: 1, marginVertical: 20, borderRadius: 60, height: 50, },
     input: { flex: 1, paddingLeft: 25, fontSize: 14, color: '#FFF' },
     icoView: { justifyContent: 'center', alignItems: 'center', marginRight: 10, width: 40, height: 40, },
-    listCont: { alignItems: 'center', justifyContent: 'space-around', padding: 15, paddingBottom: 30, flexDirection: 'row', flexWrap: 'wrap' },
+    listCont: {
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        padding: 15,
+        marginBottom: 40,
+        flexDirection: 'row',
+        flexWrap: 'wrap'
+    },
     itemTou: { borderRadius: 10, marginHorizontal: 4, marginVertical: 10, },
     itemImg: { width: 100, height: 140, resizeMode: 'contain' },
     name: { marginTop: 5, color: '#E6E6E6', fontFamily: Typography.FONT_FAMILY_BOLD, fontSize: 14, },

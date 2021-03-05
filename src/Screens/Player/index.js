@@ -1,24 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Image, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
-import { SettingIcon, Pause, SeekLeft, SeekRight, Loop, LeftCorner, UpArrow, Cross, } from "../../Assets/Icons";
+import { SettingIcon, Pause, SeekLeft, SeekRight, Loop, LeftCorner, UpArrow, Cross, play_black } from "../../Assets/Icons";
 import { SvgXml } from "react-native-svg";
 import { Typography, Colors } from "../../Styles";
 import LinearGradient from 'react-native-linear-gradient';
 import Slider from '@react-native-community/slider';
 import { useNavigation } from "@react-navigation/native";
+import Video from 'react-native-video';
+
 const Player = ({ route }) => {
+    const [isPlaying, setIsPlaying] = useState(true);
+
     const navigation = useNavigation()
-    const { imageSource } = route.params;
+    const { item } = route.params;
+    console.log("🚀 ~ file: index.js ~ line 14 ~ Player ~ item", item)
+
+
+    console.log(isPlaying)
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
             <ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: '#2C2939', flex: 1, }}>
+                {isPlaying ? <Video source={{ uri: item.radio_stream }} /> : null}
+
                 <View style={styles.backImgView}>
                     <Image
                         style={styles.backImg}
-                        source={imageSource}
+                        source={{ uri: item.big_photo }}
                     />
                 </View>
                 <View style={styles.backView}>
@@ -38,8 +48,8 @@ const Player = ({ route }) => {
                     <View style={styles.main}>
                         <View style={styles.conView}>
                             <View>
-                                <Text style={styles.title}>Lets Pray</Text>
-                                <Text style={styles.epiTxt}>EPISODE - 14</Text>
+                                <Text style={styles.title}>{item.title}</Text>
+                                <Text numberOfLines={1} style={styles.epiTxt}>{item.description}</Text>
                             </View>
                             <TouchableOpacity style={styles.icoTho}>
                                 <SvgXml xml={SettingIcon} />
@@ -61,25 +71,26 @@ const Player = ({ route }) => {
 
 
                         <View style={styles.controlView}>
-                            <TouchableOpacity style={styles.icoTho}>
+                            {/* <TouchableOpacity style={styles.icoTho}>
                                 <SvgXml xml={LeftCorner} />
-                            </TouchableOpacity>
-
+                            </TouchableOpacity> */}
+                            <View />
                             <TouchableOpacity style={styles.icoTho}>
                                 <SvgXml xml={SeekLeft} />
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={styles.middleIco}>
-                                <SvgXml xml={Pause} />
+                            <TouchableOpacity onPress={() => { setIsPlaying(!isPlaying) }} style={styles.middleIco}>
+                                {isPlaying ? <SvgXml xml={Pause} /> : <SvgXml xml={play_black} />}
                             </TouchableOpacity>
 
                             <TouchableOpacity style={styles.icoTho}>
                                 <SvgXml xml={SeekRight} />
                             </TouchableOpacity>
+                            <View />
 
-                            <TouchableOpacity style={styles.icoTho}>
+                            {/* <TouchableOpacity style={styles.icoTho}>
                                 <SvgXml xml={Loop} />
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
                         </View>
 
                         <TouchableOpacity onPress={() => { navigation.navigate('CreateAccount') }} style={styles.chatView}>

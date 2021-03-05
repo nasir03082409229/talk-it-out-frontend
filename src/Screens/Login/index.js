@@ -43,6 +43,7 @@ const Login = ({ navigation }) => {
                     );
 
                 }).catch((err) => {
+                    console.log("🚀 ~ file: index.js ~ line 46 ~ onPressLogin ~ err", err)
                     setLoader(false)
                     setPasswordError('Invalid email Or password')
                 })

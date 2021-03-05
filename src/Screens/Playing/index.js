@@ -17,7 +17,8 @@ const Playing = ({ navigation, route }) => {
     const [duration, setDuration] = useState(0);
     const timerToClearSomewhere = useRef(null)
     const [currentTime, setCurrentTime] = useState(0);
-    const { imageSource, playerImage } = route.params;
+    const { item, playerImage } = route.params;
+    console.log("🚀 ~ file: index.js ~ line 21 ~ Playing ~ item", item)
 
     SoundPlayer.loadSoundFile('birdsound', 'mp3');
     var intervalTimer;
@@ -32,30 +33,30 @@ const Playing = ({ navigation, route }) => {
         // setCurrentTime(info.currentTime)
     }
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        console.log('effect', isPlay);
-        if (isPlay) {
-            timerToClearSomewhere.current = setInterval(() => {
-                console.log('in inter', currentTimerLocal);
-                currentTimerLocal = currentTimerLocal + 1;
-                setTimeout(() => {
-                    setCurrentTime(currentTimerLocal)
-                }, 0);
-            }, 1000);
-            AudioPlay();
-            // SoundPlayer.stop()
-            SoundPlayer.seek(currentTimerLocal)
+    //     console.log('effect', isPlay);
+    //     if (isPlay) {
+    //         timerToClearSomewhere.current = setInterval(() => {
+    //             console.log('in inter', currentTimerLocal);
+    //             currentTimerLocal = currentTimerLocal + 1;
+    //             setTimeout(() => {
+    //                 setCurrentTime(currentTimerLocal)
+    //             }, 0);
+    //         }, 1000);
+    //         AudioPlay();
+    //         // SoundPlayer.stop()
+    //         SoundPlayer.seek(currentTimerLocal)
 
-        } else {
-            console.log('else', currentTimerLocal);
-            clearInterval(timerToClearSomewhere.current)
-            AudioStop();
-            // SoundPlayer.resume()
+    //     } else {
+    //         console.log('else', currentTimerLocal);
+    //         clearInterval(timerToClearSomewhere.current)
+    //         AudioStop();
+    //         // SoundPlayer.resume()
 
-        }
+    //     }
 
-    }, [isPlay]);
+    // }, [isPlay]);
 
     console.log(currentTimerLocal);
 
@@ -82,18 +83,20 @@ const Playing = ({ navigation, route }) => {
             <StatusBar backgroundColor='#2C2939' />
             <ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: '#2C2939', flex: 1, }}>
                 <View style={styles.backImgView}>
-                    <Image style={styles.backImg} source={imageSource} />
+                    <Image style={styles.backImg}
+                        source={{ uri: item.big_photo }}
+                    />
                     <LinearGradient colors={['rgba(44,41,57,0)', 'rgba(44,41,57,0.01)', 'rgba(44,41,57,0.1)', 'rgba(44,41,57,0.2)', 'rgba(44,41,57,0.5)', 'rgba(44,41,57,0.9)', 'rgba(44,41,57,0.99)', 'rgba(44,41,57,1)',]}
                         style={styles.linGrad}>
                         <View style={styles.main}>
                             <Text style={styles.noePlay}>NOW PLAYING</Text>
                             <View style={styles.detailView}>
                                 <View>
-                                    <Text style={styles.title}>Lets Pray</Text>
-                                    <Text style={styles.epi}>EPISODE - 14</Text>
+                                    <Text style={styles.title}>{item.title}</Text>
+                                    <Text style={styles.epi}>{item.sub_title}</Text>
                                 </View>
                                 <TouchableOpacity onPress={() => {
-                                    navigation.navigate('Player', { imageSource: playerImage })
+                                    navigation.navigate('Player', { item: item })
                                 }} style={styles.controls}>
                                     {
                                         isPlay ?
@@ -133,23 +136,28 @@ const Playing = ({ navigation, route }) => {
                 </View>
                 <Text style={styles.nextTxt}>UP NEXT</Text>
 
-                <FlatList keyExtractor={index => index.toString()} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40, }} data={[1, 2, 3, 4, 5, 6,]} renderItem={({ index, item }) => {
-                    return (
-                        <View style={styles.listMainView}>
-                            <TouchableOpacity style={styles.playIco}>
-                                <SvgXml xml={PlayIcon} />
-                            </TouchableOpacity>
-                            <View style={styles.detailTxt}>
-                                <Text style={styles.epiTxt}>Episode 148</Text>
-                                <Text style={styles.title}>Martin Garrix Show</Text>
-                                <Text style={styles.durationTxt}>1:42:00</Text>
+                <FlatList keyExtractor={index => index.toString()}
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40, }}
+                    data={item.streams}
+                    renderItem={({ index, item }) => {
+                        return (
+                            <View style={styles.listMainView}>
+                                <TouchableOpacity style={styles.playIco}>
+                                    <SvgXml xml={PlayIcon} />
+                                </TouchableOpacity>
+                                <View style={styles.detailTxt}>
+                                    <Text style={styles.epiTxt}>{item.podsubtitle}</Text>
+                                    <Text style={styles.title}>{item.podtitle}</Text>
+                                    <Text style={styles.durationTxt}>1:42:00</Text>
+                                </View>
+                                <TouchableOpacity style={styles.setTou}>
+                                    <SvgXml xml={SettingIcon} />
+                                </TouchableOpacity>
                             </View>
-                            <TouchableOpacity style={styles.setTou}>
-                                <SvgXml xml={SettingIcon} />
-                            </TouchableOpacity>
-                        </View>
-                    )
-                }} />
+                        )
+                    }} />
 
                 <View style={styles.crossView}>
                     <SvgXml xml={Cross} />

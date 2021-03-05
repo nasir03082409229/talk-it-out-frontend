@@ -50,8 +50,10 @@ import PlusIcon from "./plusicon";
 import SettingIconHori from "./settingiconhori";
 import LocationIcon from "./locationicon";
 import ShareIcon from "./shareicon";
+import play_black from "./play_black";
 
 export {
+    play_black,
     plus_icon,
     history_blue,
     history_gray,

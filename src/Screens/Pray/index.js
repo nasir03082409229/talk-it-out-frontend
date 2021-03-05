@@ -7,8 +7,10 @@ import { SvgXml } from "react-native-svg";
 import { Typography, Colors } from "../../Styles";
 import LinearGradient from 'react-native-linear-gradient';
 
-const Pray = ({ navigation }) => {
+const Pray = ({ navigation, route }) => {
     StatusBar.setHidden = false
+    const { item } = route.params;
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             {/* <StatusBar backgroundColor='transparent' /> */}
@@ -16,7 +18,7 @@ const Pray = ({ navigation }) => {
                 <View style={styles.backImgView}>
                     <Image
                         style={{ width: '100%', height: '100%' }}
-                        source={require('../../Assets/images/prayback.png')}
+                        source={{ uri: item.big_photo }}
                     />
                 </View>
 
@@ -34,8 +36,8 @@ const Pray = ({ navigation }) => {
                 <LinearGradient colors={['#00000000', '#00000030', '#000000EE', '#000000']}
                     style={styles.linGrad}>
                     <View style={styles.detailView}>
-                        <Text style={styles.title}>PRAYER OF THE DAY</Text>
-                        <Text style={styles.detailTxt}>Grant us patience, O Lord, to follow the road you have taken. Let our confidence not rest in our own understanding but in your guiding hand; let our desires not be for our own comfort, but for the joy of your kingdom; for your cross is our hope and our joy now and unto the day of eternity. Amen.</Text>
+                        <Text style={styles.title}>{item.title}</Text>
+                        <Text style={styles.detailTxt}>{item.description}</Text>
                     </View>
                 </LinearGradient>
 
