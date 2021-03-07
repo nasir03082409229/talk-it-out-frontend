@@ -27,59 +27,12 @@ const Explore = ({ navigation }) => {
                 'Authorization': `Bearer ${access_token}`
             }
         })
-        let normalizePages = response.data.pages.map(x => ({ ...x, type: 'page' }))
+        let normalizePages = response.data.pages.map(x => ({ ...x, type: 'page' })).filter(x => ['2', '3', '4'].indexOf(x.id) === -1)
         let normalizePodcasts = response.data.podcasts.map(x => ({ ...x, type: 'podcast' }))
         let normalizeRadios = response.data.radios.map(x => ({ ...x, type: 'radio' }))
         setHomeData([...normalizePages, ...normalizePodcasts, ...normalizeRadios])
 
     }
-
-    const item = [
-        {
-            name: 'LIVE /MUSIC',
-            //views: '208',
-            route: 'Player',
-            imageSource: require('../../Assets/images/player_image1.png'),
-            image: require('../../Assets/images/live.png'),
-        },
-        {
-            name: "ELDERLY'S",
-            //views: '2.5K',
-            route: 'Playing',
-            imageSource: require('../../Assets/images/elderlys_cover.png'),
-            playerImage: require('../../Assets/images/elderly_player.png'),
-            image: require('../../Assets/images/elder.png'),
-        },
-        {
-            name: 'SHADE OF DAY',
-            //views: '1.5K',
-            route: 'Playing',
-            imageSource: require('../../Assets/images/shades_of_day_cover.png'),
-            playerImage: require('../../Assets/images/shads_of_day_player.png'),
-            image: require('../../Assets/images/shade.png'),
-        },
-        {
-            name: 'REPEAT SHOW',
-            //views: '208',
-            route: 'Playing',
-            imageSource: require('../../Assets/images/player_cover1.png'),
-            playerImage: require('../../Assets/images/repeated_show_player.png'),
-            image: require('../../Assets/images/design.png'),
-        },
-        {
-            name: 'PRAY PER DAY',
-            //views: '2.5K',
-            route: 'Pray',
-            image: require('../../Assets/images/pray.png'),
-        },
-        {
-            name: 'B.O.T.D',
-            //views: '1.5K',
-            route: 'Store',
-            imageSource: require('../../Assets/images/shop_merch.png'),
-            image: require('../../Assets/images/shop.png'),
-        },
-    ]
 
     console.log("Home Data", homeData)
 

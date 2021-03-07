@@ -1,13 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, View, Image, StatusBar, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { Text } from "../../Common";
-import { aboutus, } from "../../Assets/images";
 import { Mic } from "../../Assets/Icons";
 import { SvgXml } from "react-native-svg";
 import { Typography, Colors } from "../../Styles";
 import LinearGradient from 'react-native-linear-gradient';
-
+import Axios from 'axios'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 const AboutUs = ({ navigation }) => {
+    const [aboutUs, setAboutUs] = useState(null)
+    useEffect(() => {
+        init()
+    }, [])
+
+    const init = async () => {
+        const access_token = await AsyncStorage.getItem('@access_token')
+        const response = await Axios({
+            url: "https://talkitoutqueen.com/dashboard/api/page/2",
+            method: 'get',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+            }
+        })
+        if (response.data.data) {
+            setAboutUs(response.data.data)
+        }
+        console.log(aboutUs)
+    }
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
@@ -15,7 +36,7 @@ const AboutUs = ({ navigation }) => {
                 <View style={styles.backImgView}>
                     <Image
                         style={styles.backImg}
-                        source={require('../../Assets/images/aboutus.png')}
+                        source={{ uri: aboutUs.big_photo }}
                     />
                 </View>
 
@@ -33,8 +54,10 @@ const AboutUs = ({ navigation }) => {
                 <LinearGradient colors={['#00000000', '#00000030', '#000000EE', '#000000']}
                     style={styles.linGrad}>
                     <View style={styles.detailView}>
-                        <Text style={styles.title}>TALK IT OUT</Text>
-                        <Text style={styles.detailTxt}>Grant us patience, O Lord, to follow the road you have taken. Let our confidence not rest in our own understanding but in your guiding hand; let our desires not be for our own comfort, but for the joy of your kingdom; for your cross is our hope and our joy now and unto the day of eternity. Amen.</Text>
+                        <Text style={styles.title}>{aboutUs.title}</Text>
+                        <ScrollView>
+                            <Text style={styles.detailTxt}>{aboutUs.description}</Text>
+                        </ScrollView>
                     </View>
                 </LinearGradient>
 
