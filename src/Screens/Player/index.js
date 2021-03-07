@@ -14,7 +14,7 @@ const Player = ({ route }) => {
     const [isPlaying, setIsPlaying] = useState(true);
 
     const navigation = useNavigation()
-    const { item } = route.params;
+    const { item, isFromPodcast } = route.params;
     console.log("🚀 ~ file: index.js ~ line 14 ~ Player ~ item", item)
 
 
@@ -28,7 +28,7 @@ const Player = ({ route }) => {
                 <View style={styles.backImgView}>
                     <Image
                         style={styles.backImg}
-                        source={{ uri: item.big_photo }}
+                        source={isFromPodcast ? { uri: item.podphoto } : { uri: item.big_photo }}
                     />
                 </View>
                 <View style={styles.backView}>
@@ -48,8 +48,8 @@ const Player = ({ route }) => {
                     <View style={styles.main}>
                         <View style={styles.conView}>
                             <View>
-                                <Text style={styles.title}>{item.title}</Text>
-                                <Text numberOfLines={1} style={styles.epiTxt}>{item.description}</Text>
+                                <Text style={styles.title}>{isFromPodcast ? item.podtitle : item.title}</Text>
+                                <Text numberOfLines={1} style={styles.epiTxt}>{isFromPodcast ? item.podsubtitle : item.description}</Text>
                             </View>
                             <TouchableOpacity style={styles.icoTho}>
                                 <SvgXml xml={SettingIcon} />

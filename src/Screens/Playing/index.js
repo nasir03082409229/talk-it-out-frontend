@@ -77,14 +77,14 @@ const Playing = ({ navigation, route }) => {
 
 
     }
-
+    let firstStream = item.streams[0];
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
             <ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: '#2C2939', flex: 1, }}>
                 <View style={styles.backImgView}>
                     <Image style={styles.backImg}
-                        source={{ uri: item.big_photo }}
+                        source={{ uri: firstStream.podphoto }}
                     />
                     <LinearGradient colors={['rgba(44,41,57,0)', 'rgba(44,41,57,0.01)', 'rgba(44,41,57,0.1)', 'rgba(44,41,57,0.2)', 'rgba(44,41,57,0.5)', 'rgba(44,41,57,0.9)', 'rgba(44,41,57,0.99)', 'rgba(44,41,57,1)',]}
                         style={styles.linGrad}>
@@ -92,11 +92,11 @@ const Playing = ({ navigation, route }) => {
                             <Text style={styles.noePlay}>NOW PLAYING</Text>
                             <View style={styles.detailView}>
                                 <View>
-                                    <Text style={styles.title}>{item.title}</Text>
-                                    <Text style={styles.epi}>{item.sub_title}</Text>
+                                    <Text style={styles.title}>{firstStream.podtitle}</Text>
+                                    <Text style={styles.epi}>{firstStream.podsubtitle}</Text>
                                 </View>
                                 <TouchableOpacity onPress={() => {
-                                    navigation.navigate('Player', { item: item })
+                                    navigation.navigate('Player', { isFromPodcast: true, item: firstStream })
                                 }} style={styles.controls}>
                                     {
                                         isPlay ?
@@ -136,15 +136,18 @@ const Playing = ({ navigation, route }) => {
                 </View>
                 <Text style={styles.nextTxt}>UP NEXT</Text>
 
-                <FlatList keyExtractor={index => index.toString()}
+                <FlatList
+                    keyExtractor={index => index.toString()}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40, }}
-                    data={item.streams}
+                    data={item.streams.slice(1)}
                     renderItem={({ index, item }) => {
                         return (
                             <View style={styles.listMainView}>
-                                <TouchableOpacity style={styles.playIco}>
+                                <TouchableOpacity onPress={() => {
+                                    navigation.navigate('Player', { isFromPodcast: true, item: item })
+                                }} style={styles.playIco}>
                                     <SvgXml xml={PlayIcon} />
                                 </TouchableOpacity>
                                 <View style={styles.detailTxt}>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, View, Image, StatusBar, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { FlatList, View, Image, StatusBar, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Text } from "../../Common";
 import { Mic } from "../../Assets/Icons";
 import { SvgXml } from "react-native-svg";
@@ -32,7 +32,7 @@ const AboutUs = ({ navigation }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
-            <ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: '#2C2939', flex: 1, }}>
+            {aboutUs ? <ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: '#2C2939', flex: 1, }}>
                 <View style={styles.backImgView}>
                     <Image
                         style={styles.backImg}
@@ -62,7 +62,10 @@ const AboutUs = ({ navigation }) => {
                 </LinearGradient>
 
 
-            </ScrollView>
+            </ScrollView> : <View style={{ backgroundColor: '#2C2939', flex: 1, }}>
+                    <ActivityIndicator color={'#fff'} size={20} style={{ alignSelf: 'center' }} />
+                </View>
+            }
         </SafeAreaView>
     )
 }

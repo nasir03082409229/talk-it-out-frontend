@@ -37,7 +37,9 @@ const Pray = ({ navigation, route }) => {
                     style={styles.linGrad}>
                     <View style={styles.detailView}>
                         <Text style={styles.title}>{item.title}</Text>
-                        <Text style={styles.detailTxt}>{item.description}</Text>
+                        <ScrollView>
+                            <Text style={styles.detailTxt}>{item.description}</Text>
+                        </ScrollView>
                     </View>
                 </LinearGradient>
 
