@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Image, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from "react-native";
-import { Text, PlayerControl } from "../../Common";
+import { Text, PlayerControl, RadioPlayer } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { SettingIcon, Pause, SeekLeft, SeekRight, Loop, LeftCorner, UpArrow, Cross, play_black } from "../../Assets/Icons";
 import { SvgXml } from "react-native-svg";
@@ -23,7 +23,7 @@ const Player = ({ route }) => {
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
             <ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: '#2C2939', flex: 1, }}>
-                {isPlaying ? <Video source={{ uri: item.radio_stream }} /> : null}
+                {/* {isPlaying ? <Video source={{ uri: item.radio_stream }} /> : null} */}
 
                 <View style={styles.backImgView}>
                     <Image
@@ -55,7 +55,8 @@ const Player = ({ route }) => {
                                 <SvgXml xml={SettingIcon} />
                             </TouchableOpacity>
                         </View>
-                        <PlayerControl podstream={item.podstream} isFromPodcast={isFromPodcast} />
+                        {isFromPodcast ? <PlayerControl stream={item.podstream} /> :
+                            <RadioPlayer stream={item.radio_stream} />}
 
                         <TouchableOpacity onPress={() => { navigation.navigate('CreateAccount') }} style={styles.chatView}>
                             <SvgXml xml={UpArrow} />
