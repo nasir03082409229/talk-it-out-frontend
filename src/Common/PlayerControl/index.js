@@ -31,6 +31,23 @@ const PlayerControl = ({ podstream, isFromPodcast }) => {
         return `${hours}:${minutes}:${seconds}`;
     }
 
+    const seekTo = (condition) => {
+        if (condition == 'back') {
+            let seeked = progress.currentTime - 15;
+            if (seeked > 0) {
+                videoRef.current.seek(seeked)
+                setIsPlaying(true)
+            }
+        } else if (condition == 'forward') {
+            let seeked = progress.currentTime + 15;
+            if (seeked < progress.seekableDuration) {
+                videoRef.current.seek(seeked)
+                setIsPlaying(true)
+            }
+        }
+
+    }
+
     return <View>
         <View style={styles.sliView}>
             <Video
@@ -39,10 +56,15 @@ const PlayerControl = ({ podstream, isFromPodcast }) => {
                 audioOnly
                 ref={videoRef} source={{ uri: podstream }} />
             <Slider
+                value={progress && progress.currentTime}
                 minimumValue={0}
-                maximumValue={1}
+                maximumValue={progress && progress.seekableDuration}
                 minimumTrackTintColor="#707070"
                 maximumTrackTintColor="#707070"
+                onSlidingComplete={(value) => {
+                    videoRef.current.seek(value)
+                    setIsPlaying(true)
+                }}
             />
         </View>
         <View style={styles.conView}>
@@ -51,7 +73,7 @@ const PlayerControl = ({ podstream, isFromPodcast }) => {
         </View>
         <View style={styles.controlView}>
             <View />
-            <TouchableOpacity style={styles.icoTho}>
+            <TouchableOpacity onPress={() => seekTo('back')} style={styles.icoTho}>
                 <SvgXml xml={SeekLeft} />
             </TouchableOpacity>
 
@@ -59,7 +81,7 @@ const PlayerControl = ({ podstream, isFromPodcast }) => {
                 {isPlaying ? <SvgXml xml={Pause} /> : <SvgXml xml={play_black} />}
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.icoTho}>
+            <TouchableOpacity onPress={() => seekTo('forward')} style={styles.icoTho}>
                 <SvgXml xml={SeekRight} />
             </TouchableOpacity>
             <View />
