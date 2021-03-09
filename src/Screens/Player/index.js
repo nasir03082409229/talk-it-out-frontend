@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Image, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from "react-native";
-import { Text } from "../../Common";
+import { Text, PlayerControl } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { SettingIcon, Pause, SeekLeft, SeekRight, Loop, LeftCorner, UpArrow, Cross, play_black } from "../../Assets/Icons";
 import { SvgXml } from "react-native-svg";
@@ -55,43 +55,7 @@ const Player = ({ route }) => {
                                 <SvgXml xml={SettingIcon} />
                             </TouchableOpacity>
                         </View>
-                        <View style={styles.sliView}>
-                            <Slider
-                                minimumValue={0}
-                                maximumValue={1}
-                                minimumTrackTintColor="#707070"
-                                maximumTrackTintColor="#707070"
-                            />
-                        </View>
-                        <View style={styles.conView}>
-                            <Text style={styles.durationTxt}>1:02:50</Text>
-                            <Text style={styles.durationTxt}>1:02:50</Text>
-                        </View>
-
-
-
-                        <View style={styles.controlView}>
-                            {/* <TouchableOpacity style={styles.icoTho}>
-                                <SvgXml xml={LeftCorner} />
-                            </TouchableOpacity> */}
-                            <View />
-                            <TouchableOpacity style={styles.icoTho}>
-                                <SvgXml xml={SeekLeft} />
-                            </TouchableOpacity>
-
-                            <TouchableOpacity onPress={() => { setIsPlaying(!isPlaying) }} style={styles.middleIco}>
-                                {isPlaying ? <SvgXml xml={Pause} /> : <SvgXml xml={play_black} />}
-                            </TouchableOpacity>
-
-                            <TouchableOpacity style={styles.icoTho}>
-                                <SvgXml xml={SeekRight} />
-                            </TouchableOpacity>
-                            <View />
-
-                            {/* <TouchableOpacity style={styles.icoTho}>
-                                <SvgXml xml={Loop} />
-                            </TouchableOpacity> */}
-                        </View>
+                        <PlayerControl podstream={item.podstream} isFromPodcast={isFromPodcast} />
 
                         <TouchableOpacity onPress={() => { navigation.navigate('CreateAccount') }} style={styles.chatView}>
                             <SvgXml xml={UpArrow} />

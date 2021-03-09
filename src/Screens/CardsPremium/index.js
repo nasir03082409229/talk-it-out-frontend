@@ -49,7 +49,11 @@ const CardsPremium = ({ navigation }) => {
         return (
             <View style={[styles.card, { width: '100%', }]}>
                 <ImageBackground resizeMode={'stretch'} style={styles.img} source={item.image} >
-                    <TouchableOpacity activeOpacity={1} onPress={() => { navigation.navigate(item.route, { imageSource: item.imageSource, playerImage: item.playerImage }) }} style={{ position: 'absolute', bottom: 26, right: 5 }}>
+                    <TouchableOpacity activeOpacity={1}
+                        onPress={() => {
+                            // navigation.navigate(item.route,
+                            //     { imageSource: item.imageSource, playerImage: item.playerImage })
+                        }} style={{ position: 'absolute', bottom: 26, right: 5 }}>
                         <SvgXml xml={plus_icon} />
                     </TouchableOpacity>
                 </ImageBackground>

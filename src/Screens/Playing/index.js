@@ -84,7 +84,7 @@ const Playing = ({ navigation, route }) => {
             <ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: '#2C2939', flex: 1, }}>
                 <View style={styles.backImgView}>
                     <Image style={styles.backImg}
-                        source={{ uri: firstStream.podphoto }}
+                        source={{ uri: item.big_photo }}
                     />
                     <LinearGradient colors={['rgba(44,41,57,0)', 'rgba(44,41,57,0.01)', 'rgba(44,41,57,0.1)', 'rgba(44,41,57,0.2)', 'rgba(44,41,57,0.5)', 'rgba(44,41,57,0.9)', 'rgba(44,41,57,0.99)', 'rgba(44,41,57,1)',]}
                         style={styles.linGrad}>
