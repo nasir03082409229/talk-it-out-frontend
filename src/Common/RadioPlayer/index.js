@@ -14,7 +14,7 @@ class RadioPlayer extends React.Component {
         isPlaying: true
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.initState()
     }
 
