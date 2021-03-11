@@ -6,6 +6,7 @@ import { AppRegistry } from 'react-native';
 import { Navigator } from './src/Screens/';
 import { name as appName } from './app.json';
 import { LogBox } from 'react-native';
+import App from './src/index'
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs();//Ignore all log notifications
 AppRegistry.registerComponent(appName, () => Navigator);
