@@ -137,14 +137,14 @@ const Playing = ({ navigation, route }) => {
                 <Text style={styles.nextTxt}>UP NEXT</Text>
 
                 <FlatList
-                    keyExtractor={index => index.toString()}
+                    // keyExtractor={index => index.toString()}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40, }}
                     data={item.streams.slice(1)}
                     renderItem={({ index, item }) => {
                         return (
-                            <View style={styles.listMainView}>
+                            <View key={index.toString()} style={styles.listMainView}>
                                 <TouchableOpacity onPress={() => {
                                     navigation.navigate('Player', { isFromPodcast: true, item: item })
                                 }} style={styles.playIco}>
