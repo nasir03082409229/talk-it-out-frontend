@@ -32,6 +32,18 @@ const Login = ({ navigation }) => {
                     console.log(response.data)
                     await AsyncStorage.setItem('@access_token', response.data.access_token)
                     await AsyncStorage.setItem('@user', JSON.stringify(response.data.user))
+
+                    // Axios({
+                    //     method: 'put',
+                    //     url: 'https://talkitoutqueen.com/dashboard/api/user-profile-update/2',
+                    //     headers: {
+                    //         'Accept': 'application/json',
+                    //         'Content-Type': 'application/json',
+                    //         'Authorization': `Bearer ${response.data.access_token}`
+                    //     },
+                    //     data: { "device_id": "S551F27C060712A72730B0A0F734064B1" }
+                    // })
+
                     setLoader(false)
                     navigation.dispatch(
                         CommonActions.reset({
@@ -86,9 +98,9 @@ const Login = ({ navigation }) => {
                     <TouchableOpacity>
                         <Text style={styles.subTxt}>LOGIN</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+                    {/* <TouchableOpacity onPress={() => navigation.navigate('Register')}>
                         <Text style={styles.subText}>Create an Account</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </ScrollView>
         </SafeAreaView>
