@@ -8,6 +8,7 @@ import { Typography, Colors } from "../../Styles";
 import Axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { CommonActions } from '@react-navigation/native';
+import { getUniqueId } from 'react-native-device-info';
 
 
 const Login = ({ navigation }) => {
@@ -32,27 +33,32 @@ const Login = ({ navigation }) => {
                     console.log(response.data)
                     await AsyncStorage.setItem('@access_token', response.data.access_token)
                     await AsyncStorage.setItem('@user', JSON.stringify(response.data.user))
+                    let device_id = getUniqueId()
+                    Axios({
+                        method: 'put',
+                        url: `https://talkitoutqueen.com/dashboard/api/user-profile-update/${response.data.user.id}`,
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${response.data.access_token}`
+                        },
+                        data: { "device_id": device_id }
+                    }).then((data) => {
+                        console.log(" ~ data", data)
+                        setLoader(false)
+                        navigation.dispatch(
+                            CommonActions.reset({
+                                index: 0,
+                                routes: [
+                                    { name: 'BottomStackComp' },
+                                ],
+                            })
+                        );
+                    }).catch((err) => {
+                        console.log(" ~ err", err)
 
-                    // Axios({
-                    //     method: 'put',
-                    //     url: 'https://talkitoutqueen.com/dashboard/api/user-profile-update/2',
-                    //     headers: {
-                    //         'Accept': 'application/json',
-                    //         'Content-Type': 'application/json',
-                    //         'Authorization': `Bearer ${response.data.access_token}`
-                    //     },
-                    //     data: { "device_id": "S551F27C060712A72730B0A0F734064B1" }
-                    // })
+                    })
 
-                    setLoader(false)
-                    navigation.dispatch(
-                        CommonActions.reset({
-                            index: 0,
-                            routes: [
-                                { name: 'BottomStackComp' },
-                            ],
-                        })
-                    );
 
                 }).catch((err) => {
                     console.log("🚀 ~ file: index.js ~ line 46 ~ onPressLogin ~ err", err)
