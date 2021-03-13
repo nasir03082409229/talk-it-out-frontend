@@ -5,6 +5,7 @@ this.playerRef = null
 this.streamRef = '';
 const startAudio = (stream) => {
     console.log(this.playerRef)
+    TrackPlayer.pause();
     if (this.streamRef !== stream) {
         if (this.playerRef) {
             this.playerRef.destroy()
@@ -46,16 +47,24 @@ const seekTo = (seconds) => {
 // Podcast Actions 
 
 const startPodcastPlayer = async (stream) => {
+    console.log('this.streamRef', this.streamRef)
+    if (this.playerRef) {
+        this.playerRef.destroy()
+        this.streamRef = ''
+    }
+    if (this.streamRef !== stream.podstream) {
+        await TrackPlayer.reset()
+        await TrackPlayer.add({
+            id: 'trackId',
+            url: { uri: stream.podstream },
+            title: stream.podtitle,
+            // artist: streamObj.singerName,
+            artwork: stream.podsubtitle
+        });
+        await TrackPlayer.play();
+        this.streamRef = stream.podstream
+    }
 
-    await TrackPlayer.reset()
-    await TrackPlayer.add({
-        id: 'trackId',
-        url: { uri: stream.podstream },
-        title: stream.podtitle,
-        // artist: streamObj.singerName,
-        artwork: stream.podsubtitle
-    });
-    await TrackPlayer.play();
 }
 
 

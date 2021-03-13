@@ -8,7 +8,7 @@ import { Pause, play_black, SeekLeft, SeekRight, SettingIcon, UpArrow } from "..
 import { Text } from "../../Common";
 import {
     pauseAudio, playAudio, startAudio, stopAudio,
-    startPodcastPlayer, pausePodcastPlayer, seekToPodcastPlayer, playPodcastPlayer
+    startPodcastPlayer, pausePodcastPlayer, seekToPodcastPlayer, playPodcastPlayer, seekTo
 } from '../../store/Action';
 import { Typography } from "../../Styles";
 import TrackPlayer, { useTrackPlayerProgress } from 'react-native-track-player';
@@ -50,6 +50,26 @@ const Player = ({ route }) => {
         return `${hours}:${minutes}:${seconds}`;
 
     }
+
+    const seekTo = (condition) => {
+        if (condition == 'back') {
+            let sec = position - 15;
+            if (sec <= 0) {
+                seekToPodcastPlayer(0);
+            } else {
+                seekToPodcastPlayer(sec);
+            }
+        } else if (condition == 'forward') {
+            let sec = position + 15;
+            if (sec >= duration) {
+                seekToPodcastPlayer(duration);
+            } else {
+                seekToPodcastPlayer(sec);
+            }
+        }
+        setIsPlaying(true)
+    }
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
@@ -108,13 +128,13 @@ const Player = ({ route }) => {
                             </View>
                             <View style={styles.controlView}>
                                 <View />
-                                <TouchableOpacity onPress={() => { seekToPodcastPlayer(position - 15); setIsPlaying(true) }} style={styles.icoTho}>
+                                <TouchableOpacity onPress={() => { seekTo('back') }} style={styles.icoTho}>
                                     <SvgXml xml={SeekLeft} />
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => { toogleStartStopAudio() }} style={styles.middleIco}>
                                     {isPlaying ? <SvgXml xml={Pause} /> : <SvgXml xml={play_black} />}
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { seekToPodcastPlayer(position + 15); setIsPlaying(true) }} style={styles.icoTho}>
+                                <TouchableOpacity onPress={() => { seekTo('forward') }} style={styles.icoTho}>
                                     <SvgXml xml={SeekRight} />
                                 </TouchableOpacity>
                                 <View />
