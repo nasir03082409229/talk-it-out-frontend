@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Image, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from "react-native";
-import { Text, PlayerControl, RadioPlayer } from "../../Common";
-import { logo, } from "../../Assets/images";
-import { SettingIcon, Pause, SeekLeft, SeekRight, Loop, LeftCorner, UpArrow, Cross, play_black } from "../../Assets/Icons";
-import { SvgXml } from "react-native-svg";
-import { Typography, Colors } from "../../Styles";
-import LinearGradient from 'react-native-linear-gradient';
-import Slider from '@react-native-community/slider';
 import { useNavigation } from "@react-navigation/native";
-import Video from 'react-native-video';
+import React, { useState } from "react";
+import { Image, SafeAreaView, ScrollView, StatusBar, StyleSheet, TouchableOpacity, View } from "react-native";
+import LinearGradient from 'react-native-linear-gradient';
+import { SvgXml } from "react-native-svg";
+import { SettingIcon, UpArrow } from "../../Assets/Icons";
+import { Text } from "../../Common";
+import { RadioPlayerDefault } from '../../Common/RadioPlayer/index';
+import { Typography } from "../../Styles";
 
 const Player = ({ route }) => {
     const [isPlaying, setIsPlaying] = useState(true);
@@ -18,58 +16,66 @@ const Player = ({ route }) => {
     console.log("🚀 ~ file: index.js ~ line 14 ~ Player ~ item", item)
 
 
-    console.log(isPlaying)
-    return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <StatusBar backgroundColor='#2C2939' />
-            <ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: '#2C2939', flex: 1, }}>
-                {/* {isPlaying ? <Video source={{ uri: item.radio_stream }} /> : null} */}
+    try {
+        return (
+            <SafeAreaView style={{ flex: 1 }}>
+                <StatusBar backgroundColor='#2C2939' />
+                <ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: '#2C2939', flex: 1, }}>
+                    {/* {isPlaying ? <Video source={{ uri: item.radio_stream }} /> : null} */}
 
-                <View style={styles.backImgView}>
-                    <Image
-                        style={styles.backImg}
-                        source={isFromPodcast ? { uri: item.podphoto } : { uri: item.big_photo }}
-                    />
-                </View>
-                <View style={styles.backView}>
-                    <TouchableOpacity onPress={() => { navigation.goBack() }} style={styles.touBack}>
-                        <View style={styles.topBackView}>
-                            <Image style={styles.topBackImg} source={require('../../Assets/images/login_logo.png')} />
-                        </View>
-                        <Text style={styles.topBackTxt}>BACK</Text>
-                    </TouchableOpacity>
-                </View>
-
-
-
-                <LinearGradient colors={['rgba(44,41,57,0)', 'rgba(44,41,57,0.01)', 'rgba(44,41,57,0.1)', 'rgba(44,41,57,0.2)', 'rgba(44,41,57,0.5)', 'rgba(44,41,57,0.9)', 'rgba(44,41,57,0.99)', 'rgba(44,41,57,1)',]}
-                    style={styles.linGrad}>
-                    <Text style={styles.nowPla}>NOW PLAYING</Text>
-                    <View style={styles.main}>
-                        <View style={styles.conView}>
-                            <View>
-                                <Text style={styles.title}>{isFromPodcast ? item.podtitle : item.title}</Text>
-                                <Text numberOfLines={1} style={styles.epiTxt}>{isFromPodcast ? item.podsubtitle : item.description}</Text>
+                    <View style={styles.backImgView}>
+                        <Image
+                            style={styles.backImg}
+                            source={isFromPodcast ? { uri: item.podphoto } : { uri: item.big_photo }}
+                        />
+                    </View>
+                    <View style={styles.backView}>
+                        <TouchableOpacity onPress={() => { navigation.goBack() }} style={styles.touBack}>
+                            <View style={styles.topBackView}>
+                                <Image style={styles.topBackImg} source={require('../../Assets/images/login_logo.png')} />
                             </View>
-                            <TouchableOpacity style={styles.icoTho}>
-                                <SvgXml xml={SettingIcon} />
-                            </TouchableOpacity>
-                        </View>
-                        {isFromPodcast ? <PlayerControl stream={item.podstream} /> :
-                            <RadioPlayer stream={item.radio_stream} />}
-
-                        <TouchableOpacity onPress={() => { navigation.navigate('CreateAccount') }} style={styles.chatView}>
-                            <SvgXml xml={UpArrow} />
-                            <Text style={styles.queTxt}>CHAT</Text>
+                            <Text style={styles.topBackTxt}>BACK</Text>
                         </TouchableOpacity>
-
                     </View>
 
-                </LinearGradient>
 
-            </ScrollView>
-        </SafeAreaView>
-    )
+
+                    <LinearGradient colors={['rgba(44,41,57,0)', 'rgba(44,41,57,0.01)', 'rgba(44,41,57,0.1)', 'rgba(44,41,57,0.2)', 'rgba(44,41,57,0.5)', 'rgba(44,41,57,0.9)', 'rgba(44,41,57,0.99)', 'rgba(44,41,57,1)',]}
+                        style={styles.linGrad}>
+                        <Text style={styles.nowPla}>NOW PLAYING</Text>
+                        <View style={styles.main}>
+                            <View style={styles.conView}>
+                                <View>
+                                    <Text style={styles.title}>{isFromPodcast ? item.podtitle : item.title}</Text>
+                                    <Text numberOfLines={1} style={styles.epiTxt}>{isFromPodcast ? item.podsubtitle : item.description}</Text>
+                                </View>
+                                <TouchableOpacity style={styles.icoTho}>
+                                    <SvgXml xml={SettingIcon} />
+                                </TouchableOpacity>
+                            </View>
+                            <View>
+                                <Text>{isFromPodcast}</Text>
+                            </View>
+                            <RadioPlayerDefault stream={item.radio_stream} />
+                            {/* {isFromPodcast && <PlayerControl stream={item.podstream} />}
+                            {!isFromPodcast && <View>
+                                </View>} */}
+                            <TouchableOpacity onPress={() => { navigation.navigate('CreateAccount') }} style={styles.chatView}>
+                                <SvgXml xml={UpArrow} />
+                                <Text style={styles.queTxt}>CHAT</Text>
+                            </TouchableOpacity>
+
+                        </View>
+
+                    </LinearGradient>
+
+                </ScrollView>
+            </SafeAreaView>
+        )
+    } catch (err) {
+        return <View><Text>{JSON.stringify(err)}</Text></View>
+    }
+
 }
 
 

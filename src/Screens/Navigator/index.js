@@ -6,7 +6,7 @@ import {
     Splash, AboutUs, Login, Explore, SignUp, Profile, UpdateProfile, ForgetPassword,
     Podcasts, Downloads, Pray, Store, Playing, Player, LoginPremium, SubscriptionPremium,
     PlayingPremium, PlayerPremium, CardsPremium, PostTimeLine, CreatePost, PostDetails,
-    CommentsList, CreateAccount, Register
+    CommentsList, CreateAccount, Register, RadioPlayer
 } from '..';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomBar, Text } from "../../Common";
@@ -22,7 +22,7 @@ const Drawer = createDrawerNavigator();
 
 
 const BottomStackComp = () => {
-    
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#2C2939' }}>
 
@@ -50,7 +50,7 @@ const BottomStackComp = () => {
 };
 
 const Home = () => {
-    
+
     return (
         <Stack.Navigator initialRouteName='Splash' headerMode={'none'}>
             <Stack.Screen name="Splash" component={Splash} options={MyTransition} />
@@ -69,6 +69,7 @@ const Home = () => {
             <BottomStack.Screen name="Pray" component={Pray} options={MyTransition} />
             <BottomStack.Screen name="Playing" component={Playing} options={MyTransition} />
             <BottomStack.Screen name="Player" component={Player} options={MyTransition} />
+            <BottomStack.Screen name="RadioPlayer" component={RadioPlayer} options={MyTransition} />
             <BottomStack.Screen name="CreateAccount" component={CreateAccount} options={MyTransition} />
         </Stack.Navigator>
     )

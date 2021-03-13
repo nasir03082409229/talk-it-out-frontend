@@ -39,7 +39,7 @@ const Explore = ({ navigation }) => {
     const navigate = (item) => {
         console.log("🚀 ~ file: index.js ~ line 87 ~ navigate ~ item", item)
         if (item.type == 'radio') {
-            navigation.navigate('Player', { item: item })
+            navigation.navigate('RadioPlayer', { item: item })
         } else if (item.type == 'podcast') {
             navigation.navigate('Playing', { item: item })
         } else if (item.type == 'page') {

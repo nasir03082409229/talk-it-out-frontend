@@ -24,6 +24,7 @@ import PostDetails from "./PostDetails";
 import CommentsList from "./CommentsList";
 import Register from "./Register";
 import CreateAccount from "./CreateAccount";
+import RadioPlayer from "./RadioPlayer";
 
 export {
     Navigator, Splash, Login, Explore, SignUp, Podcasts,
@@ -31,6 +32,7 @@ export {
     SubscriptionPremium, PlayingPremium, PlayerPremium,
     CardsPremium, AboutUs, Profile, UpdateProfile,
     ForgetPassword, PostTimeLine, CreatePost, PostDetails, CommentsList,
-    CreateAccount, Register
+    CreateAccount, Register,
+    RadioPlayer
 };
 
