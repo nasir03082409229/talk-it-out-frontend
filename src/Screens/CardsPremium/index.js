@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, ImageBackground, View, Image, StatusBar, Linking, SafeAreaView, ScrollView, ActivityIndicator, Dimensions, TouchableOpacity } from "react-native";
+import { StyleSheet, ImageBackground, View, StatusBar, Linking, SafeAreaView, ScrollView, ActivityIndicator, Dimensions, TouchableOpacity } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { SettingIcon, Pause, SeekLeft, SeekRight, Loop, LeftCorner, UpArrow, Cross, plus_icon } from "../../Assets/Icons";
@@ -10,6 +10,7 @@ import Slider from '@react-native-community/slider';
 import Carousel from 'react-native-snap-carousel';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Axios from 'axios'
+import Image from 'react-native-fast-image'
 
 const CardsPremium = ({ navigation }) => {
     const [error, setError] = useState('')
@@ -96,8 +97,8 @@ const CardsPremium = ({ navigation }) => {
     }
     const _renderItem = ({ item, index }) => {
         return (
-            <View style={[styles.card, { width: '100%', }]}>
-                <ImageBackground resizeMode={'stretch'} style={styles.img}
+            <View style={[styles.card, { width: '100%', borderRadius: 20 }]}>
+                <Image resizeMode={'stretch'} style={styles.img}
                     source={{ uri: item.big_photo }} >
                     <TouchableOpacity activeOpacity={1}
                         onPress={() => {
@@ -105,7 +106,7 @@ const CardsPremium = ({ navigation }) => {
                         }} style={{ position: 'absolute', bottom: 26, right: 5 }}>
                         <SvgXml xml={plus_icon} />
                     </TouchableOpacity>
-                </ImageBackground>
+                </Image>
             </View>
         );
     }
@@ -167,7 +168,7 @@ const styles = StyleSheet.create({
     preTxt: { color: '#1592E6', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 23, marginTop: -15, },
     main: { justifyContent: 'center', alignItems: 'center', marginTop: 45, marginBottom: 50, },
     card: {},
-    img: { width: '100%', height: '92%', resizeMode: 'stretch', borderRadius: 0, },
+    img: { width: '100%', height: '92%', resizeMode: 'stretch', borderRadius: 15, },
     cardView: {},
 
 })

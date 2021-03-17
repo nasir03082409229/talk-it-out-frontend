@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, View, Image, StatusBar, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
+import { FlatList, View, StatusBar, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Text } from "../../Common";
 import { Mic } from "../../Assets/Icons";
 import { SvgXml } from "react-native-svg";
@@ -7,6 +7,8 @@ import { Typography, Colors } from "../../Styles";
 import LinearGradient from 'react-native-linear-gradient';
 import Axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import Image from 'react-native-fast-image'
+
 const AboutUs = ({ navigation }) => {
     const [aboutUs, setAboutUs] = useState(null)
     useEffect(() => {
@@ -44,7 +46,8 @@ const AboutUs = ({ navigation }) => {
                 <View style={styles.backView}>
                     <TouchableOpacity onPress={() => { navigation.goBack() }} style={styles.touBack}>
                         <View style={styles.topBackView}>
-                            <Image style={styles.topBackImg} source={require('../../Assets/images/login_logo.png')} />
+                            <Image style={styles.topBackImg}
+                                source={require('../../Assets/images/login_logo.png')} />
                         </View>
                         <Text style={styles.topBackTxt}>BACK</Text>
                     </TouchableOpacity>
@@ -63,8 +66,8 @@ const AboutUs = ({ navigation }) => {
 
 
             </ScrollView> : <View style={{ backgroundColor: '#2C2939', flex: 1, }}>
-                    <ActivityIndicator color={'#fff'} size={20} style={{ alignSelf: 'center' }} />
-                </View>
+                <ActivityIndicator color={'#fff'} size={20} style={{ alignSelf: 'center' }} />
+            </View>
             }
         </SafeAreaView>
     )
