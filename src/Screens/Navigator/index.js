@@ -31,7 +31,9 @@ const BottomStackComp = () => {
                 screenOptions={{
                     headerShown: false
                 }}
-                initialRouteName="Explore">
+                // initialRouteName="Explore"
+                initialRouteName="PostTimeLine"
+            >
                 <BottomStack.Screen name="Explore" component={Explore} options={MyTransition} />
                 <BottomStack.Screen name="Podcasts" component={SubscriptionPremium} options={MyTransition} />
                 <BottomStack.Screen name="Downloads" component={Downloads} options={MyTransition} />

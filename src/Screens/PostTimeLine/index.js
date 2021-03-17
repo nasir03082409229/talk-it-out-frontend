@@ -1,13 +1,35 @@
-import React, { useState } from "react";
-import { FlatList, StyleSheet, View, Image, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import { FlatList, StyleSheet, View, Image, StatusBar, SafeAreaView, ScrollView, ActivityIndicator, TextInput, TouchableOpacity } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { InActiveHeart, PlusIcon, ActiveHeart, MessageIcon, SearchIcon, } from "../../Assets/Icons";
 import { Typography, Colors } from "../../Styles";
 import { SvgXml } from "react-native-svg";
-
+import Axios from 'axios'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 const PostTimeLine = ({ navigation }) => {
-    const [isActiveHeart, setIsActiveHeart] = useState([{ active: true }, { active: false }, { active: false }, { active: true }, { active: false }]);
+    const [isActiveHeart, setIsActiveHeart] = useState([]);
+    const [postData, setPostData] = useState(null);
+
+    useEffect(() => {
+        initState()
+    }, [])
+
+    const initState = async () => {
+        const access_token = await AsyncStorage.getItem('@access_token')
+        const { data } = await Axios({
+            url: 'https://talkitoutqueen.com/dashboard/api/posts', method: 'get',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+            }
+        })
+        setPostData([...data.data])
+        console.log("🚀 ~ file: index.js ~ line 19 ~ initState ~ data", data)
+
+    }
+    console.log('postDatapostData=>', postData)
     return (
         <SafeAreaView style={{ flex: 1, }}>
             <StatusBar barStyle={'dark-content'} backgroundColor='#FFF' />
@@ -17,48 +39,58 @@ const PostTimeLine = ({ navigation }) => {
                     <TouchableOpacity style={{}}>
                     </TouchableOpacity>
                     <Text style={styles.Createtxt}>Talk it out Wall</Text>
-                    <TouchableOpacity onPress={() => { navigation.goBack() }} style={{padding:5}}>
+                    <TouchableOpacity onPress={() => { navigation.goBack() }} style={{ padding: 5 }}>
                         <SvgXml xml={SearchIcon} />
                     </TouchableOpacity>
                 </View>
-                <FlatList keyExtractor={index => index} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 130 }} style={{ flex: 1 }} data={isActiveHeart} renderItem={({ index, item }) => {
-                    return (
-                        <TouchableOpacity onPress={() => navigation.navigate('PostDetails')} style={styles.maintimelineview}>
-                            <View style={styles.titletimeview}>
-                                <Text style={styles.titleTxt}>Talk it Out Live - Mad a dutty gyal!!!</Text>
-                                <Text style={styles.timeTxt}>10 mins ago</Text>
-                                <Image style={styles.img} source={require('../../Assets/images/imageplaceholder.png')} />
+                {postData ? <FlatList
+                    keyExtractor={index => index}
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{ paddingBottom: 130 }}
+                    style={{ flex: 1 }}
+                    data={postData}
+                    renderItem={({ index, item }) => {
+                        return (
+                            <TouchableOpacity
+                                key={`${index.toString() + 'post'}`}
+                                onPress={() => navigation.navigate('PostDetails')}
+                                style={styles.maintimelineview}>
+                                <View style={styles.titletimeview}>
+                                    <Text style={styles.titleTxt}>{item.title}</Text>
+                                    <Text style={styles.timeTxt}>10 mins ago</Text>
+                                    <Image style={styles.img}
+                                        source={{ uri: item.image }} />
 
-                            </View>
-                            <View style={styles.lowerview}>
-                                <View style={styles.imgdetailview}>
-                                    <Image style={styles.mainimg} source={require('../../Assets/images/avatar.png')} />
-                                    <View>
-                                        <Text style={styles.titleTxt}>Talk it Out Live </Text>
-                                        <Text style={styles.timeTxt}>10 mins ago</Text>
+                                </View>
+                                <View style={styles.lowerview}>
+                                    <View style={styles.imgdetailview}>
+                                        <Image style={styles.mainimg} source={require('../../Assets/images/avatar.png')} />
+                                        <View>
+                                            <Text style={styles.titleTxt}>Talk it Out Live </Text>
+                                            <Text style={styles.timeTxt}>10 mins ago</Text>
+                                        </View>
+                                    </View>
+
+                                    <View style={{ flexDirection: 'row', }}>
+                                        <TouchableOpacity onPress={() => navigation.navigate('PostDetails')}>
+                                            <SvgXml xml={MessageIcon} />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => {
+                                            let dummyIsActiveHeart = [...isActiveHeart];
+                                            dummyIsActiveHeart[index].active = !dummyIsActiveHeart[index].active;
+                                            console.log('Active Heart Master', isActiveHeart);
+                                            console.log(dummyIsActiveHeart);
+                                            setIsActiveHeart(dummyIsActiveHeart);
+
+                                        }}>
+                                            <SvgXml style={{ marginLeft: 10, }} xml={item.active ? ActiveHeart : InActiveHeart} />
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
+                            </TouchableOpacity>
 
-                                <View style={{ flexDirection: 'row', }}>
-                                    <TouchableOpacity onPress={() => navigation.navigate('PostDetails')}>
-                                        <SvgXml xml={MessageIcon} />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => {
-                                        let dummyIsActiveHeart = [...isActiveHeart];
-                                        dummyIsActiveHeart[index].active = !dummyIsActiveHeart[index].active;
-                                        console.log('Active Heart Master', isActiveHeart);
-                                        console.log(dummyIsActiveHeart);
-                                        setIsActiveHeart(dummyIsActiveHeart);
-
-                                    }}>
-                                        <SvgXml style={{ marginLeft: 10, }} xml={item.active ? ActiveHeart : InActiveHeart} />
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-
-                    )
-                }} />
+                        )
+                    }} /> : <ActivityIndicator color={'#fff'} size={20} style={{ alignSelf: 'center' }} />}
 
 
                 <TouchableOpacity onPress={() => navigation.navigate('CreatePost')} style={{ position: 'absolute', bottom: 60, right: 20 }}>
