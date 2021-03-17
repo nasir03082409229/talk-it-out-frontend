@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, View, Image, StyleSheet, StatusBar, SafeAreaView, ScrollView, ActivityIndicator, TextInput, TouchableOpacity } from "react-native";
+import { FlatList, View,  StyleSheet, StatusBar, SafeAreaView, ScrollView, ActivityIndicator, TextInput, TouchableOpacity } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { Mic } from "../../Assets/Icons";
@@ -7,6 +7,7 @@ import { SvgXml } from "react-native-svg";
 import { Typography, Colors } from "../../Styles";
 import Axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import Image from 'react-native-fast-image'
 
 const Explore = ({ navigation }) => {
     const [homeData, setHomeData] = useState(null)
