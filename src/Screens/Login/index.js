@@ -30,7 +30,7 @@ const Login = ({ navigation }) => {
                     method: 'post',
                     data: { "email": email, "password": password }
                 }).then(async (response) => {
-                    console.log(response.data)
+                    console.log('LOGIN=======',response.data)
                     await AsyncStorage.setItem('@access_token', response.data.access_token)
                     await AsyncStorage.setItem('@user', JSON.stringify(response.data.user))
                     let device_id = getUniqueId()

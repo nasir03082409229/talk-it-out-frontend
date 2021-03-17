@@ -30,7 +30,7 @@ const Explore = ({ navigation }) => {
         let normalizePages = response.data.pages.map(x => ({ ...x, type: 'page' })).filter(x => ['2', '3', '4'].indexOf(x.id) === -1)
         let normalizePodcasts = response.data.podcasts.map(x => ({ ...x, type: 'podcast' }))
         let normalizeRadios = response.data.radios.map(x => ({ ...x, type: 'radio' }))
-        setHomeData([...normalizePages, ...normalizePodcasts, ...normalizeRadios])
+        setHomeData([...normalizeRadios, ...normalizePodcasts, ...normalizePages,])
 
     }
 

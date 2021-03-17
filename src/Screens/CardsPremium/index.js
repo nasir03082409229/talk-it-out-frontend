@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet, ImageBackground, View, Image, StatusBar, SafeAreaView, ScrollView, Dimensions, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, ImageBackground, View, Image, StatusBar, Linking, SafeAreaView, ScrollView, ActivityIndicator, Dimensions, TouchableOpacity } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { SettingIcon, Pause, SeekLeft, SeekRight, Loop, LeftCorner, UpArrow, Cross, plus_icon } from "../../Assets/Icons";
@@ -8,9 +8,51 @@ import { Typography, Colors } from "../../Styles";
 import LinearGradient from 'react-native-linear-gradient';
 import Slider from '@react-native-community/slider';
 import Carousel from 'react-native-snap-carousel';
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Axios from 'axios'
 
 const CardsPremium = ({ navigation }) => {
+    const [error, setError] = useState('')
+    const [premiumData, setPremiumData] = useState([])
+
+    useEffect(() => {
+        initState()
+    }, [])
+
+    const initState = async () => {
+        //"Please subscribe to premium plan to access it "
+        //
+        let access_token = await AsyncStorage.getItem('@access_token');
+        let user = await AsyncStorage.getItem('@user');
+        user = JSON.parse(user)
+        const { data } = await Axios({
+            url: `https://talkitoutqueen.com/dashboard/api/user/${user.id}`,
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+            }
+        })
+        let userDetails = data.data
+        await AsyncStorage.setItem('@user', JSON.stringify(userDetails))
+        if (userDetails.subscription_plan == 'premium' && userDetails.subscription_active == 1) {
+            const { data } = await Axios({
+                url: 'https://talkitoutqueen.com/dashboard/api/premium',
+                method: 'get',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                }
+            })
+            let normalizePodcasts = data.podcasts.map(x => ({ ...x, type: 'podcast' }))
+            let normalizeRadios = data.radios.map(x => ({ ...x, type: 'radio' }))
+            setPremiumData([...normalizeRadios, ...normalizePodcasts])
+        } else {
+            setError('Please subscribe to premium plan to access it')
+        }
+    }
 
     let cards = [
         {
@@ -45,14 +87,21 @@ const CardsPremium = ({ navigation }) => {
     ]
 
     let _carousel;
+    const navigate = (item) => {
+        if (item.type == 'radio') {
+            navigation.navigate('RadioPlayer', { item: item })
+        } else if (item.type == 'podcast') {
+            navigation.navigate('Playing', { item: item })
+        }
+    }
     const _renderItem = ({ item, index }) => {
         return (
             <View style={[styles.card, { width: '100%', }]}>
-                <ImageBackground resizeMode={'stretch'} style={styles.img} source={item.image} >
+                <ImageBackground resizeMode={'stretch'} style={styles.img}
+                    source={{ uri: item.big_photo }} >
                     <TouchableOpacity activeOpacity={1}
                         onPress={() => {
-                            // navigation.navigate(item.route,
-                            //     { imageSource: item.imageSource, playerImage: item.playerImage })
+                            navigate(item)
                         }} style={{ position: 'absolute', bottom: 26, right: 5 }}>
                         <SvgXml xml={plus_icon} />
                     </TouchableOpacity>
@@ -60,7 +109,7 @@ const CardsPremium = ({ navigation }) => {
             </View>
         );
     }
-
+    console.log('ERROR', error)
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
@@ -71,10 +120,10 @@ const CardsPremium = ({ navigation }) => {
                     <Text style={styles.preTxt}>PREMIUM</Text>
                 </View>
 
-                <Carousel
+                {premiumData.length > 0 && <Carousel
                     // layout={'default'}
                     ref={(c) => { _carousel = c; }}
-                    data={cards}
+                    data={premiumData}
                     hasParallaxImages
                     renderItem={_renderItem}
                     sliderWidth={Dimensions.get('window').width}
@@ -82,7 +131,15 @@ const CardsPremium = ({ navigation }) => {
                     itemHeight={Dimensions.get('screen').height - 100}
                     height={500}
                 // layoutCardOffset={100}
-                />
+                />}
+                {error ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ color: '#fff', fontSize: 20, paddingHorizontal: 20, textAlign: 'center' }}>{error}</Text>
+                    <TouchableOpacity
+                        onPress={() => { Linking.openURL('https://talkitoutqueen.com/') }}
+                        style={{ borderWidth: 1, borderColor: 'white', borderRadius: 10, marginVertical: 20 }}>
+                        <Text style={{ color: '#fff', paddingHorizontal: 10, paddingVertical: 10, }}>{'Go to talkitoutqueen.com'}</Text>
+                    </TouchableOpacity>
+                </View> : <ActivityIndicator color={'#fff'} size={20} style={{ alignSelf: 'center' }} />}
                 {/* <View style={styles.cardView}> */}
 
 
