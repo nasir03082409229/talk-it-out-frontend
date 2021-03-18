@@ -17,7 +17,9 @@ const BottomBar = ({ state, navigation }) => {
                         <SvgXml xml={Bottom1Icon} />
                 }
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconview} onPress={() => { navigation.navigate('LoginPremium') }} style={styles.iconview}>
+            <TouchableOpacity style={styles.iconview} onPress={() => {
+                navigation.navigate('CardsPremium')
+            }} style={styles.iconview}>
                 {
                     state.state.index === 1 ?
                         <SvgXml xml={Bottom2IconActive} />
@@ -36,7 +38,7 @@ const BottomBar = ({ state, navigation }) => {
                 }
             </TouchableOpacity>
             <TouchableOpacity style={styles.iconview} onPress={() => {
-                 navigation.navigate('Profile')
+                navigation.navigate('Profile')
             }} style={styles.iconview}>
                 {
                     state.state.index === 3 ?
