@@ -51,8 +51,10 @@ import SettingIconHori from "./settingiconhori";
 import LocationIcon from "./locationicon";
 import ShareIcon from "./shareicon";
 import play_black from "./play_black";
+import logout from "./logout";
 
 export {
+    logout,
     play_black,
     plus_icon,
     history_blue,

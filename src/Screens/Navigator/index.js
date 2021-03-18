@@ -1,12 +1,12 @@
-import { NavigationContainer, } from '@react-navigation/native';
-import { View, StyleSheet, TouchableOpacity, Image, Touchable, StatusBar } from "react-native";
+import { CommonActions, NavigationContainer, } from '@react-navigation/native';
+import { View, StyleSheet, TouchableOpacity, Image, Touchable, StatusBar, ScrollView } from "react-native";
 import { createStackNavigator, HeaderStyleInterpolators, TransitionSpecs } from '@react-navigation/stack';
 import React, { useState, useEffect } from 'react';
 import {
     Splash, AboutUs, Login, Explore, SignUp, Profile, UpdateProfile, ForgetPassword,
     Podcasts, Downloads, Pray, Store, Playing, Player, LoginPremium, SubscriptionPremium,
     PlayingPremium, PlayerPremium, CardsPremium, PostTimeLine, CreatePost, PostDetails,
-    CommentsList, CreateAccount, Register, RadioPlayer
+    CommentsList, CreateAccount, Register, RadioPlayer,
 } from '..';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomBar, Text } from "../../Common";
@@ -14,7 +14,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Typography, Colors } from "../../Styles";
 import { SvgXml } from "react-native-svg";
-import { CrossDrawer, SwitchActive, HomeDra, Switch, AboutDra, NotifDra, ShareDra, ProfileDra, ForgetPasswordDra } from "../../Assets/Icons";
+import { CrossDrawer, SwitchActive, HomeDra, Switch, AboutDra, NotifDra, ShareDra, ProfileDra, ForgetPasswordDra, logout } from "../../Assets/Icons";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -32,7 +34,7 @@ const BottomStackComp = () => {
                     headerShown: false
                 }}
                 initialRouteName="Explore"
-                // initialRouteName="PostTimeLine"
+            // initialRouteName="PostTimeLine"
             >
                 <BottomStack.Screen name="Explore" component={Explore} options={MyTransition} />
                 <BottomStack.Screen name="Podcasts" component={SubscriptionPremium} options={MyTransition} />
@@ -84,13 +86,25 @@ const App = ({ navigation }) => {
     useEffect(() => {
         StatusBar.setHidden = true;
     }, [])
+
+    const onPressLogout = async () => {
+        //await  AsyncStorage.clear();
+        // navigation.dispatch(
+        //     CommonActions.reset({
+        //         index: 0,
+        //         routes: [
+        //             { name: 'Login' },
+        //         ],
+        //     })
+        // );
+    }
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#2C2939' }}>
             <NavigationContainer>
 
                 <Drawer.Navigator drawerContent={({ navigation }) => {
                     return (
-                        <View>
+                        <ScrollView>
                             <TouchableOpacity onPress={() => { navigation.closeDrawer(); }} style={{ width: 30, height: 30, alignSelf: 'flex-end', marginRight: 20, marginTop: 20, }}>
                                 <SvgXml xml={CrossDrawer} />
                             </TouchableOpacity>
@@ -113,11 +127,6 @@ const App = ({ navigation }) => {
                                 <Text style={styles.draTxt}>NOTIFICATION</Text>
                                 <SvgXml style={[{ marginTop: -15, }, active ? { marginLeft: 18, } : null]} xml={active ? SwitchActive : Switch} />
                             </TouchableOpacity>
-                            {/* <TouchableOpacity style={styles.draRaow}>
-                                <SvgXml xml={NotifDra} />
-                                <Text style={styles.draTxt}>NOTIFICATION</Text>
-                                <SvgXml style={{ marginTop: -15, marginLeft:18, }} xml={SwitchActive} />
-                            </TouchableOpacity> */}
                             <TouchableOpacity onPress={() => { navigation.navigate('ForgetPassword') }} style={styles.draRaow}>
                                 <SvgXml xml={ForgetPasswordDra} />
                                 <Text style={styles.draTxt}>FORGET PASSWORD</Text>
@@ -130,8 +139,34 @@ const App = ({ navigation }) => {
                                 <SvgXml xml={ShareDra} />
                                 <Text style={styles.draTxt}>SHARE APP</Text>
                             </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={async () => {
+                                    const access_token = await AsyncStorage.getItem('@access_token')
+                                    await axios({
+                                        method: 'post', url: 'https://talkitoutqueen.com/dashboard/api/logout',
+                                        headers: {
+                                            'Accept': 'application/json',
+                                            'Content-Type': 'application/json',
+                                            'Authorization': `Bearer ${access_token}`
+                                        }
+                                    })
+                                    await AsyncStorage.clear();
+                                    navigation.closeDrawer();
+                                    navigation.dispatch(
+                                        CommonActions.reset({
+                                            index: 0,
+                                            routes: [
+                                                { name: 'Login' },
+                                            ],
+                                        })
+                                    );
+                                }}
+                                style={styles.draRaow}>
+                                <SvgXml xml={logout} />
+                                <Text style={styles.draTxt}>LOGOUT</Text>
+                            </TouchableOpacity>
                             {/* <Text>asdasdasd</Text> */}
-                        </View>
+                        </ScrollView>
                     )
                 }} initialRouteName="MainStackBtn">
                     <Drawer.Screen name="Home" component={Home} />
