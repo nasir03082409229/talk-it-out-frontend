@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, View,  StyleSheet, StatusBar, SafeAreaView, ScrollView, ActivityIndicator, TextInput, TouchableOpacity } from "react-native";
+import { FlatList, View, StyleSheet, StatusBar, SafeAreaView, ScrollView, ActivityIndicator, TextInput, TouchableOpacity } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { Mic } from "../../Assets/Icons";
@@ -65,7 +65,9 @@ const Explore = ({ navigation }) => {
                 </View>
 
                 <TouchableOpacity style={styles.searchView}>
-                    <TextInput onTouchStart={() => { navigation.navigate('SubscriptionPremium') }} placeholder={'Search'} placeholderTextColor={'#707070'} style={styles.input} />
+                    <TextInput
+                        // onTouchStart={() => { navigation.navigate('SubscriptionPremium') }}
+                        placeholder={'Search'} placeholderTextColor={'#707070'} style={styles.input} />
 
                     <TouchableOpacity style={styles.icoView}>
                         <SvgXml xml={Mic} />
