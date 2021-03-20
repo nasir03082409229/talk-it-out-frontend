@@ -55,37 +55,7 @@ const CardsPremium = ({ navigation }) => {
         }
     }
 
-    let cards = [
-        {
-            route: 'Playing',
-            image: require('../../Assets/images/card1.png'),
-            imageSource: require('../../Assets/images/house_cover.png'),
-            playerImage: require('../../Assets/images/house_player.png'),
-        },
-        {
-            route: 'Playing',
-            image: require('../../Assets/images/card2.png'),
-            imageSource: require('../../Assets/images/school_cover.png'),
-            playerImage: require('../../Assets/images/school_player.png'),
-        },
-        {
-            route: 'Playing',
-            image: require('../../Assets/images/card3.png'),
-            imageSource: require('../../Assets/images/women_cover.png'),
-            playerImage: require('../../Assets/images/women_player.png'),
-        },
-        {
-            image: require('../../Assets/images/card4.png'),
-            imageSource: require('../../Assets/images/card4_player.png'),
-            route: 'Player'
-        },
-        {
-            route: 'Playing',
-            image: require('../../Assets/images/card5.png'),
-            imageSource: require('../../Assets/images/card5_cover.png'),
-            playerImage: require('../../Assets/images/card5_player.png'),
-        },
-    ]
+
 
     let _carousel;
     const navigate = (item) => {
@@ -99,7 +69,7 @@ const CardsPremium = ({ navigation }) => {
         return (
             <View style={[styles.card, { width: '100%', borderRadius: 20 }]}>
                 <Image resizeMode={'stretch'} style={styles.img}
-                    source={{ uri: item.big_photo }} >
+                    source={{ uri: item.small_photo }}  >
                     <TouchableOpacity activeOpacity={1}
                         onPress={() => {
                             navigate(item)

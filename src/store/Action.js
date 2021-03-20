@@ -53,13 +53,14 @@ const startPodcastPlayer = async (stream) => {
         this.streamRef = ''
     }
     if (this.streamRef !== stream.podstream) {
+        console.log("🚀 ~ stream.podstream", stream.podstream)
         await TrackPlayer.reset()
         await TrackPlayer.add({
             id: 'trackId',
             url: { uri: stream.podstream },
             title: stream.podtitle,
             // artist: streamObj.singerName,
-            artwork: stream.podsubtitle
+            // artwork: stream.podsubtitle
         });
         await TrackPlayer.play();
         this.streamRef = stream.podstream
