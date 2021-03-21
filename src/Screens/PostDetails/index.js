@@ -1,23 +1,30 @@
-import React from "react";
-import { FlatList, StyleSheet, View, Image, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { FlatList, StyleSheet, View, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { LocationIcon, ShareIcon, ArrowLeft, SettingIconHori, ActiveHeart, InActiveHeart, SendIcon, UploadIcon, SearchIcon } from "../../Assets/Icons";
 import { Typography, Colors } from "../../Styles";
 import { SvgXml } from "react-native-svg";
+import Image from 'react-native-fast-image'
 
-const PostDetails = ({ navigation }) => {
+const PostDetails = ({ navigation, route }) => {
+    const { post, isFromTimeline } = route.params;
+    const [postDetail, setPostDetail] = useState(null)
+    useEffect(() => {
+        if (isFromTimeline) {
+            setPostDetail(post)
+        } else {
+            // post_id will do it later
+
+        }
+    }, [])
     return (
         <SafeAreaView style={{ flex: 1, }}>
             <StatusBar barStyle={'dark-content'} backgroundColor='#FFF' />
             {/* <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 70 }} style={{ backgroundColor: '#FDA', flex: 1, }}> */}
-
-
-
             <View style={styles.mainView}>
-
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => { navigation.goBack() }} style={{padding:5}}>
+                    <TouchableOpacity onPress={() => { navigation.goBack() }} style={{ padding: 5 }}>
                         <SvgXml xml={ArrowLeft} />
                     </TouchableOpacity>
                     <Text style={styles.Createtxt}>Ms-Lioness Queen Post</Text>
@@ -25,14 +32,8 @@ const PostDetails = ({ navigation }) => {
                         <SvgXml xml={SettingIconHori} />
                     </TouchableOpacity>
                 </View>
-
-
-
-
-                <ScrollView>
-
+                {postDetail ? <ScrollView>
                     <View style={styles.maintimelineview}>
-
                         <View style={styles.lowerview}>
                             <View style={styles.imgdetailview}>
                                 <Image style={styles.mainimg} source={require('../../Assets/images/avatar.png')} />
@@ -56,22 +57,17 @@ const PostDetails = ({ navigation }) => {
                             </View>
                         </View>
 
-                        <Text style={styles.heading}>Topic</Text>
-                        <Text style={styles.detailtxt}>Thank you Jesus, I am alive and well so all is good with my soul. People only doubt your win when they can't accept their loss. Like #JESUS, despite what your haters have said, EVERYBODY can now see you've resurrected from the place they tried to bury you. #TRUTH #Enemies You NEVER have to fight your enemies. Their harvest will fight them for you.</Text>
-
-
+                        <Text style={styles.heading}>{postDetail.title}</Text>
+                        <Text style={styles.detailtxt}>{postDetail.description}</Text>
                         <View style={styles.titletimeview}>
-                            <Image style={styles.img} source={require('../../Assets/images/imageplaceholder.png')} />
+                            <Image style={styles.img} source={{ uri: postDetail.image }} />
                         </View>
-
                         <View style={styles.locationView}>
                             <TouchableOpacity style={{ marginRight: 10, }}>
                                 <SvgXml xml={LocationIcon} />
                             </TouchableOpacity>
                             <Text style={styles.timeTxt}>10 mins ago</Text>
                         </View>
-
-
                         <View style={styles.heartShareView}>
                             <TouchableOpacity style={styles.heartIcon}>
                                 <SvgXml xml={InActiveHeart} />
@@ -88,14 +84,9 @@ const PostDetails = ({ navigation }) => {
                             </TouchableOpacity>
                         </View>
                     </View>
-
-
-
                     <FlatList keyExtractor={index => index} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120, margin: 20, marginTop: 0, }} style={{ flex: 1 }} data={[1, 2,]} renderItem={({ index, item }) => {
                         return (
                             <View style={styles.maintimelineview}>
-
-
                                 <View style={{ flexDirection: 'row', }}>
                                     <Image style={styles.mainimg} source={require('../../Assets/images/avatar.png')} />
                                     <View style={{ flex: 1, }}>
@@ -114,11 +105,8 @@ const PostDetails = ({ navigation }) => {
                         )
                     }} />
 
-                </ScrollView>
+                </ScrollView> : <ActivityIndicator color={'#fff'} size={20} style={{ alignSelf: 'center' }} />}
             </View>
-
-
-
             <View style={styles.mainSearView}>
                 <TextInput style={styles.commentinput} placeholder='Write Comment...' />
                 <TouchableOpacity >
@@ -150,7 +138,7 @@ const styles = StyleSheet.create({
     commentinput: { paddingLeft: 10, flex: 1, },
     emoji: { width: 25, height: 25, },
     sendIcon: { marginRight: 10, marginLeft: 10, width: 40, alignItems: 'center', justifyContent: 'center', height: 40, borderRadius: 30, backgroundColor: '#FF6265' },
-    img: { marginVertical: 10, borderRadius: 2, width: '100%', height: 130, resizeMode: 'stretch', },
+    img: { marginVertical: 10, borderRadius: 2, width: '100%', height: 170, resizeMode: 'contain', },
 
     locationView: { marginHorizontal: 20, flexDirection: 'row' },
 

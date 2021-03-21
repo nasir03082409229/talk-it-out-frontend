@@ -16,17 +16,21 @@ const PostTimeLine = ({ navigation }) => {
     }, [])
 
     const initState = async () => {
-        const access_token = await AsyncStorage.getItem('@access_token')
-        const { data } = await Axios({
-            url: 'https://talkitoutqueen.com/dashboard/api/posts', method: 'get',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${access_token}`
-            }
-        })
-        setPostData([...data.data])
-        console.log("🚀 ~ file: index.js ~ line 19 ~ initState ~ data", data)
+        try {
+            const access_token = await AsyncStorage.getItem('@access_token')
+            console.log("~ access_token", access_token)
+            const { data } = await Axios({
+                url: 'https://talkitoutqueen.com/dashboard/api/posts', method: 'get',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                }
+            })
+            setPostData([...data])
+        } catch (err) {
+            console.log("errerrerrerr", err)
+        }
 
     }
     console.log('postDatapostData=>', postData)
@@ -53,7 +57,7 @@ const PostTimeLine = ({ navigation }) => {
                         return (
                             <TouchableOpacity
                                 key={`${index.toString() + 'post'}`}
-                                onPress={() => navigation.navigate('PostDetails')}
+                                onPress={() => navigation.navigate('PostDetails', { post: item, isFromTimeline: true })}
                                 style={styles.maintimelineview}>
                                 <View style={styles.titletimeview}>
                                     <Text style={styles.titleTxt}>{item.title}</Text>
@@ -115,7 +119,7 @@ const styles = StyleSheet.create({
     Createtxt: { color: '#4A4A4A', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 18, },
     titleTxt: { color: '#4A4A4A', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 12, },
     timeTxt: { color: '#9B9B9B', fontFamily: Typography.FONT_FAMILY_LIGHT, fontSize: 10, },
-    img: { marginVertical: 10, borderRadius: 2, width: '100%', height: 130, resizeMode: 'stretch', },
+    img: { marginVertical: 10, borderRadius: 2, width: '100%', height: 170, resizeMode: 'contain', },
     emojiimg: { width: 25, height: 25, resizeMode: 'contain', },
     uploadView: { backgroundColor: '#A4B7B560', justifyContent: 'center', alignItems: 'center', borderRadius: 10, height: 300, margin: 10, },
     topicView: { paddingHorizontal: 10, paddingVertical: 5, borderBottomColor: '#97979730', borderBottomWidth: 1, marginTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
