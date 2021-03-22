@@ -52,7 +52,10 @@ const BottomBar = ({ state, navigation }) => {
 }
 
 const styles = StyleSheet.create({
-    main: { paddingHorizontal: 20, paddingTop: 3, backgroundColor: '#2C2838', elevation: 5, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', position: 'absolute', bottom: 0, left: 0, right: 0, },
+    main: {
+        paddingHorizontal: 20, paddingTop: 3, backgroundColor: '#2C2838', elevation: 5, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center',
+        // position: 'absolute', bottom: 0, left: 0, right: 0,
+    },
     iconview: { width: 55, height: 55, justifyContent: 'center', alignItems: 'center' },
     icon: { resizeMode: 'contain', width: '100%', height: '100%' },
 })

@@ -1,29 +1,55 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, View, Image, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from "react-native";
+import { FlatList, StyleSheet, View, Image, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { CrossIcon, ArrowLeft, EmojiIcon, SaveIcon, SendIcon, UploadIcon, SearchIcon } from "../../Assets/Icons";
 import { Typography, Colors } from "../../Styles";
 import { SvgXml } from "react-native-svg";
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Axios from 'axios'
+import { useLayoutEffect } from "react";
 
 const CommentsList = ({ navigation, route }) => {
+    const { post } = route.params;
 
     const [postDetail, setPostDetail] = useState(null)
     const [commentList, setCommentList] = useState(null)
+    const [loader, setLoader] = useState(null)
 
+    console.log("🚀 ~ file: index.js ~ line 16 ~ CommentsList ~ loader", loader)
     useEffect(() => {
+        console.log('USE LAYOUT EFFECT')
         initState()
-    }, [])
+    }, [post])
+
+    const getComments = async () => {
+        setLoader(true)
+        const access_token = await AsyncStorage.getItem('@access_token')
+        const { data } = await Axios({
+            url: `${commentList.next_page_url}`,
+            method: 'get',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+            }
+        })
+        setLoader(false)
+        let previousData = commentList.data;
+        let newCommentData = { ...data }
+        newCommentData.data = [...previousData, ...data.data]
+        setCommentList(newCommentData)
+    }
 
     const initState = () => {
-        const { postDetail, commentList } = route.params;
-        console.log("🚀 ~ file: index.js ~ line 20 ~ initState ~ postDetail, commentList", postDetail, commentList)
-        setPostDetail(postDetail)
+        const { post, commentList } = route.params;
+        setPostDetail(post)
         setCommentList(commentList)
     }
 
     return (
         <SafeAreaView style={{ flex: 1, }}>
+
             <StatusBar barStyle={'dark-content'} backgroundColor='#FFF' />
             {postDetail && <View style={{ flex: 1, backgroundColor: '#FFF' }}>
                 <View style={styles.header}>
@@ -36,25 +62,16 @@ const CommentsList = ({ navigation, route }) => {
                     </TouchableOpacity>
                 </View>
 
-                <View style={styles.mainSearView}>
-                    <TextInput style={styles.commentinput} placeholder='Write Comment...' />
-                    <TouchableOpacity >
-                        <Image style={styles.emoji} source={require('../../Assets/images/emojiImg.png')} />
-
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.sendIcon} >
-                        <SvgXml xml={SendIcon} />
-                    </TouchableOpacity>
-                </View>
-
-                <FlatList keyExtractor={index => index}
+                <FlatList
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingBottom: 120 }}
-                    style={{ flex: 1 }}
+                    style={{ flex: 1, }}
                     data={commentList ? commentList.data : []}
-                    onEndReached={(e) => {
-                        alert(JSON.stringify(e))
-                    }}
+                    ListFooterComponent={() => (<View style={{ height: 25, justifyContent: 'center', alignItems: 'center', marginVertical: 5 }}>
+                        {commentList.next_page_url ?
+                            !loader ? <TouchableOpacity onPress={() => getComments()} style={{ width: 100, borderWidth: 1, borderColor: 'black', borderRadius: 5 }}>
+                                <Text style={{ color: 'black', textAlign: 'center' }}>Load More</Text>
+                            </TouchableOpacity> : <ActivityIndicator color={'#000'} size={20} style={{ alignSelf: 'center' }} /> : null}
+                    </View>)}
                     renderItem={({ index, item }) => {
                         return (
                             <View key={index} style={styles.maintimelineview}>
@@ -71,7 +88,19 @@ const CommentsList = ({ navigation, route }) => {
                             </View>
                         )
                     }} />
+
+                <View style={styles.mainSearView}>
+                    <TextInput style={styles.commentinput} placeholder='Write Comment...' />
+                    <TouchableOpacity >
+                        <Image style={styles.emoji} source={require('../../Assets/images/emojiImg.png')} />
+
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.sendIcon} >
+                        <SvgXml xml={SendIcon} />
+                    </TouchableOpacity>
+                </View>
             </View>}
+
         </SafeAreaView>
     )
 }
@@ -87,7 +116,15 @@ const styles = StyleSheet.create({
     commentTxt: { color: '#4A4A4A', fontFamily: Typography.FONT_FAMILY_LIGHT, fontSize: 12, },
     mainimg: { resizeMode: 'contain', width: 30, height: 30, marginRight: 10, marginTop: -5, },
 
-    mainSearView: { zIndex: +10000, backgroundColor: '#FFF', flexDirection: 'row', alignItems: 'center', height: 60, elevation: 10, position: 'absolute', bottom: 58, left: 0, right: 0, },
+    mainSearView: {
+        // zIndex: +10000,
+        backgroundColor: '#FFF',
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 60,
+        elevation: 10,
+        // position: 'absolute', bottom: 58, left: 0, right: 0,
+    },
     commentinput: { paddingLeft: 10, flex: 1, },
     emoji: { width: 25, height: 25, },
     sendIcon: { marginRight: 10, marginLeft: 10, width: 40, alignItems: 'center', justifyContent: 'center', height: 40, borderRadius: 30, backgroundColor: '#FF6265' },

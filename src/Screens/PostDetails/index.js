@@ -8,7 +8,7 @@ import { SvgXml } from "react-native-svg";
 import Image from 'react-native-fast-image'
 import Axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
+import moment from 'moment'
 
 
 const PostDetails = ({ navigation, route }) => {
@@ -72,7 +72,7 @@ const PostDetails = ({ navigation, route }) => {
                                 <Image style={styles.mainimg} source={require('../../Assets/images/avatar.png')} />
                                 <View>
                                     <Text style={styles.titleTxt}>Talk it Out Live </Text>
-                                    <Text style={styles.timeTxt}>10 mins ago</Text>
+                                    <Text style={styles.timeTxt}>{moment(postDetail.created_at).fromNow()}</Text>
                                 </View>
                             </View>
 
@@ -112,13 +112,13 @@ const PostDetails = ({ navigation, route }) => {
 
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 20 }}>
                             <Text style={styles.timeTxt}>21 Comments</Text>
-                            <TouchableOpacity onPress={() => navigation.navigate('CommentsList', { postDetail, commentList, })}>
+                            <TouchableOpacity onPress={() => navigation.navigate('CommentsList', { post: postDetail, commentList, })}>
                                 <Text style={styles.viewalltxt}>View All</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                     <FlatList
-                    //  keyExtractor={index => index}
+                        //  keyExtractor={index => index}
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={{ paddingBottom: 120, margin: 20, marginTop: 0, }}
                         style={{ flex: 1 }}
@@ -131,7 +131,7 @@ const PostDetails = ({ navigation, route }) => {
                                         <View style={{ flex: 1, }}>
                                             <View style={styles.headingView}>
                                                 <Text style={styles.titleTxt}>Anthony Newman</Text>
-                                                <Text style={styles.timeTxt}>10 mins ago</Text>
+                                                <Text style={styles.timeTxt}>{moment(item.created_at).fromNow()}</Text>
                                             </View>
                                             <Text style={styles.commentTxt}>{item.comment}</Text>
                                         </View>
