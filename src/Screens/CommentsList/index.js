@@ -16,9 +16,7 @@ const CommentsList = ({ navigation, route }) => {
     const [commentList, setCommentList] = useState(null)
     const [loader, setLoader] = useState(null)
 
-    console.log("🚀 ~ file: index.js ~ line 16 ~ CommentsList ~ loader", loader)
     useEffect(() => {
-        console.log('USE LAYOUT EFFECT')
         initState()
     }, [post])
 
@@ -38,6 +36,7 @@ const CommentsList = ({ navigation, route }) => {
         let previousData = commentList.data;
         let newCommentData = { ...data }
         newCommentData.data = [...previousData, ...data.data]
+        console.log("🚀 ~ commentList", newCommentData)
         setCommentList(newCommentData)
     }
 
@@ -61,7 +60,11 @@ const CommentsList = ({ navigation, route }) => {
                         <SvgXml xml={CrossIcon} />
                     </TouchableOpacity>
                 </View>
-
+                {commentList && commentList.data.length == 0 ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ width: 180, paddingVertical: 5, borderWidth: 1, borderColor: 'black', borderRadius: 5 }}>
+                        <Text style={{ color: 'black', textAlign: 'center' }}>No comments found</Text>
+                    </View>
+                </View> : null}
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     style={{ flex: 1, }}

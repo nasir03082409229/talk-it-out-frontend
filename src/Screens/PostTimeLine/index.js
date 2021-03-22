@@ -79,14 +79,7 @@ const PostTimeLine = ({ navigation }) => {
                                         <TouchableOpacity onPress={() => navigation.navigate('PostDetails')}>
                                             <SvgXml xml={MessageIcon} />
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => {
-                                            let dummyIsActiveHeart = [...isActiveHeart];
-                                            dummyIsActiveHeart[index].active = !dummyIsActiveHeart[index].active;
-                                            console.log('Active Heart Master', isActiveHeart);
-                                            console.log(dummyIsActiveHeart);
-                                            setIsActiveHeart(dummyIsActiveHeart);
-
-                                        }}>
+                                        <TouchableOpacity onPress={() => { }}>
                                             <SvgXml style={{ marginLeft: 10, }} xml={item.active ? ActiveHeart : InActiveHeart} />
                                         </TouchableOpacity>
                                     </View>
