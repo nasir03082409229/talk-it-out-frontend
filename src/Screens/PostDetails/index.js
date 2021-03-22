@@ -169,7 +169,11 @@ const styles = StyleSheet.create({
     commentTxt: { color: '#4A4A4A', fontFamily: Typography.FONT_FAMILY_LIGHT, fontSize: 12, },
     // mainimg: { resizeMode: 'contain', width: 30, height: 30, marginRight: 10, marginTop: -5, },
 
-    mainSearView: { zIndex: +10000, backgroundColor: '#FFF', flexDirection: 'row', alignItems: 'center', height: 60, elevation: 10, position: 'absolute', bottom: 58, left: 0, right: 0, },
+    mainSearView: {
+        zIndex: +10000, backgroundColor: '#FFF',
+        flexDirection: 'row', alignItems: 'center', height: 60, elevation: 10,
+        /// position: 'absolute', bottom: 58, left: 0, right: 0,
+    },
     commentinput: { paddingLeft: 10, flex: 1, },
     emoji: { width: 25, height: 25, },
     sendIcon: { marginRight: 10, marginLeft: 10, width: 40, alignItems: 'center', justifyContent: 'center', height: 40, borderRadius: 30, backgroundColor: '#FF6265' },
