@@ -6,6 +6,7 @@ import { InActiveHeart, PlusIcon, ActiveHeart, MessageIcon, SearchIcon, } from "
 import { Typography, Colors } from "../../Styles";
 import { SvgXml } from "react-native-svg";
 import Axios from 'axios'
+import moment from 'moment'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 const PostTimeLine = ({ navigation }) => {
     const [isActiveHeart, setIsActiveHeart] = useState([]);
@@ -33,12 +34,10 @@ const PostTimeLine = ({ navigation }) => {
         }
 
     }
-    console.log('postDatapostData=>', postData)
     return (
         <SafeAreaView style={{ flex: 1, }}>
             <StatusBar barStyle={'dark-content'} backgroundColor='#FFF' />
             <View style={{ flex: 1, backgroundColor: '#FFF' }}>
-
                 <View style={styles.header}>
                     <TouchableOpacity style={{}}>
                     </TouchableOpacity>
@@ -54,6 +53,7 @@ const PostTimeLine = ({ navigation }) => {
                     style={{ flex: 1 }}
                     data={postData}
                     renderItem={({ index, item }) => {
+                        console.log("🚀 ~ file: index.js ~ line 56 ~ PostTimeLine ~ item", item)
                         return (
                             <TouchableOpacity
                                 key={`${index.toString() + 'post'}`}
@@ -61,7 +61,7 @@ const PostTimeLine = ({ navigation }) => {
                                 style={styles.maintimelineview}>
                                 <View style={styles.titletimeview}>
                                     <Text style={styles.titleTxt}>{item.title}</Text>
-                                    <Text style={styles.timeTxt}>10 mins ago</Text>
+                                    <Text style={styles.timeTxt}>{moment(item.created_at).fromNow()}</Text>
                                     <Image style={styles.img}
                                         source={{ uri: item.image }} />
 
@@ -71,7 +71,7 @@ const PostTimeLine = ({ navigation }) => {
                                         <Image style={styles.mainimg} source={require('../../Assets/images/avatar.png')} />
                                         <View>
                                             <Text style={styles.titleTxt}>Talk it Out Live </Text>
-                                            <Text style={styles.timeTxt}>10 mins ago</Text>
+                                            <Text style={styles.timeTxt}>{moment(item.created_at).fromNow()}</Text>
                                         </View>
                                     </View>
 
@@ -92,16 +92,8 @@ const PostTimeLine = ({ navigation }) => {
                                     </View>
                                 </View>
                             </TouchableOpacity>
-
                         )
                     }} /> : <ActivityIndicator color={'#fff'} size={20} style={{ alignSelf: 'center' }} />}
-
-
-                <TouchableOpacity onPress={() => navigation.navigate('CreatePost')} style={{ position: 'absolute', bottom: 60, right: 20 }}>
-                    <SvgXml style={{}} xml={PlusIcon} />
-                </TouchableOpacity>
-
-
             </View>
         </SafeAreaView>
     )

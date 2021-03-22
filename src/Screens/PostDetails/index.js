@@ -6,18 +6,51 @@ import { LocationIcon, ShareIcon, ArrowLeft, SettingIconHori, ActiveHeart, InAct
 import { Typography, Colors } from "../../Styles";
 import { SvgXml } from "react-native-svg";
 import Image from 'react-native-fast-image'
+import Axios from 'axios'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
+
 
 const PostDetails = ({ navigation, route }) => {
-    const { post, isFromTimeline } = route.params;
+    const { post, isFromTimeline, post_id } = route.params;
+    console.log("🚀 ~ file: index.js ~ line 12 ~ PostDetails ~ post", post)
     const [postDetail, setPostDetail] = useState(null)
+    const [commentList, setCommentList] = useState(null)
+
     useEffect(() => {
+        initState()
+        return () => {
+            setPostDetail(null)
+            setCommentList(null)
+        }
+    }, [post])
+
+    const initState = () => {
         if (isFromTimeline) {
             setPostDetail(post)
         } else {
             // post_id will do it later
-
         }
-    }, [])
+        getComments()
+    }
+
+    const getComments = async () => {
+        let post_id = post ? post.id : post_id;
+        console.log("🚀 ~ file: index.js ~ line 34 ~ getComments ~ post_id", post_id)
+        const access_token = await AsyncStorage.getItem('@access_token')
+        const { data } = await Axios({
+            url: `https://talkitoutqueen.com/dashboard/api/get-comments/${post_id}`,
+            method: 'get',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+            }
+        })
+        console.log('datadata', data)
+        setCommentList(data)
+    }
+
     return (
         <SafeAreaView style={{ flex: 1, }}>
             <StatusBar barStyle={'dark-content'} backgroundColor='#FFF' />
@@ -79,31 +112,33 @@ const PostDetails = ({ navigation, route }) => {
 
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 20 }}>
                             <Text style={styles.timeTxt}>21 Comments</Text>
-                            <TouchableOpacity onPress={() => navigation.navigate('CommentsList')}>
+                            <TouchableOpacity onPress={() => navigation.navigate('CommentsList', { postDetail, commentList, })}>
                                 <Text style={styles.viewalltxt}>View All</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <FlatList keyExtractor={index => index} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120, margin: 20, marginTop: 0, }} style={{ flex: 1 }} data={[1, 2,]} renderItem={({ index, item }) => {
-                        return (
-                            <View style={styles.maintimelineview}>
-                                <View style={{ flexDirection: 'row', }}>
-                                    <Image style={styles.mainimg} source={require('../../Assets/images/avatar.png')} />
-                                    <View style={{ flex: 1, }}>
-                                        <View style={styles.headingView}>
-                                            <Text style={styles.titleTxt}>Anthony Newman</Text>
-                                            <Text style={styles.timeTxt}>10 mins ago</Text>
+                    <FlatList
+                    //  keyExtractor={index => index}
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={{ paddingBottom: 120, margin: 20, marginTop: 0, }}
+                        style={{ flex: 1 }}
+                        data={commentList ? commentList.data : []}
+                        renderItem={({ index, item }) => {
+                            return (
+                                <View key={`${index}${item.id}-postdetail`} style={styles.maintimelineview}>
+                                    <View style={{ flexDirection: 'row', }}>
+                                        <Image style={styles.mainimg} source={require('../../Assets/images/avatar.png')} />
+                                        <View style={{ flex: 1, }}>
+                                            <View style={styles.headingView}>
+                                                <Text style={styles.titleTxt}>Anthony Newman</Text>
+                                                <Text style={styles.timeTxt}>10 mins ago</Text>
+                                            </View>
+                                            <Text style={styles.commentTxt}>{item.comment}</Text>
                                         </View>
-                                        <Text style={styles.commentTxt}>It was a humorously perilous business for both of us. For, before we proceed further</Text>
                                     </View>
-
                                 </View>
-
-
-                            </View>
-
-                        )
-                    }} />
+                            )
+                        }} />
 
                 </ScrollView> : <ActivityIndicator color={'#fff'} size={20} style={{ alignSelf: 'center' }} />}
             </View>
