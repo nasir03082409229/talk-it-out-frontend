@@ -17,6 +17,7 @@ const PostDetails = ({ navigation, route }) => {
     const [postDetail, setPostDetail] = useState(null)
     const [commentList, setCommentList] = useState(null)
 
+    const [commentText, setCommentText] = useState('')
     useEffect(() => {
         initState()
         return () => {
@@ -49,6 +50,29 @@ const PostDetails = ({ navigation, route }) => {
         })
         console.log('datadata', data)
         setCommentList(data)
+    }
+
+    const onPressSendComment = async () => {
+        const access_token = await AsyncStorage.getItem('@access_token')
+        let user = await AsyncStorage.getItem('@user')
+        user = JSON.parse(user);
+        console.log({ "user_id": user.id, "post_id": post.id, "comment": commentText, access_token }, '{ "user_id": user.id, "post_id": post.id, "comment": commentText }');
+        try {
+            const { data } = await Axios({
+                url: `https://talkitoutqueen.com/dashboard/api/post-comments`,
+                method: 'post',
+                data: { "user_id": user.id, "post_id": Number(post.id), "comment": commentText },
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                }
+            })
+            console.log("🚀 ~ file: index.js ~ data ", data)
+        } catch (error) {
+            console.log("🚀 ~ file: index.js ~ line ", error)
+        }
+
     }
 
     return (
@@ -143,12 +167,16 @@ const PostDetails = ({ navigation, route }) => {
                 </ScrollView> : <ActivityIndicator color={'#fff'} size={20} style={{ alignSelf: 'center' }} />}
             </View>
             <View style={styles.mainSearView}>
-                <TextInput style={styles.commentinput} placeholder='Write Comment...' />
+                <TextInput
+                    value={commentText}
+                    onChangeText={(text) => setCommentText(text)}
+                    style={styles.commentinput}
+                    placeholder='Write Comment...' />
                 <TouchableOpacity >
                     <Image style={styles.emoji} source={require('../../Assets/images/emojiImg.png')} />
 
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.sendIcon} >
+                <TouchableOpacity onPress={onPressSendComment} style={styles.sendIcon} >
                     <SvgXml xml={SendIcon} />
                 </TouchableOpacity>
             </View>
