@@ -15,8 +15,9 @@ const PostDetails = ({ navigation, route }) => {
     const { post, isFromTimeline, post_id } = route.params;
     const [postDetail, setPostDetail] = useState(null)
     const [commentList, setCommentList] = useState(null)
-
+    console.log("🚀 ~ file: index.js ~ line 18 ~ PostDetails ~ commentList",postDetail, commentList)
     const [commentText, setCommentText] = useState('')
+    
     useEffect(() => {
         initState()
         return () => {
@@ -147,7 +148,7 @@ const PostDetails = ({ navigation, route }) => {
                         </View>
 
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 20 }}>
-                            <Text style={styles.timeTxt}>21 Comments</Text>
+                            <Text style={styles.timeTxt}>{`${postDetail.count_comments} Comments`}</Text>
                             <TouchableOpacity onPress={() => navigation.navigate('CommentsList', { post: postDetail, commentList, })}>
                                 <Text style={styles.viewalltxt}>View All</Text>
                             </TouchableOpacity>
