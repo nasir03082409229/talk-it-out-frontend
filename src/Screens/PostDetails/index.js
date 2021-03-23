@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, View, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
+import { FlatList, StyleSheet, View, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity, ActivityIndicator, Keyboard } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { LocationIcon, ShareIcon, ArrowLeft, SettingIconHori, ActiveHeart, InActiveHeart, SendIcon, UploadIcon, SearchIcon } from "../../Assets/Icons";
@@ -13,7 +13,6 @@ import moment from 'moment'
 
 const PostDetails = ({ navigation, route }) => {
     const { post, isFromTimeline, post_id } = route.params;
-    console.log("🚀 ~ file: index.js ~ line 12 ~ PostDetails ~ post", post)
     const [postDetail, setPostDetail] = useState(null)
     const [commentList, setCommentList] = useState(null)
 
@@ -54,21 +53,34 @@ const PostDetails = ({ navigation, route }) => {
 
     const onPressSendComment = async () => {
         const access_token = await AsyncStorage.getItem('@access_token')
+        console.log("🚀 ~ file: index.js ~ line 57 ~ onPressSendComment ~ access_token", access_token)
         let user = await AsyncStorage.getItem('@user')
         user = JSON.parse(user);
-        console.log({ "user_id": user.id, "post_id": post.id, "comment": commentText, access_token }, '{ "user_id": user.id, "post_id": post.id, "comment": commentText }');
         try {
             const { data } = await Axios({
                 url: `https://talkitoutqueen.com/dashboard/api/post-comments`,
-                method: 'post',
-                data: { "user_id": user.id, "post_id": Number(post.id), "comment": commentText },
+                method: 'put',
+                data: {
+                    "user_id": user.id,
+                    "post_id": post.id,
+                    "comment": commentText
+                },
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${access_token}`
                 }
             })
-            console.log("🚀 ~ file: index.js ~ data ", data)
+            commentList.data.push({
+                comment: commentText,
+                user_id: user.id,
+                post_id: post.id
+            })
+            setCommentList({ ...commentList })
+            setCommentText('')
+            Keyboard.dismiss()
+            
+            console.log("🚀 ~ file: index.js ~ commentList ", commentList)
         } catch (error) {
             console.log("🚀 ~ file: index.js ~ line ", error)
         }

@@ -11,7 +11,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 const PostTimeLine = ({ navigation }) => {
     const [isActiveHeart, setIsActiveHeart] = useState([]);
     const [postData, setPostData] = useState(null);
-
+    
+    console.log("🚀 ~ file: index.js ~ line 14 ~ PostTimeLine ~ postData", postData)
     useEffect(() => {
         initState()
     }, [])
@@ -28,7 +29,8 @@ const PostTimeLine = ({ navigation }) => {
                     'Authorization': `Bearer ${access_token}`
                 }
             })
-            setPostData([...data])
+            console.log("🚀 ~ file: index.js ~ line 25 ~ initState ~ data", data)
+            setPostData([...data.data])
         } catch (err) {
             console.log("errerrerrerr", err)
         }
@@ -47,7 +49,7 @@ const PostTimeLine = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
                 {postData ? <FlatList
-                    keyExtractor={index => index}
+                    // keyExtractor={index => index}
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ paddingBottom: 130 }}
                     style={{ flex: 1 }}
