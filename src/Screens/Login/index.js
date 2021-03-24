@@ -30,7 +30,7 @@ const Login = ({ navigation }) => {
                     method: 'post',
                     data: { "email": email, "password": password }
                 }).then(async (response) => {
-                    console.log('LOGIN=======',response.data)
+                    console.log('LOGIN=======', response.data)
                     await AsyncStorage.setItem('@access_token', response.data.access_token)
                     await AsyncStorage.setItem('@user', JSON.stringify(response.data.user))
                     let device_id = getUniqueId()
@@ -61,9 +61,14 @@ const Login = ({ navigation }) => {
 
 
                 }).catch((err) => {
-                    console.log("🚀 ~ file: index.js ~ line 46 ~ onPressLogin ~ err", err)
+                    console.log("🚀 ~ file: index.js ~ line 46 ~ onPressLogin ~ err", err.response, JSON.parse(JSON.stringify(err)))
                     setLoader(false)
-                    setPasswordError('Invalid email Or password')
+                    console.log()
+                    if (err.response.status == 412) {
+                        setPasswordError(err.response.data.message)
+                    } else {
+                        setPasswordError('Invalid email Or password')
+                    }
                 })
             } else {
                 setPasswordError('Invalid email Or password')

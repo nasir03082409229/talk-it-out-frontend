@@ -1,10 +1,11 @@
 import React from "react";
-import { FlatList, StyleSheet, View, Image, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from "react-native";
+import { FlatList, StyleSheet, View, Image, Alert, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { CrossIcon, ArrowLeft, EmojiIcon, SaveIcon, SendIcon, UploadIcon } from "../../Assets/Icons";
 import { Typography, Colors } from "../../Styles";
 import { SvgXml } from "react-native-svg";
+import ImagePicker from 'react-native-image-crop-picker';
 
 const CreateAccount = ({ navigation }) => {
     return (
@@ -13,7 +14,7 @@ const CreateAccount = ({ navigation }) => {
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 70 }} style={{ backgroundColor: '#FFF', flex: 1, }}>
 
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => { navigation.goBack() }} style={{padding:5}}>
+                    <TouchableOpacity onPress={() => { navigation.goBack() }} style={{ padding: 5 }}>
                         <SvgXml xml={ArrowLeft} />
                     </TouchableOpacity>
                     <Text style={styles.Createtxt}>Create Account</Text>
@@ -21,7 +22,33 @@ const CreateAccount = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
                 <Text style={styles.UploadImageTxt}>Fill in required  wall name and add your Picture then click Proceed.</Text>
-                <Image style={styles.img} source={require('../../Assets/images/addimg.png')} />
+                <TouchableOpacity onPress={() => {
+                    Alert.alert(
+                        "Upload Image",
+                        "",
+                        [
+                            {
+                                text: "OPEN CAMERA",
+                                onPress: () => {
+                                    ImagePicker.openCamera({}).then((images) => {
+                                        console.log("🚀 ~ file: index.js ~ line 34 ~ ImagePicker.openCamera ~ images", images)
+                                    })
+                                },
+                                style: "cancel"
+                            },
+                            {
+                                text: "OPEN GALLERY", onPress: () => {
+                                    ImagePicker.openPicker({}).then((images) => {
+                                        console.log("🚀 ~ file: index.js ~ line 34 ~ ImagePicker.openCamera ~ images", images)
+                                    })
+                                }
+                            }
+                        ]
+                    );
+
+                }}>
+                    <Image style={styles.img} source={require('../../Assets/images/addimg.png')} />
+                </TouchableOpacity>
 
                 <TextInput placeholderTextColor='#4A4A4A50' placeholder='Enter Wall Name' style={styles.inputSty} />
 
