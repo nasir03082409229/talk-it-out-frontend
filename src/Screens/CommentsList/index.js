@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, View, Image, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
+import { FlatList, StyleSheet, View, Image, StatusBar, SafeAreaView, Keyboard, ScrollView, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { CrossIcon, ArrowLeft, EmojiIcon, SaveIcon, SendIcon, UploadIcon, SearchIcon } from "../../Assets/Icons";
@@ -15,6 +15,8 @@ const CommentsList = ({ navigation, route }) => {
     const [postDetail, setPostDetail] = useState(null)
     const [commentList, setCommentList] = useState(null)
     const [loader, setLoader] = useState(null)
+    const [commentText, setCommentText] = useState('')
+
 
     useEffect(() => {
         initState()
@@ -45,7 +47,41 @@ const CommentsList = ({ navigation, route }) => {
         setPostDetail(post)
         setCommentList(commentList)
     }
+    const onPressSendComment = async () => {
+        const access_token = await AsyncStorage.getItem('@access_token')
+        console.log("🚀 ~ file: index.js ~ line 57 ~ onPressSendComment ~ access_token", access_token)
+        let user = await AsyncStorage.getItem('@user')
+        user = JSON.parse(user);
+        try {
+            const { data } = await Axios({
+                url: `https://talkitoutqueen.com/dashboard/api/post-comments`,
+                method: 'put',
+                data: {
+                    "user_id": user.id,
+                    "post_id": post.id,
+                    "comment": commentText
+                },
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                }
+            })
+            commentList.data.unshift({
+                comment: commentText,
+                user_id: user.id,
+                post_id: post.id
+            })
+            setCommentList({ ...commentList })
+            setCommentText('')
+            Keyboard.dismiss()
 
+            console.log("🚀 ~ file: index.js ~ commentList ", commentList)
+        } catch (error) {
+            console.log("🚀 ~ file: index.js ~ line ", error)
+        }
+
+    }
     return (
         <SafeAreaView style={{ flex: 1, }}>
 
@@ -93,12 +129,16 @@ const CommentsList = ({ navigation, route }) => {
                     }} />
 
                 <View style={styles.mainSearView}>
-                    <TextInput style={styles.commentinput} placeholder='Write Comment...' />
+                    <TextInput
+                        value={commentText}
+                        onChangeText={(text) => setCommentText(text)}
+                        style={styles.commentinput}
+                        placeholder='Write Comment...' />
                     <TouchableOpacity >
                         <Image style={styles.emoji} source={require('../../Assets/images/emojiImg.png')} />
 
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.sendIcon} >
+                    <TouchableOpacity onPress={onPressSendComment} style={styles.sendIcon} >
                         <SvgXml xml={SendIcon} />
                     </TouchableOpacity>
                 </View>

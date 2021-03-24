@@ -15,9 +15,9 @@ const PostDetails = ({ navigation, route }) => {
     const { post, isFromTimeline, post_id } = route.params;
     const [postDetail, setPostDetail] = useState(null)
     const [commentList, setCommentList] = useState(null)
-    console.log("🚀 ~ file: index.js ~ line 18 ~ PostDetails ~ commentList",postDetail, commentList)
+    console.log("🚀 ~ file: index.js ~ line 18 ~ PostDetails ~ commentList", postDetail, commentList)
     const [commentText, setCommentText] = useState('')
-    
+
     useEffect(() => {
         initState()
         return () => {
@@ -72,7 +72,7 @@ const PostDetails = ({ navigation, route }) => {
                     'Authorization': `Bearer ${access_token}`
                 }
             })
-            commentList.data.push({
+            commentList.data.unshift({
                 comment: commentText,
                 user_id: user.id,
                 post_id: post.id
@@ -80,7 +80,7 @@ const PostDetails = ({ navigation, route }) => {
             setCommentList({ ...commentList })
             setCommentText('')
             Keyboard.dismiss()
-            
+
             console.log("🚀 ~ file: index.js ~ commentList ", commentList)
         } catch (error) {
             console.log("🚀 ~ file: index.js ~ line ", error)

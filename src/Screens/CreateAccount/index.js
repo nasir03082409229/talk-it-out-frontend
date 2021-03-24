@@ -8,6 +8,32 @@ import { SvgXml } from "react-native-svg";
 import ImagePicker from 'react-native-image-crop-picker';
 
 const CreateAccount = ({ navigation }) => {
+
+    const onPressSelectImage = () => {
+        Alert.alert(
+            "Upload Image",
+            "",
+            [
+                {
+                    text: "OPEN CAMERA",
+                    onPress: () => {
+                        ImagePicker.openCamera({}).then((images) => {
+                            console.log("🚀 ~ file: index.js ~ line 34 ~ ImagePicker.openCamera ~ images", images)
+                        })
+                    },
+                    style: "cancel"
+                },
+                {
+                    text: "OPEN GALLERY", onPress: () => {
+                        ImagePicker.openPicker({}).then((images) => {
+                            console.log("🚀 ~ file: index.js ~ line 34 ~ ImagePicker.openCamera ~ images", images)
+                        })
+                    }
+                }
+            ]
+        );
+    }
+
     return (
         <SafeAreaView style={{ flex: 1, }}>
             <StatusBar barStyle={'dark-content'} backgroundColor='#FFF' />
@@ -22,31 +48,7 @@ const CreateAccount = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
                 <Text style={styles.UploadImageTxt}>Fill in required  wall name and add your Picture then click Proceed.</Text>
-                <TouchableOpacity onPress={() => {
-                    Alert.alert(
-                        "Upload Image",
-                        "",
-                        [
-                            {
-                                text: "OPEN CAMERA",
-                                onPress: () => {
-                                    ImagePicker.openCamera({}).then((images) => {
-                                        console.log("🚀 ~ file: index.js ~ line 34 ~ ImagePicker.openCamera ~ images", images)
-                                    })
-                                },
-                                style: "cancel"
-                            },
-                            {
-                                text: "OPEN GALLERY", onPress: () => {
-                                    ImagePicker.openPicker({}).then((images) => {
-                                        console.log("🚀 ~ file: index.js ~ line 34 ~ ImagePicker.openCamera ~ images", images)
-                                    })
-                                }
-                            }
-                        ]
-                    );
-
-                }}>
+                <TouchableOpacity onPress={onPressSelectImage}>
                     <Image style={styles.img} source={require('../../Assets/images/addimg.png')} />
                 </TouchableOpacity>
 
