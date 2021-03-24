@@ -38,7 +38,6 @@ const CommentsList = ({ navigation, route }) => {
         let previousData = commentList.data;
         let newCommentData = { ...data }
         newCommentData.data = [...previousData, ...data.data]
-        console.log("🚀 ~ commentList", newCommentData)
         setCommentList(newCommentData)
     }
 
@@ -49,9 +48,10 @@ const CommentsList = ({ navigation, route }) => {
     }
     const onPressSendComment = async () => {
         const access_token = await AsyncStorage.getItem('@access_token')
-        console.log("🚀 ~ file: index.js ~ line 57 ~ onPressSendComment ~ access_token", access_token)
         let user = await AsyncStorage.getItem('@user')
         user = JSON.parse(user);
+        console.log("🚀 ~ file: ind", access_token, user.id,
+            commentText)
         try {
             const { data } = await Axios({
                 url: `https://talkitoutqueen.com/dashboard/api/post-comments`,
@@ -82,6 +82,7 @@ const CommentsList = ({ navigation, route }) => {
         }
 
     }
+    
     return (
         <SafeAreaView style={{ flex: 1, }}>
 
