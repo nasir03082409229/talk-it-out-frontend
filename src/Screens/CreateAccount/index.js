@@ -53,14 +53,14 @@ const CreateAccount = ({ navigation }) => {
 
 
     const onPressProceed = async () => {
-        navigation.navigate('PostTimeLine')
-        return;
         let user = await AsyncStorage.getItem('@user');
+        const access_token = await AsyncStorage.getItem('@access_token')
+
         user = JSON.parse(user);
         let data = new FormData();
         data.append('image',
             {
-                uri: 'file://data/user/0/com.talkitout/cache/react-native-image-crop-picker/Screenshot_20210318-233240.png',
+                uri: avatarImage.path,
                 name: `${name}.png`,
                 type: 'image/jpg'
             });
@@ -68,10 +68,18 @@ const CreateAccount = ({ navigation }) => {
             const { data } = await axios({
                 method: 'post',
                 url: `https://talkitoutqueen.com/dashboard/api/user-profile-update/${user.id}`,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                },
                 data: data
             })
+
+            navigation.navigate('PostTimeLine')
             console.log("🚀 ~ file: index.js ~ line 66 ~ onPressProceed ~ data", data)
         } catch (err) {
+            alert(err.response.message)
             console.log("🚀 ~ ferrerrerr", err)
 
         }

@@ -88,6 +88,23 @@ const PostDetails = ({ navigation, route }) => {
 
     }
 
+    const onPressHeart = async (item) => {
+        const access_token = await AsyncStorage.getItem('@access_token')
+        let user = await AsyncStorage.getItem('@user');
+        user = JSON.parse(user)
+        const { data } = await Axios({
+            url: 'https://talkitoutqueen.com/dashboard/api/post-likes', method: 'put',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+            },
+            data: { "user_id": user.id, "post_id": item.id }
+        })
+        postDetail.is_liked = postDetail.is_liked == 'true' ? 'false' : 'true'
+        setPostDetail({ ...postDetail })
+    }
+
     return (
         <SafeAreaView style={{ flex: 1, }}>
             <StatusBar barStyle={'dark-content'} backgroundColor='#FFF' />
@@ -106,9 +123,9 @@ const PostDetails = ({ navigation, route }) => {
                     <View style={styles.maintimelineview}>
                         <View style={styles.lowerview}>
                             <View style={styles.imgdetailview}>
-                                <Image style={styles.mainimg} source={require('../../Assets/images/avatar.png')} />
+                                <Image style={styles.mainimg} source={{ uri: postDetail.creator_photo }} />
                                 <View>
-                                    <Text style={styles.titleTxt}>Talk it Out Live </Text>
+                                    <Text style={styles.titleTxt}>{postDetail.created_by}</Text>
                                     <Text style={styles.timeTxt}>{moment(postDetail.created_at).fromNow()}</Text>
                                 </View>
                             </View>
@@ -136,11 +153,11 @@ const PostDetails = ({ navigation, route }) => {
                             <TouchableOpacity style={{ marginRight: 10, }}>
                                 <SvgXml xml={LocationIcon} />
                             </TouchableOpacity>
-                            <Text style={styles.timeTxt}>10 mins ago</Text>
+                            <Text style={styles.timeTxt}>{moment(postDetail.created_at).fromNow()}</Text>
                         </View>
                         <View style={styles.heartShareView}>
-                            <TouchableOpacity style={styles.heartIcon}>
-                                <SvgXml xml={InActiveHeart} />
+                            <TouchableOpacity style={styles.heartIcon} onPress={() => onPressHeart(postDetail)}>
+                                <SvgXml xml={postDetail.is_liked !== 'false' ? ActiveHeart : InActiveHeart} />
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.shareIcon}>
                                 <SvgXml xml={ShareIcon} />
@@ -164,10 +181,10 @@ const PostDetails = ({ navigation, route }) => {
                             return (
                                 <View key={`${index}${item.id}-postdetail`} style={styles.maintimelineview}>
                                     <View style={{ flexDirection: 'row', }}>
-                                        <Image style={styles.mainimg} source={require('../../Assets/images/avatar.png')} />
+                                        <Image style={styles.mainimg} source={{ uri: item.user_photo }} />
                                         <View style={{ flex: 1, }}>
                                             <View style={styles.headingView}>
-                                                <Text style={styles.titleTxt}>Anthony Newman</Text>
+                                                <Text style={styles.titleTxt}>{item.user_name}</Text>
                                                 <Text style={styles.timeTxt}>{moment(item.created_at).fromNow()}</Text>
                                             </View>
                                             <Text style={styles.commentTxt}>{item.comment}</Text>

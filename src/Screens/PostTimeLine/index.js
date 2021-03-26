@@ -9,15 +9,20 @@ import Axios from 'axios'
 import moment from 'moment'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 const PostTimeLine = ({ navigation }) => {
-    const [isActiveHeart, setIsActiveHeart] = useState([]);
     const [postData, setPostData] = useState(null);
-    
+
     console.log("🚀 ~ file: index.js ~ line 14 ~ PostTimeLine ~ postData", postData)
     useEffect(() => {
-        initState()
-    }, [])
+        const unsubscribe = navigation.addListener('focus', () => {
+            initState()
+            // do something
+        });
+
+        return unsubscribe;
+    }, [navigation])
 
     const initState = async () => {
+
         try {
             const access_token = await AsyncStorage.getItem('@access_token')
             console.log("~ access_token", access_token)
@@ -36,6 +41,24 @@ const PostTimeLine = ({ navigation }) => {
         }
 
     }
+
+    const onPressHeart = async (item, index) => {
+        const access_token = await AsyncStorage.getItem('@access_token')
+        let user = await AsyncStorage.getItem('@user');
+        user = JSON.parse(user)
+        const { data } = await Axios({
+            url: 'https://talkitoutqueen.com/dashboard/api/post-likes', method: 'put',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+            },
+            data: { "user_id": user.id, "post_id": item.id }
+        })
+        postData[index].is_liked = postData[index].is_liked == 'true' ? 'false' : 'true'
+        setPostData([...postData])
+    }
+
     return (
         <SafeAreaView style={{ flex: 1, }}>
             <StatusBar barStyle={'dark-content'} backgroundColor='#FFF' />
@@ -70,9 +93,9 @@ const PostTimeLine = ({ navigation }) => {
                                 </View>
                                 <View style={styles.lowerview}>
                                     <View style={styles.imgdetailview}>
-                                        <Image style={styles.mainimg} source={require('../../Assets/images/avatar.png')} />
+                                        <Image style={styles.mainimg} source={{ uri: item.creator_photo }} />
                                         <View>
-                                            <Text style={styles.titleTxt}>Talk it Out Live </Text>
+                                            <Text style={styles.titleTxt}>{item.created_by}</Text>
                                             <Text style={styles.timeTxt}>{moment(item.created_at).fromNow()}</Text>
                                         </View>
                                     </View>
@@ -81,8 +104,8 @@ const PostTimeLine = ({ navigation }) => {
                                         <TouchableOpacity onPress={() => navigation.navigate('PostDetails')}>
                                             <SvgXml xml={MessageIcon} />
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => { }}>
-                                            <SvgXml style={{ marginLeft: 10, }} xml={item.active ? ActiveHeart : InActiveHeart} />
+                                        <TouchableOpacity onPress={() => onPressHeart(item, index)}>
+                                            <SvgXml style={{ marginLeft: 10, }} xml={item.is_liked !== 'false' ? ActiveHeart : InActiveHeart} />
                                         </TouchableOpacity>
                                     </View>
                                 </View>
