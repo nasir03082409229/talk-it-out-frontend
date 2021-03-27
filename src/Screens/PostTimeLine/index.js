@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FlatList, StyleSheet, View, Image, StatusBar, SafeAreaView, ScrollView, ActivityIndicator, TextInput, TouchableOpacity } from "react-native";
+import { FlatList, StyleSheet, RefreshControl, View, StatusBar, SafeAreaView, ScrollView, ActivityIndicator, TextInput, TouchableOpacity } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { InActiveHeart, PlusIcon, ActiveHeart, MessageIcon, SearchIcon, } from "../../Assets/Icons";
@@ -8,8 +8,10 @@ import { SvgXml } from "react-native-svg";
 import Axios from 'axios'
 import moment from 'moment'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import Image from "react-native-fast-image";
 const PostTimeLine = ({ navigation }) => {
     const [postData, setPostData] = useState(null);
+    const [loader, setLoader] = useState(false);
 
     console.log("🚀 ~ file: index.js ~ line 14 ~ PostTimeLine ~ postData", postData)
     useEffect(() => {
@@ -22,6 +24,7 @@ const PostTimeLine = ({ navigation }) => {
     }, [navigation])
 
     const initState = async () => {
+        setLoader(true)
 
         try {
             const access_token = await AsyncStorage.getItem('@access_token')
@@ -36,7 +39,9 @@ const PostTimeLine = ({ navigation }) => {
             })
             console.log("🚀 ~ file: index.js ~ line 25 ~ initState ~ data", data)
             setPostData([...data.data])
+            setLoader(false)
         } catch (err) {
+            setLoader(false)
             console.log("errerrerrerr", err)
         }
 
@@ -72,7 +77,12 @@ const PostTimeLine = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
                 {postData ? <FlatList
-                    // keyExtractor={index => index}
+                      refreshControl={
+                        <RefreshControl
+                          refreshing={loader}
+                          onRefresh={initState}
+                        />
+                      }
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ paddingBottom: 130 }}
                     style={{ flex: 1 }}
@@ -101,7 +111,7 @@ const PostTimeLine = ({ navigation }) => {
                                     </View>
 
                                     <View style={{ flexDirection: 'row', }}>
-                                        <TouchableOpacity onPress={() => navigation.navigate('PostDetails')}>
+                                        <TouchableOpacity onPress={() => navigation.navigate('PostDetails',{ post: item, isFromTimeline: true })}>
                                             <SvgXml xml={MessageIcon} />
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => onPressHeart(item, index)}>
