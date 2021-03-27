@@ -9,6 +9,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import Image from 'react-native-fast-image'
+import { CommonActions } from "@react-navigation/routers";
 
 const CreateAccount = ({ navigation }) => {
 
@@ -83,31 +84,41 @@ const CreateAccount = ({ navigation }) => {
         console.log("🚀 ~ file: index.js ~ line 59 ~ onPressProceed ~ access_token", access_token)
 
         user = JSON.parse(user);
-        let data = new FormData();
-        data.append('image',
-            {
-                uri: avatarImage,
-                name: `${name}.png`,
-                type: 'image/jpg'
-            });
-        try {
-            const { data } = await axios({
-                method: 'put',
-                url: `https://talkitoutqueen.com/dashboard/api/user-profile-update/${user.id}`,
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${access_token}`
-                },
-                data: data
-            })
+        // if image change
+        if (avatarImage?.path) {
+            let data = new FormData();
+            data.append('image', { uri: avatarImage, name: `${name}.png`, type: 'image/jpg' });
+            try {
+                const { data } = await axios({
+                    method: 'put',
+                    url: `https://talkitoutqueen.com/dashboard/api/user-profile-update/${user.id}`,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${access_token}`
+                    },
+                    data: data
+                })
+                console.log("🚀 ~ file: index.js ~ line 66 ~ onPressProceed ~ data", data)
+            } catch (err) {
+                console.log("🚀 ~ ferrerrerr", err)
 
-            navigation.navigate('PostTimeLine')
-            console.log("🚀 ~ file: index.js ~ line 66 ~ onPressProceed ~ data", data)
-        } catch (err) {
-            console.log("🚀 ~ ferrerrerr", err)
-
+            }
         }
+        // if username changes
+
+        const res = await axios({
+            method: 'put',
+            url: `https://talkitoutqueen.com/dashboard/api/user-profile-update/${user.id}`,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+            },
+            data: { "name": name }
+        })
+        console.log('resresresres', res)
+        navigation.navigate('PostTimeLine')
     }
 
     return (
