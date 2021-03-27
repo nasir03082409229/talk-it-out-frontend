@@ -8,7 +8,7 @@ import { SvgXml } from "react-native-svg";
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Axios from 'axios'
 import { useLayoutEffect } from "react";
-
+import moment from 'moment'
 const CommentsList = ({ navigation, route }) => {
     const { post } = route.params;
 
@@ -50,8 +50,8 @@ const CommentsList = ({ navigation, route }) => {
         const access_token = await AsyncStorage.getItem('@access_token')
         let user = await AsyncStorage.getItem('@user')
         user = JSON.parse(user);
-        console.log("🚀 ~ file: ind", access_token, user.id,
-            commentText)
+        console.log("🚀 ~ file: ind", user)
+        console.log("🚀 ~ file: ind", commentList)
         try {
             const { data } = await Axios({
                 url: `https://talkitoutqueen.com/dashboard/api/post-comments`,
@@ -70,8 +70,11 @@ const CommentsList = ({ navigation, route }) => {
             commentList.data.unshift({
                 comment: commentText,
                 user_id: user.id,
-                post_id: post.id
+                post_id: post.id,
+                user_name: user.name,
+                user_photo: user.image
             })
+            console.log("🚀 ~ file: index.js ~ line 71 ~ onPressSendComment ~ commentList", commentList)
             setCommentList({ ...commentList })
             setCommentText('')
             Keyboard.dismiss()
@@ -82,7 +85,7 @@ const CommentsList = ({ navigation, route }) => {
         }
 
     }
-    
+
     return (
         <SafeAreaView style={{ flex: 1, }}>
 
@@ -114,13 +117,13 @@ const CommentsList = ({ navigation, route }) => {
                     </View>)}
                     renderItem={({ index, item }) => {
                         return (
-                            <View key={index} style={styles.maintimelineview}>
+                            <View key={`${index}${item.id}-postdetail`} style={styles.maintimelineview}>
                                 <View style={{ flexDirection: 'row', }}>
-                                    <Image style={styles.mainimg} source={require('../../Assets/images/avatar.png')} />
+                                    <Image style={styles.mainimg} source={{ uri: item.user_photo }} />
                                     <View style={{ flex: 1, }}>
                                         <View style={styles.headingView}>
-                                            <Text style={styles.titleTxt}>Anthony Newman</Text>
-                                            <Text style={styles.timeTxt}>10 mins ago</Text>
+                                            <Text style={styles.titleTxt}>{item.user_name}</Text>
+                                            <Text style={styles.timeTxt}>{moment(item.created_at).fromNow()}</Text>
                                         </View>
                                         <Text style={styles.commentTxt}>{item.comment}</Text>
                                     </View>

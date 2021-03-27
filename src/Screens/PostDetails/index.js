@@ -75,7 +75,9 @@ const PostDetails = ({ navigation, route }) => {
             commentList.data.unshift({
                 comment: commentText,
                 user_id: user.id,
-                post_id: post.id
+                post_id: post.id,
+                user_name: user.name,
+                user_photo: user.image
             })
             setCommentList({ ...commentList })
             setCommentText('')
@@ -181,7 +183,7 @@ const PostDetails = ({ navigation, route }) => {
                             return (
                                 <View key={`${index}${item.id}-postdetail`} style={styles.maintimelineview}>
                                     <View style={{ flexDirection: 'row', }}>
-                                        <Image style={styles.mainimg} source={{ uri: item.user_photo }} />
+                                        <Image style={styles.mainimg} source={{ uri: item.user_photo ? item.user_photo : `https://cencup.com/wp-content/uploads/2019/07/avatar-placeholder.png` }} />
                                         <View style={{ flex: 1, }}>
                                             <View style={styles.headingView}>
                                                 <Text style={styles.titleTxt}>{item.user_name}</Text>

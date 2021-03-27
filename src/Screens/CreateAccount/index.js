@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FlatList, StyleSheet, View, Image, Alert, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from "react-native";
+import { FlatList, StyleSheet, View, Alert, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { CrossIcon, ArrowLeft, EmojiIcon, SaveIcon, SendIcon, UploadIcon } from "../../Assets/Icons";
@@ -8,6 +8,7 @@ import { SvgXml } from "react-native-svg";
 import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import Image from 'react-native-fast-image'
 
 const CreateAccount = ({ navigation }) => {
 
@@ -19,9 +20,33 @@ const CreateAccount = ({ navigation }) => {
     }, [])
 
     const initState = async () => {
+
+        const access_token = await AsyncStorage.getItem('@access_token')
+        console.log("🚀 ~ file: index.js ~ line 25 ~ initState ~ access_token", access_token)
         let user = await AsyncStorage.getItem('@user');
         user = JSON.parse(user);
+        console.log("🚀 ~ file: index.js ~ line 24 ~ initState ~ user", user)
         setName(user.name)
+        if (user.image) {
+            setAvatarImage(user.image)
+        }
+
+        const { data } = await axios({
+            url: 'https://talkitoutqueen.com/dashboard/api/profile', method: 'get',
+            headers:
+            {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+            }
+        })
+        console.log("datatata", data.user)
+        setName(data.user.name)
+        if (data.user.image) {
+            setAvatarImage(data.user.image)
+        }
+        AsyncStorage.setItem('@user', JSON.stringify(data.user))
+
     }
 
     const onPressSelectImage = () => {
@@ -50,23 +75,24 @@ const CreateAccount = ({ navigation }) => {
             ]
         );
     }
-
+    console.log(avatarImage)
 
     const onPressProceed = async () => {
         let user = await AsyncStorage.getItem('@user');
         const access_token = await AsyncStorage.getItem('@access_token')
+        console.log("🚀 ~ file: index.js ~ line 59 ~ onPressProceed ~ access_token", access_token)
 
         user = JSON.parse(user);
         let data = new FormData();
         data.append('image',
             {
-                uri: avatarImage.path,
+                uri: avatarImage,
                 name: `${name}.png`,
                 type: 'image/jpg'
             });
         try {
             const { data } = await axios({
-                method: 'post',
+                method: 'put',
                 url: `https://talkitoutqueen.com/dashboard/api/user-profile-update/${user.id}`,
                 headers: {
                     'Accept': 'application/json',
@@ -79,7 +105,6 @@ const CreateAccount = ({ navigation }) => {
             navigation.navigate('PostTimeLine')
             console.log("🚀 ~ file: index.js ~ line 66 ~ onPressProceed ~ data", data)
         } catch (err) {
-            alert(err.response.message)
             console.log("🚀 ~ ferrerrerr", err)
 
         }
@@ -100,7 +125,9 @@ const CreateAccount = ({ navigation }) => {
                 </View>
                 <Text style={styles.UploadImageTxt}>Fill in required  wall name and add your Picture then click Proceed.</Text>
                 <TouchableOpacity onPress={onPressSelectImage}>
-                    <Image style={styles.img} source={avatarImage ? { uri: avatarImage.path } : require('../../Assets/images/addimg.png')} />
+                    <Image style={styles.img}
+                        source={avatarImage && avatarImage.path ? { uri: avatarImage.path } : { uri: avatarImage }}
+                    />
                 </TouchableOpacity>
 
                 <TextInput value={name} onChangeText={(text) => setName(text)} placeholderTextColor='#4A4A4A50' placeholder='Enter Wall Name' style={styles.inputSty} />
