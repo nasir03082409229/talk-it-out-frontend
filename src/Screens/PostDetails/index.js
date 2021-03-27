@@ -9,6 +9,7 @@ import Image from 'react-native-fast-image'
 import Axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import moment from 'moment'
+import { useIsFocused } from '@react-navigation/native';
 
 
 const PostDetails = ({ navigation, route }) => {
@@ -16,8 +17,9 @@ const PostDetails = ({ navigation, route }) => {
     const [loader, setLoader] = useState(false)
     const [postDetail, setPostDetail] = useState(null)
     const [commentList, setCommentList] = useState(null)
-    console.log("🚀 ~ file: index.js ~ line 18 ~ PostDetails ~ commentList", postDetail, commentList)
     const [commentText, setCommentText] = useState('')
+
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         initState()
@@ -25,18 +27,16 @@ const PostDetails = ({ navigation, route }) => {
             setPostDetail(null)
             setCommentList(null)
         }
-    }, [post])
+    }, [isFocused])
 
     const initState = async () => {
         setLoader(true)
         if (isFromTimeline) {
             setPostDetail(post)
         }
-
         getComments()
     }
     const onRefreshControl = async () => {
-        // post_id will do it later
         setLoader(true)
         const access_token = await AsyncStorage.getItem('@access_token')
         var config = {
@@ -68,7 +68,7 @@ const PostDetails = ({ navigation, route }) => {
             }
         })
         console.log('datadata', data)
-        setCommentList(data)
+        setCommentList({ ...data })
         setLoader(false)
     }
 
@@ -92,14 +92,7 @@ const PostDetails = ({ navigation, route }) => {
                     'Authorization': `Bearer ${access_token}`
                 }
             })
-            commentList.data.unshift({
-                comment: commentText,
-                user_id: user.id,
-                post_id: post.id,
-                user_name: user.name,
-                user_photo: user.image
-            })
-            setCommentList({ ...commentList })
+            getComments();
             setCommentText('')
             Keyboard.dismiss()
 

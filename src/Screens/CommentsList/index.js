@@ -8,22 +8,39 @@ import { SvgXml } from "react-native-svg";
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Axios from 'axios'
 import { useLayoutEffect } from "react";
-import moment from 'moment'
+import moment from 'moment';
+import { useIsFocused } from '@react-navigation/native';
+
+
 const CommentsList = ({ navigation, route }) => {
     const { post } = route.params;
+    const isFocused = useIsFocused();
 
     const [postDetail, setPostDetail] = useState(null)
     const [commentList, setCommentList] = useState(null)
-    console.log("🚀 ~ file: index.js ~ line 17 ~ CommentsList ~ commentList", commentList)
     const [loader, setLoader] = useState(false)
     const [commentText, setCommentText] = useState('')
 
 
     useEffect(() => {
         initState()
-    }, [post])
+    }, [isFocused])
 
-    const getComments = async () => {
+    const getLatestComments = async () => {
+        const access_token = await AsyncStorage.getItem('@access_token')
+        const { data } = await Axios({
+            url: `https://talkitoutqueen.com/dashboard/api/get-comments/${postDetail.id}`,
+            method: 'get',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+            }
+        })
+        setCommentList({ ...data })
+    }
+
+    const loadMoreComments = async () => {
         setLoader(true)
         const access_token = await AsyncStorage.getItem('@access_token')
         const { data } = await Axios({
@@ -47,6 +64,7 @@ const CommentsList = ({ navigation, route }) => {
         setPostDetail(post)
         setCommentList(commentList)
     }
+
     const onPressSendComment = async () => {
         const access_token = await AsyncStorage.getItem('@access_token')
         let user = await AsyncStorage.getItem('@user')
@@ -68,15 +86,7 @@ const CommentsList = ({ navigation, route }) => {
                     'Authorization': `Bearer ${access_token}`
                 }
             })
-            commentList.data.unshift({
-                comment: commentText,
-                user_id: user.id,
-                post_id: post.id,
-                user_name: user.name,
-                user_photo: user.image
-            })
-            console.log("🚀 ~ file: index.js ~ line 71 ~ onPressSendComment ~ commentList", commentList)
-            setCommentList({ ...commentList })
+            getLatestComments()
             setCommentText('')
             Keyboard.dismiss()
 
@@ -86,6 +96,7 @@ const CommentsList = ({ navigation, route }) => {
         }
 
     }
+
     const onRefreshControl = async () => {
         // post_id will do it later
         setLoader(true)
@@ -134,7 +145,7 @@ const CommentsList = ({ navigation, route }) => {
                     data={commentList ? commentList.data : []}
                     ListFooterComponent={() => (<View style={{ height: 25, justifyContent: 'center', alignItems: 'center', marginVertical: 5 }}>
                         {commentList && commentList.links?.next ?
-                            !loader ? <TouchableOpacity onPress={() => getComments()} style={{ width: 100, borderWidth: 1, borderColor: 'black', borderRadius: 5 }}>
+                            !loader ? <TouchableOpacity onPress={() => loadMoreComments()} style={{ width: 100, borderWidth: 1, borderColor: 'black', borderRadius: 5 }}>
                                 <Text style={{ color: 'black', textAlign: 'center' }}>Load More</Text>
                             </TouchableOpacity> : <ActivityIndicator color={'#000'} size={20} style={{ alignSelf: 'center' }} /> : null}
                     </View>)}
