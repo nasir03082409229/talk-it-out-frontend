@@ -38,12 +38,15 @@ const PostDetails = ({ navigation, route }) => {
     const onRefreshControl = async () => {
         // post_id will do it later
         setLoader(true)
+        const access_token = await AsyncStorage.getItem('@access_token')
         var config = {
             method: 'get',
             url: `https://talkitoutqueen.com/dashboard/api/post/${post.id}`,
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+
             }
         };
         const { data } = await Axios(config)
@@ -67,7 +70,6 @@ const PostDetails = ({ navigation, route }) => {
         console.log('datadata', data)
         setCommentList(data)
         setLoader(false)
-
     }
 
     const onPressSendComment = async () => {
@@ -143,7 +145,7 @@ const PostDetails = ({ navigation, route }) => {
                     refreshControl={
                         <RefreshControl
                             refreshing={loader}
-                            onRefresh={initState}
+                            onRefresh={onRefreshControl}
                         />
                     }
                 >

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, View, Image, StatusBar, SafeAreaView, Keyboard, ScrollView, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
+import { FlatList, RefreshControl, StyleSheet, View, Image, StatusBar, SafeAreaView, Keyboard, ScrollView, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { CrossIcon, ArrowLeft, EmojiIcon, SaveIcon, SendIcon, UploadIcon, SearchIcon } from "../../Assets/Icons";
@@ -14,7 +14,8 @@ const CommentsList = ({ navigation, route }) => {
 
     const [postDetail, setPostDetail] = useState(null)
     const [commentList, setCommentList] = useState(null)
-    const [loader, setLoader] = useState(null)
+    console.log("🚀 ~ file: index.js ~ line 17 ~ CommentsList ~ commentList", commentList)
+    const [loader, setLoader] = useState(false)
     const [commentText, setCommentText] = useState('')
 
 
@@ -26,7 +27,7 @@ const CommentsList = ({ navigation, route }) => {
         setLoader(true)
         const access_token = await AsyncStorage.getItem('@access_token')
         const { data } = await Axios({
-            url: `${commentList.next_page_url}`,
+            url: `${commentList.links.next}`,
             method: 'get',
             headers: {
                 'Accept': 'application/json',
@@ -85,6 +86,22 @@ const CommentsList = ({ navigation, route }) => {
         }
 
     }
+    const onRefreshControl = async () => {
+        // post_id will do it later
+        setLoader(true)
+        const access_token = await AsyncStorage.getItem('@access_token')
+        const { data } = await Axios({
+            url: `https://talkitoutqueen.com/dashboard/api/get-comments/${postDetail.id}`,
+            method: 'get',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+            }
+        })
+        setLoader(false)
+        setCommentList({ ...data })
+    }
 
     return (
         <SafeAreaView style={{ flex: 1, }}>
@@ -106,11 +123,17 @@ const CommentsList = ({ navigation, route }) => {
                     </View>
                 </View> : null}
                 <FlatList
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={loader}
+                            onRefresh={onRefreshControl}
+                        />
+                    }
                     showsVerticalScrollIndicator={false}
                     style={{ flex: 1, }}
                     data={commentList ? commentList.data : []}
                     ListFooterComponent={() => (<View style={{ height: 25, justifyContent: 'center', alignItems: 'center', marginVertical: 5 }}>
-                        {commentList.next_page_url ?
+                        {commentList && commentList.links?.next ?
                             !loader ? <TouchableOpacity onPress={() => getComments()} style={{ width: 100, borderWidth: 1, borderColor: 'black', borderRadius: 5 }}>
                                 <Text style={{ color: 'black', textAlign: 'center' }}>Load More</Text>
                             </TouchableOpacity> : <ActivityIndicator color={'#000'} size={20} style={{ alignSelf: 'center' }} /> : null}
@@ -158,7 +181,7 @@ const styles = StyleSheet.create({
     Createtxt: { color: '#4A4A4A', fontFamily: Typography.FONT_FAMILY_LIGHT, fontSize: 18, },
     headingView: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
     maintimelineview: {
-         marginVertical: 5, paddingHorizontal: 10
+        marginVertical: 5, paddingHorizontal: 10
     },
     titleTxt: { color: '#4A4A4A', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 15, },
     timeTxt: { color: '#9B9B9B', fontFamily: Typography.FONT_FAMILY_LIGHT, fontSize: 12, },
