@@ -25,8 +25,9 @@ const CommentsList = ({ navigation, route }) => {
     useEffect(() => {
         initState()
     }, [isFocused])
+   
 
-    const getLatestComments = async () => {
+    const getComments = async () => {
         const access_token = await AsyncStorage.getItem('@access_token')
         const { data } = await Axios({
             url: `https://talkitoutqueen.com/dashboard/api/get-comments/${postDetail.id}`,
@@ -37,6 +38,18 @@ const CommentsList = ({ navigation, route }) => {
                 'Authorization': `Bearer ${access_token}`
             }
         })
+        console.log('datadata', data.data)
+        let previousData = commentList.data;
+        let newCommentData = { ...data }
+        var key = "id";
+        var comments = previousData.map(el => {
+            var found = newCommentData.data.find(s => s[key] === el[key]);
+            if (found) {
+                el = Object.assign(el, found);
+            }
+            return el;
+        });
+        console.log('commentscomments', comments)
         setCommentList({ ...data })
     }
 
@@ -86,7 +99,7 @@ const CommentsList = ({ navigation, route }) => {
                     'Authorization': `Bearer ${access_token}`
                 }
             })
-            getLatestComments()
+            getComments()
             setCommentText('')
             Keyboard.dismiss()
 
@@ -137,7 +150,7 @@ const CommentsList = ({ navigation, route }) => {
                     refreshControl={
                         <RefreshControl
                             refreshing={loader}
-                            onRefresh={onRefreshControl}
+                            onRefresh={getComments}
                         />
                     }
                     showsVerticalScrollIndicator={false}
