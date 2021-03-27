@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, View, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity, ActivityIndicator, Keyboard } from "react-native";
+import { FlatList, RefreshControl, StyleSheet, View, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity, ActivityIndicator, Keyboard } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { LocationIcon, ShareIcon, ArrowLeft, SettingIconHori, ActiveHeart, InActiveHeart, SendIcon, UploadIcon, SearchIcon } from "../../Assets/Icons";
@@ -13,6 +13,7 @@ import moment from 'moment'
 
 const PostDetails = ({ navigation, route }) => {
     const { post, isFromTimeline, post_id } = route.params;
+    const [loader, setLoader] = useState(false)
     const [postDetail, setPostDetail] = useState(null)
     const [commentList, setCommentList] = useState(null)
     console.log("🚀 ~ file: index.js ~ line 18 ~ PostDetails ~ commentList", postDetail, commentList)
@@ -26,12 +27,27 @@ const PostDetails = ({ navigation, route }) => {
         }
     }, [post])
 
-    const initState = () => {
+    const initState = async () => {
+        setLoader(true)
         if (isFromTimeline) {
             setPostDetail(post)
-        } else {
-            // post_id will do it later
         }
+
+        getComments()
+    }
+    const onRefreshControl = async () => {
+        // post_id will do it later
+        setLoader(true)
+        var config = {
+            method: 'get',
+            url: `https://talkitoutqueen.com/dashboard/api/post/${post.id}`,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        };
+        const { data } = await Axios(config)
+        setPostDetail(data.data)
         getComments()
     }
 
@@ -50,6 +66,8 @@ const PostDetails = ({ navigation, route }) => {
         })
         console.log('datadata', data)
         setCommentList(data)
+        setLoader(false)
+
     }
 
     const onPressSendComment = async () => {
@@ -121,7 +139,14 @@ const PostDetails = ({ navigation, route }) => {
                         <SvgXml xml={SettingIconHori} />
                     </TouchableOpacity>
                 </View>
-                {postDetail ? <ScrollView>
+                {postDetail ? <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={loader}
+                            onRefresh={initState}
+                        />
+                    }
+                >
                     <View style={styles.maintimelineview}>
                         <View style={styles.lowerview}>
                             <View style={styles.imgdetailview}>
