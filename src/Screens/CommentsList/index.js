@@ -65,14 +65,8 @@ const CommentsList = ({ navigation, route }) => {
         let previousData = commentList.data;
         let newCommentData = { ...data }
         let key = "id";
-        let comments = previousData.map(el => {
-            let found = newCommentData.data.find(s => s[key] === el[key]);
-            if (found) {
-                el = Object.assign(el, found);
-            } else {
-            }
-            return el;
-        });
+        let comments = previousData.map((item, i) => Object.assign({}, item, newCommentData.data[i]));
+        
         commentList.data = comments
         setCommentList({ ...commentList })
     }
@@ -121,7 +115,7 @@ const CommentsList = ({ navigation, route }) => {
                     'Authorization': `Bearer ${access_token}`
                 }
             })
-
+            console.log('COMMENT -datadatadata', data)
             getComments()
             setCommentText('')
             Keyboard.dismiss()
@@ -206,10 +200,6 @@ const CommentsList = ({ navigation, route }) => {
                         onChangeText={(text) => setCommentText(text)}
                         style={styles.commentinput}
                         placeholder='Write Comment...' />
-                    <TouchableOpacity >
-                        <Image style={styles.emoji} source={require('../../Assets/images/emojiImg.png')} />
-
-                    </TouchableOpacity>
                     <TouchableOpacity onPress={onPressSendComment} style={styles.sendIcon} >
                         <SvgXml xml={SendIcon} />
                     </TouchableOpacity>

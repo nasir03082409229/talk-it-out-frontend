@@ -246,10 +246,6 @@ const PostDetails = ({ navigation, route }) => {
                     onChangeText={(text) => setCommentText(text)}
                     style={styles.commentinput}
                     placeholder='Write Comment...' />
-                <TouchableOpacity >
-                    <Image style={styles.emoji} source={require('../../Assets/images/emojiImg.png')} />
-
-                </TouchableOpacity>
                 <TouchableOpacity onPress={onPressSendComment} style={styles.sendIcon} >
                     <SvgXml xml={SendIcon} />
                 </TouchableOpacity>
