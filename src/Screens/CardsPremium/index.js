@@ -14,7 +14,7 @@ import Image from 'react-native-fast-image'
 
 const CardsPremium = ({ navigation }) => {
     const [error, setError] = useState('')
-    const [premiumData, setPremiumData] = useState([])
+    const [premiumData, setPremiumData] = useState(null)
 
     useEffect(() => {
         initState()
@@ -91,7 +91,7 @@ const CardsPremium = ({ navigation }) => {
                     <Text style={styles.preTxt}>PREMIUM</Text>
                 </View>
 
-                {premiumData.length > 0 && <Carousel
+                {premiumData && premiumData.length > 0 && <Carousel
                     // layout={'default'}
                     ref={(c) => { _carousel = c; }}
                     data={premiumData}
@@ -110,7 +110,8 @@ const CardsPremium = ({ navigation }) => {
                         style={{ borderWidth: 1, borderColor: 'white', borderRadius: 10, marginVertical: 20 }}>
                         <Text style={{ color: '#fff', paddingHorizontal: 10, paddingVertical: 10, }}>{'Go to talkitoutqueen.com'}</Text>
                     </TouchableOpacity>
-                </View> : <ActivityIndicator color={'#fff'} size={20} style={{ alignSelf: 'center' }} />}
+                </View> :
+                premiumData ? null :  <ActivityIndicator color={'#fff'} size={20} style={{ alignSelf: 'center' }} />}
                 {/* <View style={styles.cardView}> */}
 
 
