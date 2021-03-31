@@ -52,8 +52,10 @@ import LocationIcon from "./locationicon";
 import ShareIcon from "./shareicon";
 import play_black from "./play_black";
 import logout from "./logout";
+import menu_vertical from "./menu_vertical";
 
 export {
+    menu_vertical,
     logout,
     play_black,
     plus_icon,

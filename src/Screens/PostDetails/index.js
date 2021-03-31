@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { FlatList, RefreshControl, StyleSheet, View, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity, ActivityIndicator, Keyboard } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { FlatList, RefreshControl, StyleSheet, View, StatusBar, SafeAreaView, Alert, ScrollView, TextInput, TouchableOpacity, ActivityIndicator, Keyboard } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
-import { LocationIcon, ShareIcon, ArrowLeft, SettingIconHori, ActiveHeart, InActiveHeart, SendIcon, UploadIcon, SearchIcon } from "../../Assets/Icons";
+import { LocationIcon, ShareIcon, ArrowLeft, SettingIconHori, ActiveHeart, InActiveHeart, SendIcon, menu_vertical, UploadIcon, SearchIcon } from "../../Assets/Icons";
 import { Typography, Colors } from "../../Styles";
 import { SvgXml } from "react-native-svg";
 import Image from 'react-native-fast-image'
@@ -10,9 +10,11 @@ import Axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import moment from 'moment'
 import { useIsFocused } from '@react-navigation/native';
+import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 
 
 const PostDetails = ({ navigation, route }) => {
+    const menuRef = useRef()
     const { post, isFromTimeline, post_id } = route.params;
     const [loader, setLoader] = useState(false)
     const [postDetail, setPostDetail] = useState(null)
@@ -142,6 +144,42 @@ const PostDetails = ({ navigation, route }) => {
         setPostDetail({ ...postDetail })
     }
 
+    const onPressCommentMenu = (comment_id) => {
+        Alert.alert(
+            "Alert",
+            "Are you sure you want to delete comment?",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                },
+                {
+                    text: "DELETE", onPress: () => {
+                        deleteComment(comment_id)
+                    }
+                }
+            ]
+        );
+    }
+
+    const deleteComment = async (comment_id) => {
+        const access_token = await AsyncStorage.getItem('@access_token')
+        let user = await AsyncStorage.getItem('@user');
+        user = JSON.parse(user)
+        const { data } = await Axios({
+            url: 'https://talkitoutqueen.com/dashboard/api/post-delete-comments',
+            method: 'delete',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+            },
+            data: { "id": comment_id }
+        })
+        getComments()
+    }
+
     return (
         <SafeAreaView style={{ flex: 1, }}>
             <StatusBar barStyle={'dark-content'} backgroundColor='#FFF' />
@@ -229,7 +267,12 @@ const PostDetails = ({ navigation, route }) => {
                                         <View style={{ flex: 1, }}>
                                             <View style={styles.headingView}>
                                                 <Text style={styles.titleTxt}>{item.user_name}</Text>
-                                                <Text style={styles.timeTxt}>{moment(item.created_at).fromNow()}</Text>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                    <Text style={styles.timeTxt}>{moment(item.created_at).fromNow()}</Text>
+                                                    <TouchableOpacity onPress={() => onPressCommentMenu(item.id)}>
+                                                        <SvgXml xml={menu_vertical} />
+                                                    </TouchableOpacity>
+                                                </View>
                                             </View>
                                             <Text style={styles.commentTxt}>{item.comment}</Text>
                                         </View>
