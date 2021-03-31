@@ -20,6 +20,7 @@ const PostDetails = ({ navigation, route }) => {
     const [commentText, setCommentText] = useState('')
 
     const isFocused = useIsFocused();
+    const [interval, setIntervalstate] = useState(null)
 
     useEffect(() => {
         initState()
@@ -29,6 +30,27 @@ const PostDetails = ({ navigation, route }) => {
         }
     }, [isFocused])
 
+    useEffect(() => {
+        if (!isFocused) {
+            clearInterval(interval)
+        }
+        startInterval();
+        const unsubscribe = navigation.addListener('blur', e => {
+            clearInterval(interval)
+        });
+        return unsubscribe
+    }, [isFocused])
+
+    const startInterval = () => {
+        if (isFocused) {
+            interval && clearInterval(interval)
+            const intervalRef = setInterval(() => {
+                console.log('INTERVAL=')
+                getComments()
+            }, 10000);
+            setIntervalstate(intervalRef)
+        }
+    }
     const initState = async () => {
         setLoader(true)
         if (isFromTimeline) {

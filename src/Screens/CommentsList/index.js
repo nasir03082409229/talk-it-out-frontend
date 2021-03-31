@@ -1,33 +1,57 @@
-import React, { useEffect, useState } from "react";
-import { FlatList, RefreshControl, StyleSheet, View, Image, StatusBar, SafeAreaView, Keyboard, ScrollView, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
-import { Text } from "../../Common";
-import { logo, } from "../../Assets/images";
-import { CrossIcon, ArrowLeft, EmojiIcon, SaveIcon, SendIcon, UploadIcon, SearchIcon } from "../../Assets/Icons";
-import { Typography, Colors } from "../../Styles";
-import { SvgXml } from "react-native-svg";
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import Axios from 'axios'
-import { useLayoutEffect } from "react";
-import moment from 'moment';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
+import Axios from 'axios';
+import moment from 'moment';
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, FlatList, Image, Keyboard, RefreshControl, SafeAreaView, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { SvgXml } from "react-native-svg";
+import { ArrowLeft, CrossIcon, SendIcon } from "../../Assets/Icons";
+import { Text } from "../../Common";
+import { Typography } from "../../Styles";
 
 
 const CommentsList = ({ navigation, route }) => {
     const { post } = route.params;
     const isFocused = useIsFocused();
 
+    const [interval, setIntervalstate] = useState(null)
     const [postDetail, setPostDetail] = useState(null)
     const [commentList, setCommentList] = useState(null)
     const [loader, setLoader] = useState(false)
     const [commentText, setCommentText] = useState('')
 
 
+    // var interval;
     useEffect(() => {
+        if (commentList !== null) {
+            startInterval()
+        }
+    }, [commentList])
+
+    useEffect(() => {
+        if (!isFocused) {
+            clearInterval(interval)
+        }
         initState()
+        const unsubscribe = navigation.addListener('blur', e => {
+            clearInterval(interval)
+        });
+        return unsubscribe
     }, [isFocused])
-   
+
+    const startInterval = () => {
+        if (isFocused) {
+            interval && clearInterval(interval)
+            const intervalRef = setInterval(() => {
+                getComments()
+            }, 10000);
+            setIntervalstate(intervalRef)
+        }
+    }
+
 
     const getComments = async () => {
+        // return;
         const access_token = await AsyncStorage.getItem('@access_token')
         const { data } = await Axios({
             url: `https://talkitoutqueen.com/dashboard/api/get-comments/${postDetail.id}`,
@@ -38,19 +62,19 @@ const CommentsList = ({ navigation, route }) => {
                 'Authorization': `Bearer ${access_token}`
             }
         })
-        console.log('datadata', data.data)
         let previousData = commentList.data;
         let newCommentData = { ...data }
-        var key = "id";
-        var comments = previousData.map(el => {
-            var found = newCommentData.data.find(s => s[key] === el[key]);
+        let key = "id";
+        let comments = previousData.map(el => {
+            let found = newCommentData.data.find(s => s[key] === el[key]);
             if (found) {
                 el = Object.assign(el, found);
+            } else {
             }
             return el;
         });
-        console.log('commentscomments', comments)
-        setCommentList({ ...data })
+        commentList.data = comments
+        setCommentList({ ...commentList })
     }
 
     const loadMoreComments = async () => {
@@ -74,16 +98,14 @@ const CommentsList = ({ navigation, route }) => {
 
     const initState = () => {
         const { post, commentList } = route.params;
-        setPostDetail(post)
-        setCommentList(commentList)
+        setPostDetail({ ...post })
+        setCommentList({ ...commentList })
     }
 
     const onPressSendComment = async () => {
         const access_token = await AsyncStorage.getItem('@access_token')
         let user = await AsyncStorage.getItem('@user')
         user = JSON.parse(user);
-        console.log("🚀 ~ file: ind", user)
-        console.log("🚀 ~ file: ind", commentList)
         try {
             const { data } = await Axios({
                 url: `https://talkitoutqueen.com/dashboard/api/post-comments`,
@@ -99,13 +121,12 @@ const CommentsList = ({ navigation, route }) => {
                     'Authorization': `Bearer ${access_token}`
                 }
             })
+
             getComments()
             setCommentText('')
             Keyboard.dismiss()
 
-            console.log("🚀 ~ file: index.js ~ commentList ", commentList)
         } catch (error) {
-            console.log("🚀 ~ file: index.js ~ line ", error)
         }
 
     }
