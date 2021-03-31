@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, View, StatusBar, SafeAreaView, Alert, ScrollView, TextInput, TouchableOpacity, ActivityIndicator, Keyboard } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
-import { LocationIcon, ShareIcon, ArrowLeft, SettingIconHori, ActiveHeart, InActiveHeart, SendIcon, menu_vertical, UploadIcon, SearchIcon } from "../../Assets/Icons";
+import { LocationIcon, ShareIcon, ArrowLeft, SettingIconHori, ActiveHeart, 
+    InActiveHeart, SendIcon, menu_vertical, UploadIcon, SearchIcon } from "../../Assets/Icons";
 import { Typography, Colors } from "../../Styles";
 import { SvgXml } from "react-native-svg";
 import Image from 'react-native-fast-image'

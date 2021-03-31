@@ -3,9 +3,9 @@ import { useIsFocused } from '@react-navigation/native';
 import Axios from 'axios';
 import moment from 'moment';
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Image, Keyboard, RefreshControl, SafeAreaView, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, FlatList, Image, Keyboard,Alert,  RefreshControl, SafeAreaView, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { SvgXml } from "react-native-svg";
-import { ArrowLeft, CrossIcon, SendIcon } from "../../Assets/Icons";
+import { ArrowLeft, CrossIcon, SendIcon , menu_vertical } from "../../Assets/Icons";
 import { Text } from "../../Common";
 import { Typography } from "../../Styles";
 
@@ -125,21 +125,40 @@ const CommentsList = ({ navigation, route }) => {
 
     }
 
-    const onRefreshControl = async () => {
-        // post_id will do it later
-        setLoader(true)
+    const onPressCommentMenu = (comment_id) => {
+        Alert.alert(
+            "Alert",
+            "Are you sure you want to delete comment?",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                },
+                {
+                    text: "DELETE", onPress: () => {
+                        deleteComment(comment_id)
+                    }
+                }
+            ]
+        );
+    }
+
+    const deleteComment = async (comment_id) => {
         const access_token = await AsyncStorage.getItem('@access_token')
+        let user = await AsyncStorage.getItem('@user');
+        user = JSON.parse(user)
         const { data } = await Axios({
-            url: `https://talkitoutqueen.com/dashboard/api/get-comments/${postDetail.id}`,
-            method: 'get',
+            url: 'https://talkitoutqueen.com/dashboard/api/post-delete-comments',
+            method: 'delete',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${access_token}`
-            }
+            },
+            data: { "id": comment_id }
         })
-        setLoader(false)
-        setCommentList({ ...data })
+        getComments()
     }
 
     return (
@@ -180,17 +199,22 @@ const CommentsList = ({ navigation, route }) => {
                     renderItem={({ index, item }) => {
                         return (
                             <View key={`${index}${item.id}-postdetail`} style={styles.maintimelineview}>
-                                <View style={{ flexDirection: 'row', }}>
-                                    <Image style={styles.mainimg} source={{ uri: item.user_photo ? item.user_photo : `https://cencup.com/wp-content/uploads/2019/07/avatar-placeholder.png` }} />
-                                    <View style={{ flex: 1, }}>
-                                        <View style={styles.headingView}>
-                                            <Text style={styles.titleTxt}>{item.user_name}</Text>
-                                            <Text style={styles.timeTxt}>{moment(item.created_at).fromNow()}</Text>
+                                    <View style={{ flexDirection: 'row', }}>
+                                        <Image style={styles.mainimg} source={{ uri: item.user_photo ? item.user_photo : `https://cencup.com/wp-content/uploads/2019/07/avatar-placeholder.png` }} />
+                                        <View style={{ flex: 1, }}>
+                                            <View style={styles.headingView}>
+                                                <Text style={styles.titleTxt}>{item.user_name}</Text>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                    <Text style={styles.timeTxt}>{moment(item.created_at).fromNow()}</Text>
+                                                    <TouchableOpacity onPress={() => onPressCommentMenu(item.id)}>
+                                                        <SvgXml xml={menu_vertical} />
+                                                    </TouchableOpacity>
+                                                </View>
+                                            </View>
+                                            <Text style={styles.commentTxt}>{item.comment}</Text>
                                         </View>
-                                        <Text style={styles.commentTxt}>{item.comment}</Text>
                                     </View>
                                 </View>
-                            </View>
                         )
                     }} />
 
