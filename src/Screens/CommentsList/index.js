@@ -245,8 +245,10 @@ const styles = StyleSheet.create({
     titleTxt: { color: '#4A4A4A', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 15, },
     timeTxt: { color: '#9B9B9B', fontFamily: Typography.FONT_FAMILY_LIGHT, fontSize: 12, },
     commentTxt: { color: '#4A4A4A', fontFamily: Typography.FONT_FAMILY_LIGHT, fontSize: 12, },
-    mainimg: { resizeMode: 'contain', width: 30, height: 30, marginRight: 10, marginTop: -5, },
-
+    // mainimg: { resizeMode: 'contain', width: 30, height: 30, marginRight: 10, marginTop: -5, },
+    mainimg: { 
+        marginRight: 10, width: 40, height: 40, borderRadius: 70,  },
+    
     mainSearView: {
         // zIndex: +10000,
         backgroundColor: '#FFF',

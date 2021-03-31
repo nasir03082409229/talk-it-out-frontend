@@ -84,29 +84,27 @@ const CreateAccount = ({ navigation }) => {
         console.log("🚀 ~ file: index.js ~ line 59 ~ onPressProceed ~ access_token", access_token)
 
         user = JSON.parse(user);
-        // if image change
         if (avatarImage?.path) {
-            let data = new FormData();
-            data.append('image', { uri: avatarImage, name: `${name}.png`, type: 'image/jpg' });
             try {
+                let formData = new FormData();
+                formData.append('image',
+                    { uri: avatarImage.path, name: `${name}.png`, type: 'image/jpg' });
                 const { data } = await axios({
-                    method: 'put',
+                    method: 'post',
                     url: `https://talkitoutqueen.com/dashboard/api/user-profile-update/${user.id}`,
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'multipart/form-data',
                         'Authorization': `Bearer ${access_token}`
                     },
-                    data: data
+                    data: formData
                 })
                 console.log("🚀 ~ file: index.js ~ line 66 ~ onPressProceed ~ data", data)
             } catch (err) {
-                console.log("🚀 ~ ferrerrerr", err)
+                console.log("🚀 ~ ferrerrerr", err.response)
 
             }
         }
-        // if username changes
-
         const res = await axios({
             method: 'put',
             url: `https://talkitoutqueen.com/dashboard/api/user-profile-update/${user.id}`,
@@ -117,7 +115,16 @@ const CreateAccount = ({ navigation }) => {
             },
             data: { "name": name }
         })
-        console.log('resresresres', res)
+        const userDetailRes = await axios({
+            method: 'get',
+            url: `https://talkitoutqueen.com/dashboard/api/user/${user.id}`,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+            }
+        })
+        await AsyncStorage.setItem('@user', JSON.stringify(userDetailRes.data.data));
         navigation.navigate('PostTimeLine')
     }
 
@@ -137,7 +144,7 @@ const CreateAccount = ({ navigation }) => {
                 <Text style={styles.UploadImageTxt}>Fill in required  wall name and add your Picture then click Proceed.</Text>
                 <TouchableOpacity onPress={onPressSelectImage}>
                     <Image style={styles.img}
-                        source={avatarImage && avatarImage.path ? { uri: avatarImage.path } : { uri: avatarImage }}
+                        source={avatarImage && avatarImage.path ? { uri: avatarImage.path } : avatarImage ? { uri: avatarImage } : require('../../Assets/images/addimg.png')}
                     />
                 </TouchableOpacity>
 
@@ -163,7 +170,11 @@ const styles = StyleSheet.create({
     header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 20, },
     Createtxt: { color: '#4A4A4A', fontFamily: Typography.FONT_FAMILY_LIGHT, fontSize: 16, },
     UploadImageTxt: { marginHorizontal: 25, marginVertical: 20, color: '#4A4A4A', fontFamily: Typography.FONT_FAMILY_LIGHT, fontSize: 12, },
-    img: { width: 130, height: 130, resizeMode: 'contain', alignSelf: 'center', marginTop: 20, },
+    img: {
+        width: 130, height: 130,
+        resizeMode: 'contain', alignSelf: 'center', marginTop: 20,
+        borderRadius: 200
+    },
     btnView: { width: '90%', alignSelf: 'center', justifyContent: 'center', alignItems: 'center', height: 40, backgroundColor: '#FF6265', borderRadius: 5, },
     btnTxt: { color: '#FFF', fontFamily: Typography.FONT_FAMILY_LIGHT, fontSize: 14, },
     inputSty: { borderRadius: 2, borderWidth: 1, borderColor: '#F1F1F1', textAlign: 'center', marginVertical: 20, marginHorizontal: 20, height: 45, padding: 0, },

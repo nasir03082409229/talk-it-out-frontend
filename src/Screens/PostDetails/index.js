@@ -331,7 +331,8 @@ const styles = StyleSheet.create({
     titletimeview: { marginHorizontal: 20, },
     lowerview: { marginHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', },
     imgdetailview: { flexDirection: 'row', alignItems: 'center' },
-    mainimg: { marginRight: 10, width: 40, height: 40, borderRadius: 30, resizeMode: 'contain' },
+    mainimg: { 
+        marginRight: 10, width: 40, height: 40, borderRadius: 30, resizeMode: 'contain' },
     smallmainimg: { marginLeft: 5, width: 25, height: 25, borderRadius: 30, resizeMode: 'contain' },
 
     heading: { marginHorizontal: 20, textAlign: 'center', color: '#4A4A4A90', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 25, },
