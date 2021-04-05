@@ -214,19 +214,6 @@ const PostDetails = ({ navigation, route }) => {
                                     <Text style={styles.timeTxt}>{moment(postDetail.created_at).fromNow()}</Text>
                                 </View>
                             </View>
-
-                            <View style={{ flexDirection: 'row', }}>
-                                <TouchableOpacity>
-                                    <Image style={styles.smallmainimg} source={require('../../Assets/images/avatar.png')} />
-                                </TouchableOpacity>
-                                <TouchableOpacity>
-                                    <Image style={styles.smallmainimg} source={require('../../Assets/images/avatar.png')} />
-                                </TouchableOpacity>
-                                <TouchableOpacity>
-                                    <Image style={styles.smallmainimg} source={require('../../Assets/images/avatar.png')} />
-                                </TouchableOpacity>
-
-                            </View>
                         </View>
 
                         <Text style={styles.heading}>{postDetail.title}</Text>
@@ -338,7 +325,7 @@ const styles = StyleSheet.create({
     },
     smallmainimg: { marginLeft: 5, width: 25, height: 25, borderRadius: 30, resizeMode: 'contain' },
 
-    heading: { marginHorizontal: 20, textAlign: 'center', color: '#4A4A4A90', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 25, },
+    heading: { marginHorizontal: 20, textAlign: 'center', color: '#000', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 25, },
     detailtxt: { marginHorizontal: 20, color: '#4A4A4A90', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 12, },
     viewalltxt: { color: '#FF6265', textDecorationLine: 'underline', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 12, },
 
