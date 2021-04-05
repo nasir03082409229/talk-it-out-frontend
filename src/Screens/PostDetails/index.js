@@ -23,6 +23,7 @@ const PostDetails = ({ navigation, route }) => {
     const [postDetail, setPostDetail] = useState(null)
     const [commentList, setCommentList] = useState(null)
     const [commentText, setCommentText] = useState('')
+    const [user, setUser] = useState(null)
 
     const isFocused = useIsFocused();
     const [interval, setIntervalstate] = useState(null)
@@ -62,7 +63,15 @@ const PostDetails = ({ navigation, route }) => {
             setPostDetail(post)
         }
         getComments()
+        getUser()
     }
+
+    const getUser = async () => {
+        let user = await AsyncStorage.getItem('@user');
+        user = JSON.parse(user)
+        setUser(user)
+    }
+
     const onRefreshControl = async () => {
         setLoader(true)
         const access_token = await AsyncStorage.getItem('@access_token')
@@ -148,6 +157,7 @@ const PostDetails = ({ navigation, route }) => {
     }
 
     const onPressCommentMenu = (comment_id) => {
+
         Alert.alert(
             "Alert",
             "Are you sure you want to delete comment?",
@@ -181,6 +191,12 @@ const PostDetails = ({ navigation, route }) => {
             data: { "id": comment_id }
         })
         getComments()
+    }
+
+    const renderOptionsDots = (item) => {
+        return user.id == item.user_id ? <TouchableOpacity onPress={() => onPressCommentMenu(item.id, item)}>
+            <SvgXml xml={menu_vertical} />
+        </TouchableOpacity> : null
     }
 
     return (
@@ -259,9 +275,7 @@ const PostDetails = ({ navigation, route }) => {
                                                 <Text style={styles.titleTxt}>{item.user_name}</Text>
                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                     <Text style={styles.timeTxt}>{moment(item.created_at).fromNow()}</Text>
-                                                    <TouchableOpacity onPress={() => onPressCommentMenu(item.id)}>
-                                                        <SvgXml xml={menu_vertical} />
-                                                    </TouchableOpacity>
+                                                    {renderOptionsDots(item)}
                                                 </View>
                                             </View>
                                             <Text style={styles.commentTxt}>{item.comment}</Text>
