@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, View, Image, StyleSheet, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from "react-native";
+import { FlatList, View, Image, StyleSheet, StatusBar, SafeAreaView, Alert, ScrollView, TextInput, TouchableOpacity } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { Mic } from "../../Assets/Icons";
@@ -7,9 +7,14 @@ import { SvgXml } from "react-native-svg";
 import { Typography, Colors } from "../../Styles";
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
+import ImagePicker from 'react-native-image-crop-picker';
+
+
+
 const Profile = ({ navigation }) => {
     const [user, setUser] = useState(null)
     const [isEdit, setIsEdit] = useState(false)
+    const [avatarImage, setAvatarImage] = useState(null)
 
     useEffect(() => {
         initState()
@@ -51,6 +56,63 @@ const Profile = ({ navigation }) => {
         setIsEdit(!isEdit)
     }
 
+    const uploadImage = async (image) => {
+        const access_token = await AsyncStorage.getItem('@access_token');
+        console.log("🚀 ~ file: index.js ~ line 60 ~ uploadImage ~ avatarImage", user.id, image)
+        if (image?.path) {
+            try {
+                let formData = new FormData();
+                formData.append('image',
+                    { uri: image.path, name: `${name}.png`, type: 'image/jpg', });
+                const { data } = await
+                    axios({
+                        method: 'post',
+                        url: `https://talkitoutqueen.com/dashboard/api/user-profile-update/${user.id}`,
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'multipart/form-data',
+                            'Authorization': `Bearer ${access_token}`
+                        },
+                        data: formData
+                    })
+                // console.log("🚀 ~ file: index.js ~ line 66 ~ onPressProceed ~ data", data)
+            } catch (err) {
+                console.log("🚀 ~ ferrerrerr", err)
+
+            }
+        }
+    }
+
+    const onPressSelectImage = () => {
+        Alert.alert(
+            "Upload Image",
+            "Choose image for avatar",
+            [
+                {
+                    text: "OPEN CAMERA",
+                    onPress: () => {
+                        ImagePicker.openCamera({}).then((images) => {
+                            setAvatarImage(images)
+                            uploadImage(images)
+                            console.log("🚀 ~ file: index.js ~ line 34 ~ ImagePicker.openCamera ~ images", images)
+                        })
+                    },
+                    style: "cancel"
+                },
+                {
+                    text: "OPEN GALLERY", onPress: () => {
+                        ImagePicker.openPicker({}).then((images) => {
+                            setAvatarImage(images)
+                            uploadImage(images)
+                            console.log("🚀 ~ file: index.js ~ line 34 ~ ImagePicker.openCamera ~ images", images)
+                        })
+                    }
+                }
+            ]
+        );
+    }
+
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
@@ -66,9 +128,12 @@ const Profile = ({ navigation }) => {
                 </View>
                 {user &&
                     <View>
-                        <Image style={styles.ProImg}
-                            source={user.image ? { uri: user.image } : require('../../Assets/images/addimg.png')}
-                        />
+                        <TouchableOpacity onPress={onPressSelectImage}>
+
+                            <Image style={styles.ProImg}
+                                source={avatarImage && avatarImage.path ? { uri: avatarImage.path } : user?.image ? { uri: user?.image } : require('../../Assets/images/addimg.png')}
+                            />
+                        </TouchableOpacity>
                         <View style={{ padding: 20, }}>
                             {!isEdit ? <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
                                 <Text style={styles.ProfileTxt}>Name </Text>

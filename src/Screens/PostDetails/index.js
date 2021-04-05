@@ -194,7 +194,8 @@ const PostDetails = ({ navigation, route }) => {
     }
 
     const renderOptionsDots = (item) => {
-        return user.id == item.user_id ? <TouchableOpacity onPress={() => onPressCommentMenu(item.id, item)}>
+        return user.id == item.user_id ? <TouchableOpacity
+            onPress={() => onPressCommentMenu(item.id, item)}>
             <SvgXml xml={menu_vertical} />
         </TouchableOpacity> : null
     }
