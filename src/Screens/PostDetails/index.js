@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, View, StatusBar, SafeAreaView, Alert, ScrollView, TextInput, TouchableOpacity, ActivityIndicator, Keyboard } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
-import { LocationIcon, ShareIcon, ArrowLeft, SettingIconHori, ActiveHeart, 
-    InActiveHeart, SendIcon, menu_vertical, UploadIcon, SearchIcon } from "../../Assets/Icons";
+import {
+    LocationIcon, ShareIcon, ArrowLeft, SettingIconHori, ActiveHeart,
+    InActiveHeart, SendIcon, menu_vertical, UploadIcon, SearchIcon
+} from "../../Assets/Icons";
 import { Typography, Colors } from "../../Styles";
 import { SvgXml } from "react-native-svg";
 import Image from 'react-native-fast-image'
@@ -331,8 +333,9 @@ const styles = StyleSheet.create({
     titletimeview: { marginHorizontal: 20, },
     lowerview: { marginHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', },
     imgdetailview: { flexDirection: 'row', alignItems: 'center' },
-    mainimg: { 
-        marginRight: 10, width: 40, height: 40, borderRadius: 30, resizeMode: 'contain' },
+    mainimg: {
+        marginRight: 10, width: 40, height: 40, borderRadius: 30, resizeMode: 'contain'
+    },
     smallmainimg: { marginLeft: 5, width: 25, height: 25, borderRadius: 30, resizeMode: 'contain' },
 
     heading: { marginHorizontal: 20, textAlign: 'center', color: '#4A4A4A90', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 25, },

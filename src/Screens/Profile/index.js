@@ -1,61 +1,93 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, View, Image, StyleSheet, StatusBar, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from "react-native";
 import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { Mic } from "../../Assets/Icons";
 import { SvgXml } from "react-native-svg";
 import { Typography, Colors } from "../../Styles";
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import axios from 'axios'
 const Profile = ({ navigation }) => {
+    const [user, setUser] = useState(null)
+    const [isEdit, setIsEdit] = useState(false)
+
+    useEffect(() => {
+        initState()
+    }, [])
+
+    const initState = async () => {
+        let user = await AsyncStorage.getItem('@user');
+        user = JSON.parse(user)
+        setUser(user)
+    }
+
+    const onChangeText = (text) => {
+        user.name = text;
+        setUser({ ...user })
+    }
+
+    const updateUser = async () => {
+        let access_token = await AsyncStorage.getItem('@access_token');
+        const res = await axios({
+            method: 'put',
+            url: `https://talkitoutqueen.com/dashboard/api/user-profile-update/${user.id}`,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+            },
+            data: { "name": user.name }
+        })
+        const userDetailRes = await axios({
+            method: 'get',
+            url: `https://talkitoutqueen.com/dashboard/api/user/${user.id}`,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+            }
+        })
+        await AsyncStorage.setItem('@user', JSON.stringify(userDetailRes.data.data));
+        setIsEdit(!isEdit)
+    }
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
-            <ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: '#2C2939', flex: 1, }}>
+            <ScrollView style={{ backgroundColor: '#2C2939', flex: 1, }}>
                 <TouchableOpacity onPress={() => { navigation.goBack() }} style={styles.backTouch}>
                     <View style={styles.backTouView}>
                         <Image style={styles.img} source={require('../../Assets/images/login_logo.png')} />
                     </View>
                     <Text style={styles.backtxt}>BACK</Text>
                 </TouchableOpacity>
-
                 <View style={styles.headview}>
                     <Text style={styles.downTxt}>PROFILE</Text>
                 </View>
-
-                <View>
-
-                    <Image style={styles.ProImg} source={require('../../Assets/images/live.png')} />
-
-                    <View style={{ padding: 20, }}>
-
-                        <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
-                            <Text style={styles.ProfileTxt}>Name </Text>
-                            <Text style={styles.ProfileTxt}>TalkItOut</Text>
+                {user &&
+                    <View>
+                        <Image style={styles.ProImg}
+                            source={user.image ? { uri: user.image } : require('../../Assets/images/addimg.png')}
+                        />
+                        <View style={{ padding: 20, }}>
+                            {!isEdit ? <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+                                <Text style={styles.ProfileTxt}>Name </Text>
+                                <Text style={styles.ProfileTxt}>{user.name}</Text>
+                            </View> : <TextInput value={user.name}
+                                onChangeText={onChangeText}
+                                placeholder='Name'
+                                style={{ height: 40, paddingLeft: 10, marginVertical: 10, backgroundColor: '#FFF' }} />}
+                            {!isEdit ? <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+                                <Text style={styles.ProfileTxt}>Email </Text>
+                                <Text style={styles.ProfileTxt}>{user.email}</Text>
+                            </View> : <TextInput editable={false} value={user.email} placeholder='Email' style={{ height: 40, paddingLeft: 10, marginVertical: 10, backgroundColor: '#FFF' }} />}
+                            <TouchableOpacity onPress={() => { !isEdit ? setIsEdit(!isEdit) : updateUser() }} style={{ justifyContent: 'center', alignItems: 'center', height: 40, marginVertical: 10, backgroundColor: '#2979FF' }}>
+                                <Text style={{ color: '#FFF' }}>{isEdit ? 'UPDATE' : 'EDIT'}</Text>
+                            </TouchableOpacity>
                         </View>
-                        <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
-                            <Text style={styles.ProfileTxt}>Email </Text>
-                            <Text style={styles.ProfileTxt}>TalkItOut@gmail.com</Text>
-                        </View>
-                        <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
-                            <Text style={styles.ProfileTxt}>Address </Text>
-                            <Text style={styles.ProfileTxt}>TalkItOut Street city</Text>
-                        </View>
-
-                        <TouchableOpacity onPress={() => { navigation.navigate('UpdateProfile') }} style={{ justifyContent: 'center', alignItems: 'center', height: 40, marginVertical: 10, backgroundColor: '#2979FF' }}>
-                            <Text style={{ color: '#FFF' }}>EDIT</Text>
-                        </TouchableOpacity>
-                        {/* <TouchableOpacity  style={styles.signInView}>
-                            <Text style={styles.ProfileTxt}>EDIT</Text>
-                        </TouchableOpacity> */}
-
                     </View>
 
-                </View>
-
-
-
-
+                }
             </ScrollView>
         </SafeAreaView>
     )
@@ -82,7 +114,11 @@ const styles = StyleSheet.create({
     ProfileTxt: { marginVertical: 5, color: '#fff', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 18, },
     EfitTxt: { fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 18, },
     signInView: { borderWidth: 1, borderColor: '#FFFFFF20', borderRadius: 80, width: 80, height: 50, alignSelf: 'center', marginTop: 20, justifyContent: 'center', alignItems: 'center' },
-    ProImg: { borderRadius: 500, width: 100, height: 100, resizeMode: 'contain', alignSelf: 'center', },
+    ProImg: {
+        width: 130, height: 130,
+        resizeMode: 'contain', alignSelf: 'center', marginTop: 20,
+        borderRadius: 200
+    },
 
 
 
