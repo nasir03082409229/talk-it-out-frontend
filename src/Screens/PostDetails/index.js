@@ -274,7 +274,7 @@ const PostDetails = ({ navigation, route }) => {
                                             <View style={styles.headingView}>
                                                 <Text style={styles.titleTxt}>{item.user_name}</Text>
                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                    <Text style={styles.timeTxt}>{moment(item.created_at).fromNow()}</Text>
+                                                    <Text style={styles.timeTxt}>{moment.utc(item.created_at).fromNow()}</Text>
                                                     {renderOptionsDots(item)}
                                                 </View>
                                             </View>

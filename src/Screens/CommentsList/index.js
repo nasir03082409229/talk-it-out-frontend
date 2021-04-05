@@ -3,9 +3,9 @@ import { useIsFocused } from '@react-navigation/native';
 import Axios from 'axios';
 import moment from 'moment';
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Image, Keyboard,Alert,  RefreshControl, SafeAreaView, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, FlatList, Image, Keyboard, Alert, RefreshControl, SafeAreaView, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { SvgXml } from "react-native-svg";
-import { ArrowLeft, CrossIcon, SendIcon , menu_vertical } from "../../Assets/Icons";
+import { ArrowLeft, CrossIcon, SendIcon, menu_vertical } from "../../Assets/Icons";
 import { Text } from "../../Common";
 import { Typography } from "../../Styles";
 
@@ -14,6 +14,7 @@ const CommentsList = ({ navigation, route }) => {
     const { post } = route.params;
     const isFocused = useIsFocused();
 
+    const [user, setUser] = useState(null)
     const [interval, setIntervalstate] = useState(null)
     const [postDetail, setPostDetail] = useState(null)
     const [commentList, setCommentList] = useState(null)
@@ -66,7 +67,7 @@ const CommentsList = ({ navigation, route }) => {
         let newCommentData = { ...data }
         let key = "id";
         let comments = previousData.map((item, i) => Object.assign({}, item, newCommentData.data[i]));
-        
+
         commentList.data = comments
         setCommentList({ ...commentList })
     }
@@ -94,6 +95,7 @@ const CommentsList = ({ navigation, route }) => {
         const { post, commentList } = route.params;
         setPostDetail({ ...post })
         setCommentList({ ...commentList })
+        getUser()
     }
 
     const onPressSendComment = async () => {
@@ -160,7 +162,16 @@ const CommentsList = ({ navigation, route }) => {
         })
         getComments()
     }
-
+    const getUser = async () => {
+        let user = await AsyncStorage.getItem('@user');
+        user = JSON.parse(user)
+        setUser(user)
+    }
+    const renderOptionsDots = (item) => {
+        return user?.id == item.user_id ? <TouchableOpacity onPress={() => onPressCommentMenu(item.id, item)}>
+            <SvgXml xml={menu_vertical} />
+        </TouchableOpacity> : null
+    }
     return (
         <SafeAreaView style={{ flex: 1, }}>
 
@@ -199,22 +210,20 @@ const CommentsList = ({ navigation, route }) => {
                     renderItem={({ index, item }) => {
                         return (
                             <View key={`${index}${item.id}-postdetail`} style={styles.maintimelineview}>
-                                    <View style={{ flexDirection: 'row', }}>
-                                        <Image style={styles.mainimg} source={{ uri: item.user_photo ? item.user_photo : `https://cencup.com/wp-content/uploads/2019/07/avatar-placeholder.png` }} />
-                                        <View style={{ flex: 1, }}>
-                                            <View style={styles.headingView}>
-                                                <Text style={styles.titleTxt}>{item.user_name}</Text>
-                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                    <Text style={styles.timeTxt}>{moment(item.created_at).fromNow()}</Text>
-                                                    <TouchableOpacity onPress={() => onPressCommentMenu(item.id)}>
-                                                        <SvgXml xml={menu_vertical} />
-                                                    </TouchableOpacity>
-                                                </View>
+                                <View style={{ flexDirection: 'row', }}>
+                                    <Image style={styles.mainimg} source={{ uri: item.user_photo ? item.user_photo : `https://cencup.com/wp-content/uploads/2019/07/avatar-placeholder.png` }} />
+                                    <View style={{ flex: 1, }}>
+                                        <View style={styles.headingView}>
+                                            <Text style={styles.titleTxt}>{item.user_name}</Text>
+                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                <Text style={styles.timeTxt}>{moment.utc(item.created_at).fromNow()}</Text>
+                                                {renderOptionsDots(item)}
                                             </View>
-                                            <Text style={styles.commentTxt}>{item.comment}</Text>
                                         </View>
+                                        <Text style={styles.commentTxt}>{item.comment}</Text>
                                     </View>
                                 </View>
+                            </View>
                         )
                     }} />
 
@@ -246,9 +255,10 @@ const styles = StyleSheet.create({
     timeTxt: { color: '#9B9B9B', fontFamily: Typography.FONT_FAMILY_LIGHT, fontSize: 12, },
     commentTxt: { color: '#4A4A4A', fontFamily: Typography.FONT_FAMILY_LIGHT, fontSize: 12, },
     // mainimg: { resizeMode: 'contain', width: 30, height: 30, marginRight: 10, marginTop: -5, },
-    mainimg: { 
-        marginRight: 10, width: 40, height: 40, borderRadius: 70,  },
-    
+    mainimg: {
+        marginRight: 10, width: 40, height: 40, borderRadius: 70,
+    },
+
     mainSearView: {
         // zIndex: +10000,
         backgroundColor: '#FFF',
