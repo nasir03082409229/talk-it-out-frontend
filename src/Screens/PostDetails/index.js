@@ -218,9 +218,11 @@ const PostDetails = ({ navigation, route }) => {
         onPressCancelEditComment()
         getComments()
     }
+
     const onPressCancelEditComment = () => {
         setIsEditComment(null)
     }
+    
     const renderOptionsDots = (item) => {
         return user.id == item.user_id ? <TouchableOpacity
             onPress={() => onPressCommentMenu(item.id, item)}>
