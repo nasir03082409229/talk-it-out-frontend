@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FlatList, RefreshControl, StyleSheet, View, StatusBar, SafeAreaView, Alert, ScrollView, TextInput, TouchableOpacity, ActivityIndicator, Keyboard } from "react-native";
-import { Text } from "../../Common";
+import { FlatList, RefreshControl, StyleSheet, View, Modal, StatusBar, SafeAreaView, Alert, ScrollView, TextInput, TouchableOpacity, ActivityIndicator, Keyboard } from "react-native";
+import { Text, EditCommentModal } from "../../Common";
 import { logo, } from "../../Assets/images";
 import {
     LocationIcon, ShareIcon, ArrowLeft, SettingIconHori, ActiveHeart,
@@ -24,6 +24,7 @@ const PostDetails = ({ navigation, route }) => {
     const [commentList, setCommentList] = useState(null)
     const [commentText, setCommentText] = useState('')
     const [user, setUser] = useState(null)
+    const [isEditComment, setIsEditComment] = useState(null)
 
     const isFocused = useIsFocused();
     const [interval, setIntervalstate] = useState(null)
@@ -156,7 +157,7 @@ const PostDetails = ({ navigation, route }) => {
         setPostDetail({ ...postDetail })
     }
 
-    const onPressCommentMenu = (comment_id) => {
+    const onPressCommentMenu = (comment_id, comment) => {
 
         Alert.alert(
             "Alert",
@@ -166,6 +167,11 @@ const PostDetails = ({ navigation, route }) => {
                     text: "Cancel",
                     onPress: () => console.log("Cancel Pressed"),
                     style: "cancel"
+                },
+                {
+                    text: "Edit", onPress: () => {
+                        setIsEditComment(comment)
+                    }
                 },
                 {
                     text: "DELETE", onPress: () => {
@@ -193,6 +199,28 @@ const PostDetails = ({ navigation, route }) => {
         getComments()
     }
 
+    const onPressUpdateComment = async (updatedComment) => {
+        console.log("isEditCommentnt", isEditComment, updatedComment)
+        const access_token = await AsyncStorage.getItem('@access_token')
+        let user = await AsyncStorage.getItem('@user');
+        user = JSON.parse(user)
+        const { data } = await Axios({
+            url: `https://talkitoutqueen.com/dashboard/api/post-comment/${isEditComment.id}`,
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+            },
+            data: { "comment": updatedComment }
+        })
+        console.log("DATA", data)
+        onPressCancelEditComment()
+        getComments()
+    }
+    const onPressCancelEditComment = () => {
+        setIsEditComment(null)
+    }
     const renderOptionsDots = (item) => {
         return user.id == item.user_id ? <TouchableOpacity
             onPress={() => onPressCommentMenu(item.id, item)}>
@@ -300,6 +328,11 @@ const PostDetails = ({ navigation, route }) => {
             </View>
 
             {/* </ScrollView> */}
+            {isEditComment && <EditCommentModal
+                onPressUpdateComment={onPressUpdateComment}
+                onPressCancelEditComment={onPressCancelEditComment}
+                value={isEditComment.comment}
+            />}
         </SafeAreaView>
     )
 }
