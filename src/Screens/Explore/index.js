@@ -8,6 +8,7 @@ import { Typography, Colors } from "../../Styles";
 import Axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Image from 'react-native-fast-image'
+import { logoutAction } from "../../store/AuthAction";
 
 const Explore = ({ navigation }) => {
     const [homeData, setHomeData] = useState(null)
@@ -19,23 +20,28 @@ const Explore = ({ navigation }) => {
 
     const init = async () => {
         const access_token = await AsyncStorage.getItem('@access_token')
-        const response = await Axios({
-            url: 'https://talkitoutqueen.com/dashboard/api/home',
-            method: 'get',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${access_token}`
+        try {
+            const response = await Axios({
+                url: 'https://talkitoutqueen.com/dashboard/api/home',
+                method: 'get',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                }
+            })
+            let normalizePages = response.data.pages.map(x => ({ ...x, type: 'page' })).filter(x => ['2', '3', '4'].indexOf(x.id) === -1)
+            let normalizePodcasts = response.data.podcasts.map(x => ({ ...x, type: 'podcast' }))
+            let normalizeRadios = response.data.radios.map(x => ({ ...x, type: 'radio' }))
+            setHomeData([...normalizeRadios, ...normalizePodcasts, ...normalizePages,])
+        } catch (error) {
+            if (error.response.status == 401) {
+                logoutAction(navigation)
             }
-        })
-        let normalizePages = response.data.pages.map(x => ({ ...x, type: 'page' })).filter(x => ['2', '3', '4'].indexOf(x.id) === -1)
-        let normalizePodcasts = response.data.podcasts.map(x => ({ ...x, type: 'podcast' }))
-        let normalizeRadios = response.data.radios.map(x => ({ ...x, type: 'radio' }))
-        setHomeData([...normalizeRadios, ...normalizePodcasts, ...normalizePages,])
+        }
 
     }
 
-    console.log("Home Data", homeData)
 
     const navigate = (item) => {
         console.log("🚀 ~ file: index.js ~ line 87 ~ navigate ~ item", item)
