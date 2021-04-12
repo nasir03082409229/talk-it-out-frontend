@@ -20,6 +20,7 @@ const Explore = ({ navigation }) => {
 
     const init = async () => {
         const access_token = await AsyncStorage.getItem('@access_token')
+        console.log("🚀 ~ file: index.js ~ line 23 ~ init ~ access_token", access_token)
         try {
             const response = await Axios({
                 url: 'https://talkitoutqueen.com/dashboard/api/home',

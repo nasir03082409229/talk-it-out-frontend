@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import moment from 'moment'
 import { useIsFocused } from '@react-navigation/native';
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
+import { logoutAction } from "../../store/AuthAction";
 
 
 const PostDetails = ({ navigation, route }) => {
@@ -92,21 +93,27 @@ const PostDetails = ({ navigation, route }) => {
     }
 
     const getComments = async () => {
-        let post_id = post ? post.id : post_id;
-        console.log("🚀 ~ file: index.js ~ line 34 ~ getComments ~ post_id", post_id)
-        const access_token = await AsyncStorage.getItem('@access_token')
-        const { data } = await Axios({
-            url: `https://talkitoutqueen.com/dashboard/api/get-comments/${post_id}`,
-            method: 'get',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${access_token}`
+        try {
+            let post_id = post ? post.id : post_id;
+            console.log("🚀 ~ file: index.js ~ line 34 ~ getComments ~ post_id", post_id)
+            const access_token = await AsyncStorage.getItem('@access_token')
+            const { data } = await Axios({
+                url: `https://talkitoutqueen.com/dashboard/api/get-comments/${post_id}`,
+                method: 'get',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                }
+            })
+            console.log('datadata', data)
+            setCommentList({ ...data })
+            setLoader(false)
+        } catch (error) {
+            if (error.response.status == 401) {
+                logoutAction(navigation)
             }
-        })
-        console.log('datadata', data)
-        setCommentList({ ...data })
-        setLoader(false)
+        }
     }
 
     const onPressSendComment = async () => {
@@ -135,26 +142,34 @@ const PostDetails = ({ navigation, route }) => {
 
             console.log("🚀 ~ file: index.js ~ commentList ", commentList)
         } catch (error) {
-            console.log("🚀 ~ file: index.js ~ line ", error)
+            if (error.response.status == 401) {
+                logoutAction(navigation)
+            }
         }
 
     }
 
     const onPressHeart = async (item) => {
-        const access_token = await AsyncStorage.getItem('@access_token')
-        let user = await AsyncStorage.getItem('@user');
-        user = JSON.parse(user)
-        const { data } = await Axios({
-            url: 'https://talkitoutqueen.com/dashboard/api/post-likes', method: 'put',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${access_token}`
-            },
-            data: { "user_id": user.id, "post_id": item.id }
-        })
-        postDetail.is_liked = postDetail.is_liked == 'true' ? 'false' : 'true'
-        setPostDetail({ ...postDetail })
+        try {
+            const access_token = await AsyncStorage.getItem('@access_token')
+            let user = await AsyncStorage.getItem('@user');
+            user = JSON.parse(user)
+            const { data } = await Axios({
+                url: 'https://talkitoutqueen.com/dashboard/api/post-likes', method: 'put',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                },
+                data: { "user_id": user.id, "post_id": item.id }
+            })
+            postDetail.is_liked = postDetail.is_liked == 'true' ? 'false' : 'true'
+            setPostDetail({ ...postDetail })
+        } catch (error) {
+            if (error.response.status == 401) {
+                logoutAction(navigation)
+            }
+        }
     }
 
     const onPressCommentMenu = (comment_id, comment) => {
@@ -183,46 +198,58 @@ const PostDetails = ({ navigation, route }) => {
     }
 
     const deleteComment = async (comment_id) => {
-        const access_token = await AsyncStorage.getItem('@access_token')
-        let user = await AsyncStorage.getItem('@user');
-        user = JSON.parse(user)
-        const { data } = await Axios({
-            url: 'https://talkitoutqueen.com/dashboard/api/post-delete-comments',
-            method: 'delete',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${access_token}`
-            },
-            data: { "id": comment_id }
-        })
-        getComments()
+        try {
+            const access_token = await AsyncStorage.getItem('@access_token')
+            let user = await AsyncStorage.getItem('@user');
+            user = JSON.parse(user)
+            const { data } = await Axios({
+                url: 'https://talkitoutqueen.com/dashboard/api/post-delete-comments',
+                method: 'delete',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                },
+                data: { "id": comment_id }
+            })
+            getComments()
+        } catch (error) {
+            if (error.response.status == 401) {
+                logoutAction(navigation)
+            }
+        }
     }
 
     const onPressUpdateComment = async (updatedComment) => {
-        console.log("isEditCommentnt", isEditComment, updatedComment)
-        const access_token = await AsyncStorage.getItem('@access_token')
-        let user = await AsyncStorage.getItem('@user');
-        user = JSON.parse(user)
-        const { data } = await Axios({
-            url: `https://talkitoutqueen.com/dashboard/api/post-comment/${isEditComment.id}`,
-            method: 'post',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${access_token}`
-            },
-            data: { "comment": updatedComment }
-        })
-        console.log("DATA", data)
-        onPressCancelEditComment()
-        getComments()
+        try {
+            console.log("isEditCommentnt", isEditComment, updatedComment)
+            const access_token = await AsyncStorage.getItem('@access_token')
+            let user = await AsyncStorage.getItem('@user');
+            user = JSON.parse(user)
+            const { data } = await Axios({
+                url: `https://talkitoutqueen.com/dashboard/api/post-comment/${isEditComment.id}`,
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                },
+                data: { "comment": updatedComment }
+            })
+            console.log("DATA", data)
+            onPressCancelEditComment()
+            getComments()
+        } catch (error) {
+            if (error.response.status == 401) {
+                logoutAction(navigation)
+            }
+        }
     }
 
     const onPressCancelEditComment = () => {
         setIsEditComment(null)
     }
-    
+
     const renderOptionsDots = (item) => {
         return user.id == item.user_id ? <TouchableOpacity
             onPress={() => onPressCommentMenu(item.id, item)}>

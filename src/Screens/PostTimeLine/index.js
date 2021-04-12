@@ -9,6 +9,7 @@ import Axios from 'axios'
 import moment from 'moment'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Image from "react-native-fast-image";
+import { logoutAction } from "../../store/AuthAction";
 const PostTimeLine = ({ navigation }) => {
     const [postData, setPostData] = useState(null);
     const [loader, setLoader] = useState(false);
@@ -40,28 +41,36 @@ const PostTimeLine = ({ navigation }) => {
             console.log("🚀 ~ file: index.js ~ line 25 ~ initState ~ data", data)
             setPostData([...data.data])
             setLoader(false)
-        } catch (err) {
+        } catch (error) {
             setLoader(false)
-            console.log("errerrerrerr", err)
+            if (error.response.status == 401) {
+                logoutAction(navigation)
+            }
         }
 
     }
 
     const onPressHeart = async (item, index) => {
-        const access_token = await AsyncStorage.getItem('@access_token')
-        let user = await AsyncStorage.getItem('@user');
-        user = JSON.parse(user)
-        const { data } = await Axios({
-            url: 'https://talkitoutqueen.com/dashboard/api/post-likes', method: 'put',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${access_token}`
-            },
-            data: { "user_id": user.id, "post_id": item.id }
-        })
-        postData[index].is_liked = postData[index].is_liked == 'true' ? 'false' : 'true'
-        setPostData([...postData])
+        try {
+            const access_token = await AsyncStorage.getItem('@access_token')
+            let user = await AsyncStorage.getItem('@user');
+            user = JSON.parse(user)
+            const { data } = await Axios({
+                url: 'https://talkitoutqueen.com/dashboard/api/post-likes', method: 'put',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                },
+                data: { "user_id": user.id, "post_id": item.id }
+            })
+            postData[index].is_liked = postData[index].is_liked == 'true' ? 'false' : 'true'
+            setPostData([...postData])
+        } catch (error) {
+            if (error.response.status == 401) {
+                logoutAction(navigation)
+            }
+        }
     }
 
     return (
@@ -77,12 +86,12 @@ const PostTimeLine = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
                 {postData ? <FlatList
-                      refreshControl={
+                    refreshControl={
                         <RefreshControl
-                          refreshing={loader}
-                          onRefresh={initState}
+                            refreshing={loader}
+                            onRefresh={initState}
                         />
-                      }
+                    }
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ paddingBottom: 130 }}
                     style={{ flex: 1 }}
@@ -111,7 +120,7 @@ const PostTimeLine = ({ navigation }) => {
                                     </View>
 
                                     <View style={{ flexDirection: 'row', }}>
-                                        <TouchableOpacity onPress={() => navigation.navigate('PostDetails',{ post: item, isFromTimeline: true })}>
+                                        <TouchableOpacity onPress={() => navigation.navigate('PostDetails', { post: item, isFromTimeline: true })}>
                                             <SvgXml xml={MessageIcon} />
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => onPressHeart(item, index)}>

@@ -8,6 +8,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Image from 'react-native-fast-image'
+import { logoutAction } from "../../store/AuthAction";
 
 const AboutUs = ({ navigation }) => {
     const [aboutUs, setAboutUs] = useState(null)
@@ -16,18 +17,25 @@ const AboutUs = ({ navigation }) => {
     }, [])
 
     const init = async () => {
-        const access_token = await AsyncStorage.getItem('@access_token')
-        const response = await Axios({
-            url: "https://talkitoutqueen.com/dashboard/api/page/2",
-            method: 'get',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${access_token}`
+        try {
+            const access_token = await AsyncStorage.getItem('@access_token')
+            const response = await Axios({
+                url: "https://talkitoutqueen.com/dashboard/api/page/2",
+                method: 'get',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                }
+            })
+            if (response.data.data) {
+                setAboutUs(response.data.data)
             }
-        })
-        if (response.data.data) {
-            setAboutUs(response.data.data)
+
+        } catch (error) {
+            if (error.response.status == 401) {
+                logoutAction(navigation)
+            }
         }
         console.log(aboutUs)
     }

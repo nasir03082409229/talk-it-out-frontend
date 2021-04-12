@@ -11,6 +11,7 @@ import Carousel from 'react-native-snap-carousel';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Axios from 'axios'
 import Image from 'react-native-fast-image'
+import { logoutAction } from "../../store/AuthAction";
 
 const CardsPremium = ({ navigation }) => {
     const [error, setError] = useState('')
@@ -22,36 +23,42 @@ const CardsPremium = ({ navigation }) => {
 
     const initState = async () => {
         //"Please subscribe to premium plan to access it "
-        //
-        let access_token = await AsyncStorage.getItem('@access_token');
-        let user = await AsyncStorage.getItem('@user');
-        user = JSON.parse(user)
-        const { data } = await Axios({
-            url: `https://talkitoutqueen.com/dashboard/api/user/${user.id}`,
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${access_token}`
-            }
-        })
-        let userDetails = data.data
-        await AsyncStorage.setItem('@user', JSON.stringify(userDetails))
-        if (userDetails.subscription_plan == 'premium' && userDetails.subscription_active == 1) {
+        try {
+            let access_token = await AsyncStorage.getItem('@access_token');
+            let user = await AsyncStorage.getItem('@user');
+            user = JSON.parse(user)
             const { data } = await Axios({
-                url: 'https://talkitoutqueen.com/dashboard/api/premium',
-                method: 'get',
+                url: `https://talkitoutqueen.com/dashboard/api/user/${user.id}`,
+                method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${access_token}`
                 }
             })
-            let normalizePodcasts = data.podcasts.map(x => ({ ...x, type: 'podcast' }))
-            let normalizeRadios = data.radios.map(x => ({ ...x, type: 'radio' }))
-            setPremiumData([...normalizeRadios, ...normalizePodcasts])
-        } else {
-            setError('Please subscribe to premium plan to access it')
+            let userDetails = data.data
+            await AsyncStorage.setItem('@user', JSON.stringify(userDetails))
+            if (userDetails.subscription_plan == 'premium' && userDetails.subscription_active == 1) {
+                const { data } = await Axios({
+                    url: 'https://talkitoutqueen.com/dashboard/api/premium',
+                    method: 'get',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${access_token}`
+                    }
+                })
+                let normalizePodcasts = data.podcasts.map(x => ({ ...x, type: 'podcast' }))
+                let normalizeRadios = data.radios.map(x => ({ ...x, type: 'radio' }))
+                setPremiumData([...normalizeRadios, ...normalizePodcasts])
+            } else {
+                setError('Please subscribe to premium plan to access it')
+            }
+
+        } catch (error) {
+            if (error.response.status == 401) {
+                logoutAction(navigation)
+            }
         }
     }
 
@@ -111,7 +118,7 @@ const CardsPremium = ({ navigation }) => {
                         <Text style={{ color: '#fff', paddingHorizontal: 10, paddingVertical: 10, }}>{'Go to talkitoutqueen.com'}</Text>
                     </TouchableOpacity>
                 </View> :
-                premiumData ? null :  <ActivityIndicator color={'#fff'} size={20} style={{ alignSelf: 'center' }} />}
+                    premiumData ? null : <ActivityIndicator color={'#fff'} size={20} style={{ alignSelf: 'center' }} />}
                 {/* <View style={styles.cardView}> */}
 
 

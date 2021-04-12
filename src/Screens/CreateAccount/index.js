@@ -10,6 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import Image from 'react-native-fast-image'
 import { CommonActions } from "@react-navigation/routers";
+import { logoutAction } from "../../store/AuthAction";
 
 const CreateAccount = ({ navigation }) => {
 
@@ -21,33 +22,37 @@ const CreateAccount = ({ navigation }) => {
     }, [])
 
     const initState = async () => {
-
-        const access_token = await AsyncStorage.getItem('@access_token')
-        console.log("🚀 ~ file: index.js ~ line 25 ~ initState ~ access_token", access_token)
-        let user = await AsyncStorage.getItem('@user');
-        user = JSON.parse(user);
-        console.log("🚀 ~ file: index.js ~ line 24 ~ initState ~ user", user)
-        setName(user.name)
-        if (user.image) {
-            setAvatarImage(user.image)
-        }
-
-        const { data } = await axios({
-            url: 'https://talkitoutqueen.com/dashboard/api/profile', method: 'get',
-            headers:
-            {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${access_token}`
+        try {
+            const access_token = await AsyncStorage.getItem('@access_token')
+            console.log("🚀 ~ file: index.js ~ line 25 ~ initState ~ access_token", access_token)
+            let user = await AsyncStorage.getItem('@user');
+            user = JSON.parse(user);
+            console.log("🚀 ~ file: index.js ~ line 24 ~ initState ~ user", user)
+            setName(user.name)
+            if (user.image) {
+                setAvatarImage(user.image)
             }
-        })
-        console.log("datatata", data.user)
-        setName(data.user.name)
-        if (data.user.image) {
-            setAvatarImage(data.user.image)
-        }
-        AsyncStorage.setItem('@user', JSON.stringify(data.user))
 
+            const { data } = await axios({
+                url: 'https://talkitoutqueen.com/dashboard/api/profile', method: 'get',
+                headers:
+                {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                }
+            })
+            console.log("datatata", data.user)
+            setName(data.user.name)
+            if (data.user.image) {
+                setAvatarImage(data.user.image)
+            }
+            AsyncStorage.setItem('@user', JSON.stringify(data.user))
+        } catch (error) {
+            if (error.response.status == 401) {
+                logoutAction(navigation)
+            }
+        }
     }
 
     const onPressSelectImage = () => {
@@ -79,53 +84,60 @@ const CreateAccount = ({ navigation }) => {
     console.log(avatarImage)
 
     const onPressProceed = async () => {
-        let user = await AsyncStorage.getItem('@user');
-        const access_token = await AsyncStorage.getItem('@access_token')
-        console.log("🚀 ~ file: index.js ~ line 59 ~ onPressProceed ~ access_token", access_token)
+        try {
+            let user = await AsyncStorage.getItem('@user');
+            const access_token = await AsyncStorage.getItem('@access_token')
+            console.log("🚀 ~ file: index.js ~ line 59 ~ onPressProceed ~ access_token", access_token)
 
-        user = JSON.parse(user);
-        if (avatarImage?.path) {
-            try {
-                let formData = new FormData();
-                formData.append('image',
-                    { uri: avatarImage.path, name: `${name}.png`, type: 'image/jpg' });
-                const { data } = await axios({
-                    method: 'post',
-                    url: `https://talkitoutqueen.com/dashboard/api/user-profile-update/${user.id}`,
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'multipart/form-data',
-                        'Authorization': `Bearer ${access_token}`
-                    },
-                    data: formData
-                })
-                console.log("🚀 ~ file: index.js ~ line 66 ~ onPressProceed ~ data", data)
-            } catch (err) {
-                console.log("🚀 ~ ferrerrerr", err.response)
+            user = JSON.parse(user);
+            if (avatarImage?.path) {
+                try {
+                    let formData = new FormData();
+                    formData.append('image',
+                        { uri: avatarImage.path, name: `${name}.png`, type: 'image/jpg' });
+                    const { data } = await axios({
+                        method: 'post',
+                        url: `https://talkitoutqueen.com/dashboard/api/user-profile-update/${user.id}`,
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'multipart/form-data',
+                            'Authorization': `Bearer ${access_token}`
+                        },
+                        data: formData
+                    })
+                    console.log("🚀 ~ file: index.js ~ line 66 ~ onPressProceed ~ data", data)
+                } catch (err) {
+                    console.log("🚀 ~ ferrerrerr", err.response)
 
+                }
+            }
+            const res = await axios({
+                method: 'put',
+                url: `https://talkitoutqueen.com/dashboard/api/user-profile-update/${user.id}`,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                },
+                data: { "name": name }
+            })
+            const userDetailRes = await axios({
+                method: 'get',
+                url: `https://talkitoutqueen.com/dashboard/api/user/${user.id}`,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                }
+            })
+            await AsyncStorage.setItem('@user', JSON.stringify(userDetailRes.data.data));
+            navigation.navigate('PostTimeLine')
+
+        } catch (error) {
+            if (error.response.status == 401) {
+                logoutAction(navigation)
             }
         }
-        const res = await axios({
-            method: 'put',
-            url: `https://talkitoutqueen.com/dashboard/api/user-profile-update/${user.id}`,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${access_token}`
-            },
-            data: { "name": name }
-        })
-        const userDetailRes = await axios({
-            method: 'get',
-            url: `https://talkitoutqueen.com/dashboard/api/user/${user.id}`,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${access_token}`
-            }
-        })
-        await AsyncStorage.setItem('@user', JSON.stringify(userDetailRes.data.data));
-        navigation.navigate('PostTimeLine')
     }
 
     return (

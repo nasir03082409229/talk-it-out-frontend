@@ -8,6 +8,7 @@ import { Typography, Colors } from "../../Styles";
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import ImagePicker from 'react-native-image-crop-picker';
+import { logoutAction } from "../../store/AuthAction";
 
 
 
@@ -32,28 +33,34 @@ const Profile = ({ navigation }) => {
     }
 
     const updateUser = async () => {
-        let access_token = await AsyncStorage.getItem('@access_token');
-        const res = await axios({
-            method: 'put',
-            url: `https://talkitoutqueen.com/dashboard/api/user-profile-update/${user.id}`,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${access_token}`
-            },
-            data: { "name": user.name }
-        })
-        const userDetailRes = await axios({
-            method: 'get',
-            url: `https://talkitoutqueen.com/dashboard/api/user/${user.id}`,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${access_token}`
+        try {
+            let access_token = await AsyncStorage.getItem('@access_token');
+            const res = await axios({
+                method: 'put',
+                url: `https://talkitoutqueen.com/dashboard/api/user-profile-update/${user.id}`,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                },
+                data: { "name": user.name }
+            })
+            const userDetailRes = await axios({
+                method: 'get',
+                url: `https://talkitoutqueen.com/dashboard/api/user/${user.id}`,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                }
+            })
+            await AsyncStorage.setItem('@user', JSON.stringify(userDetailRes.data.data));
+            setIsEdit(!isEdit)
+        } catch (error) {
+            if (error.response.status == 401) {
+                logoutAction(navigation)
             }
-        })
-        await AsyncStorage.setItem('@user', JSON.stringify(userDetailRes.data.data));
-        setIsEdit(!isEdit)
+        }
     }
 
     const uploadImage = async (image) => {
