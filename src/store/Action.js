@@ -47,18 +47,20 @@ const seekTo = (seconds) => {
 // Podcast Actions 
 
 const startPodcastPlayer = async (stream) => {
-    console.log('this.streamRef', this.streamRef)
+    //console.log('this.streamRef', this.streamRef)
     if (this.playerRef) {
         this.playerRef.destroy()
         this.streamRef = ''
     }
     if (this.streamRef !== stream.podstream) {
-        console.log("🚀 ~ stream.podstream", stream.podstream)
+        console.log("🚀 ~ stream.podstream", stream)
         await TrackPlayer.reset()
         await TrackPlayer.add({
             id: 'trackId',
             url: { uri: stream.podstream },
             title: stream.podtitle,
+            artist : `${new Date()}`,
+            
             // artist: streamObj.singerName,
             // artwork: stream.podsubtitle
         });
