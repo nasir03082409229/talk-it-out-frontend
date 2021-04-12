@@ -12,11 +12,11 @@ const startAudio = (stream) => {
         }
         this.streamRef = stream;
         this.playerRef = new Player(stream, {
-            // continuesToPlayInBackground: true,
-            autoDestroy: true,
-            continuesToPlayInBackground: false,
+            continuesToPlayInBackground: true,
+            autoDestroy: false,
+            // continuesToPlayInBackground: false,
             // category: "Ambient",
-            mixWithOthers: true,
+            // mixWithOthers: true,
         }).on('')
         this.playerRef.play()
     }
