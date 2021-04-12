@@ -1,5 +1,5 @@
-import { Player, Recorder, MediaStates } from '@react-native-community/audio-toolkit';
-import TrackPlayer, { useTrackPlayerProgress } from 'react-native-track-player';
+import { Player } from '@react-native-community/audio-toolkit';
+import TrackPlayer from 'react-native-track-player';
 
 this.playerRef = null
 this.streamRef = '';
@@ -12,7 +12,11 @@ const startAudio = (stream) => {
         }
         this.streamRef = stream;
         this.playerRef = new Player(stream, {
-            continuesToPlayInBackground: true,
+            // continuesToPlayInBackground: true,
+            autoDestroy: true,
+            continuesToPlayInBackground: false,
+            // category: "Ambient",
+            mixWithOthers: true,
         }).on('')
         this.playerRef.play()
     }
@@ -83,6 +87,6 @@ const playPodcastPlayer = async () => {
 }
 
 export {
-    startAudio, stopAudio, playAudio, pauseAudio, seekTo, getProgress
-    , startPodcastPlayer, seekToPodcastPlayer, pausePodcastPlayer, playPodcastPlayer
-}
+    startAudio, stopAudio, playAudio, pauseAudio, seekTo, getProgress,
+    startPodcastPlayer, seekToPodcastPlayer, pausePodcastPlayer, playPodcastPlayer
+};
