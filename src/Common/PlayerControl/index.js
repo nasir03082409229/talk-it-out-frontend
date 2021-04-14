@@ -5,7 +5,6 @@ import { Text, Touchable } from "..";
 import Slider from '@react-native-community/slider';
 import { SvgXml } from "react-native-svg";
 import { SettingIcon, Pause, SeekLeft, SeekRight, Loop, LeftCorner, UpArrow, Cross, play_black } from "../../Assets/Icons";
-import Video from 'react-native-video'
 import TrackPlayer, { useTrackPlayerProgress } from 'react-native-track-player';
 
 

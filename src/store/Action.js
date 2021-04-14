@@ -81,8 +81,8 @@ const startPodcastPlayer = async (stream) => {
             id: 'trackId',
             url: { uri: stream.podstream },
             title: stream.podtitle,
-            artist : `${new Date()}`,
-            
+            artist: `${new Date()}`,
+
             // artist: streamObj.singerName,
             // artwork: stream.podsubtitle
         });
