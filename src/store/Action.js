@@ -11,13 +11,31 @@ const startAudio = (stream) => {
             this.playerRef.destroy()
         }
         this.streamRef = stream;
-        this.playerRef = new Player(stream, {
-            // continuesToPlayInBackground: true,
-            autoDestroy: true,
-            continuesToPlayInBackground: false,
-            // category: "Ambient",
-            mixWithOthers: true,
-        }).on('')
+        try {
+            this.playerRef = new Player(stream, {
+                continuesToPlayInBackground: true,
+                autoDestroy: false,
+                wakeLock : true,
+                // continuesToPlayInBackground: false,
+                // category: "Ambient",
+                mixWithOthers: true,
+            })
+        } catch (error) {
+            alert(JSON.stringify(error))
+            if (this.playerRef) {
+                this.playerRef.destroy()
+                this.playerRef = new Player(stream, {
+                    continuesToPlayInBackground: true,
+                    autoDestroy: false,
+                wakeLock : true,
+
+                    // continuesToPlayInBackground: false,
+                    // category: "Ambient",
+                    mixWithOthers: true,
+                })
+            }
+
+        }
         this.playerRef.play()
     }
 }
