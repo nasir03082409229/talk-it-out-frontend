@@ -15,9 +15,10 @@ const startAudio = (stream) => {
             this.playerRef = new Player(stream, {
                 continuesToPlayInBackground: true,
                 autoDestroy: false,
+                wakeLock : true,
                 // continuesToPlayInBackground: false,
                 // category: "Ambient",
-                // mixWithOthers: true,
+                mixWithOthers: true,
             })
         } catch (error) {
             alert(JSON.stringify(error))
@@ -26,9 +27,11 @@ const startAudio = (stream) => {
                 this.playerRef = new Player(stream, {
                     continuesToPlayInBackground: true,
                     autoDestroy: false,
+                wakeLock : true,
+
                     // continuesToPlayInBackground: false,
                     // category: "Ambient",
-                    // mixWithOthers: true,
+                    mixWithOthers: true,
                 })
             }
 
