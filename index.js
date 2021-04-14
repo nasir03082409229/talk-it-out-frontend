@@ -10,4 +10,6 @@ import App from './src/index'
 import 'react-native-gesture-handler'
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs();//Ignore all log notifications
-AppRegistry.registerComponent(appName, () => Navigator);
+import TestScreen from './src/Screens/TestScreen'
+
+AppRegistry.registerComponent(appName, () => TestScreen);

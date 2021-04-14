@@ -12,6 +12,7 @@ import { logoutAction } from "../../store/AuthAction";
 
 const Explore = ({ navigation }) => {
     const [homeData, setHomeData] = useState(null)
+    console.log("🚀 ~ file: index.js ~ line 15 ~ Explore ~ homeData", homeData)
     const [loader, setLoader] = useState(false)
 
     useEffect(() => {

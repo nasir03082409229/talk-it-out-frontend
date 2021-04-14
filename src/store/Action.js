@@ -36,6 +36,9 @@ const startAudio = (stream) => {
         this.playerRef.play()
     }
 }
+
+
+
 const getProgress = () => {
     return this.playerRef;
 }
