@@ -6,7 +6,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { SvgXml } from "react-native-svg";
 import { Pause, play_black, SeekLeft, SeekRight, SettingIcon, UpArrow } from "../../Assets/Icons";
 import { Text } from "../../Common";
-import { startAudio, stopAudio } from '../../store/Action';
+import { startAudio , stopAudio, pausePodcastPlayer, playPodcastPlayer, seekToPodcastPlayer} from '../../store/Action';
 import { Typography } from "../../Styles";
 
 const RadioPlayer = ({ route }) => {
@@ -17,7 +17,7 @@ const RadioPlayer = ({ route }) => {
     const { item, isFromPodcast } = route.params;
 
     useEffect(() => {
-        startAudio(item.radio_stream)
+        startAudio(item)
     }, [])
 
     const toogleStartStopAudio = () => {
@@ -26,7 +26,7 @@ const RadioPlayer = ({ route }) => {
             console.log("🚀 ~ file: index.js ~ line 29 ~ toogleStartStopAudio ~ isPlaying", isPlaying)
             stopAudio()
         } else {
-            startAudio(item.radio_stream)
+            startAudio(item)
         }
     }
     return (

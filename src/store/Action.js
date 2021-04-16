@@ -3,71 +3,27 @@ import TrackPlayer from 'react-native-track-player';
 
 this.playerRef = null
 this.streamRef = '';
-const startAudio = (stream) => {
-    console.log(this.playerRef)
-    TrackPlayer.pause();
-    if (this.streamRef !== stream) {
-        if (this.playerRef) {
-            this.playerRef.destroy()
-        }
-        this.streamRef = stream;
-        try {
-            this.playerRef = new Player(stream, {
-                continuesToPlayInBackground: true,
-                autoDestroy: false,
-                wakeLock : true,
-                // continuesToPlayInBackground: false,
-                // category: "Ambient",
-                mixWithOthers: true,
-            })
-        } catch (error) {
-            alert(JSON.stringify(error))
-            if (this.playerRef) {
-                this.playerRef.destroy()
-                this.playerRef = new Player(stream, {
-                    continuesToPlayInBackground: true,
-                    autoDestroy: false,
-                wakeLock : true,
-
-                    // continuesToPlayInBackground: false,
-                    // category: "Ambient",
-                    mixWithOthers: true,
-                })
-            }
-
-        }
-        this.playerRef.play()
+const startAudio = async (stream) => {
+    if (this.streamRef !== stream.radio_stream) {
+        await TrackPlayer.reset()
+        await TrackPlayer.add({
+            id: stream.id,
+            url: stream.radio_stream,
+            title: stream.title,
+            artist: stream.sub_title,
+            artwork: stream.small_photo
+        });
+        await TrackPlayer.play();
+        this.streamRef = stream.radio_stream
     }
+
 }
-
-
-
-const getProgress = () => {
-    return this.playerRef;
-}
-const stopAudio = () => {
-    if (this.playerRef) {
-        this.playerRef.stop()
-    }
-    this.playerRef = null
+const stopAudio = async () => {
+    await TrackPlayer.stop()
+    await TrackPlayer.reset()
     this.streamRef = ''
 }
-const pauseAudio = () => {
-    if (this.playerRef) {
-        this.playerRef.pause()
-    }
-}
-const playAudio = () => {
-    if (this.playerRef) {
-        this.playerRef.play()
-    }
-}
 
-const seekTo = (seconds) => {
-    if (this.playerRef) {
-        this.playerRef.seek(seconds)
-    }
-}
 
 // Podcast Actions 
 
@@ -96,6 +52,7 @@ const startPodcastPlayer = async (stream) => {
 }
 
 
+
 const seekToPodcastPlayer = async (sec) => {
     await TrackPlayer.seekTo(sec)
     await TrackPlayer.play();
@@ -108,6 +65,6 @@ const playPodcastPlayer = async () => {
 }
 
 export {
-    startAudio, stopAudio, playAudio, pauseAudio, seekTo, getProgress,
+    startAudio,stopAudio,
     startPodcastPlayer, seekToPodcastPlayer, pausePodcastPlayer, playPodcastPlayer
 };

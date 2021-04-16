@@ -7,7 +7,6 @@ import { SvgXml } from "react-native-svg";
 import { Pause, play_black, SeekLeft, SeekRight, SettingIcon, UpArrow } from "../../Assets/Icons";
 import { Text } from "../../Common";
 import {
-    pauseAudio, playAudio, startAudio, stopAudio,
     startPodcastPlayer, pausePodcastPlayer, seekToPodcastPlayer, playPodcastPlayer, seekTo
 } from '../../store/Action';
 import { Typography } from "../../Styles";
