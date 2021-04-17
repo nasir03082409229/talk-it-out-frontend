@@ -1,24 +1,76 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Slider from '@react-native-community/slider';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
+import axios from 'axios';
 import React, { useEffect, useState } from "react";
 import { Image, SafeAreaView, ScrollView, StatusBar, StyleSheet, TouchableOpacity, View } from "react-native";
 import LinearGradient from 'react-native-linear-gradient';
 import { SvgXml } from "react-native-svg";
 import { Pause, play_black, SeekLeft, SeekRight, SettingIcon, UpArrow } from "../../Assets/Icons";
 import { Text } from "../../Common";
-import { startAudio , stopAudio, pausePodcastPlayer, playPodcastPlayer, seekToPodcastPlayer} from '../../store/Action';
+import { startAudio, stopAudio, pausePodcastPlayer, playPodcastPlayer, seekToPodcastPlayer } from '../../store/Action';
 import { Typography } from "../../Styles";
+import TextTicker from 'react-native-text-ticker'
+import HSNZ from "react-native-hsnz-marquee";
 
 const RadioPlayer = ({ route }) => {
     const [isPlaying, setIsPlaying] = useState(true);
     const [player, setPlayer] = useState(null);
 
     const navigation = useNavigation()
+    const isFocused = useIsFocused();
+
     const { item, isFromPodcast } = route.params;
+    const [interval, setIntervalstate] = useState(null)
+    const [metaData, setMetaData] = useState(null)
 
     useEffect(() => {
         startAudio(item)
-    }, [])
+        if (!isFocused) {
+            clearInterval(interval)
+        }
+        startInterval();
+        const unsubscribe = navigation.addListener('blur', e => {
+            clearInterval(interval)
+        });
+    }, [isFocused])
+
+    const startInterval = () => {
+        if (isFocused) {
+
+            console.log('startIntervalstartIntervalstartInterval')
+            interval && clearInterval(interval)
+            getMetaData()
+            const intervalRef = setInterval(() => {
+                console.log('INTERVAL=')
+                getMetaData()
+            }, 5000);
+            setIntervalstate(intervalRef)
+        }
+    }
+
+    const getMetaData = async () => {
+        console.log('item', item)
+        try {
+            const access_token = await AsyncStorage.getItem('@access_token')
+            var config = {
+                method: 'get',
+                url: `https://talkitoutqueen.com/dashboard/api/metadata/${item.id}`,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+
+                }
+            };
+            const { data } = await axios(config)
+            console.log("🚀 ~ file: index.js ~ line 57 ~ getMetaData ~ data", data)
+            setMetaData(data)
+        } catch (error) {
+            console.log("🚀 ~ file: index.js ~ line 58 ~ getMetaData ~ error", error)
+
+        }
+    }
 
     const toogleStartStopAudio = () => {
         setIsPlaying(!isPlaying)
@@ -29,11 +81,13 @@ const RadioPlayer = ({ route }) => {
             startAudio(item)
         }
     }
+
+
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
             <ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: '#2C2939', flex: 1, }}>
-                {/* {isPlaying ? <Video source={{ uri: item.radio_stream }} /> : null} */}
 
                 <View style={styles.backImgView}>
                     <Image
@@ -55,8 +109,22 @@ const RadioPlayer = ({ route }) => {
                     <View style={styles.main}>
                         <View style={styles.conView}>
                             <View>
-                                <Text style={styles.title}>{isFromPodcast ? item.podtitle : item.title}</Text>
-                                <Text numberOfLines={1} style={styles.epiTxt}>{isFromPodcast ? item.podsubtitle : item.description}</Text>
+                                <View>
+                                    <Text style={[styles.title,]}>{item.title}</Text>
+                                </View>
+                                <View style={{ flex: 1 }}>
+                                    {metaData && <HSNZ
+                                        style={{ height: 20, width: 200, }}
+                                        loop={-1}
+                                        direction={"rtl"}
+                                        autoPlay={true}
+                                        speed={40}
+                                        onEnd={() => null}
+                                    >
+                                        <Text style={styles.epiTxt}>{metaData && metaData.title}</Text>
+                                    </HSNZ>}
+                                </View>
+
                             </View>
                             <TouchableOpacity style={styles.icoTho}>
                                 <SvgXml xml={SettingIcon} />

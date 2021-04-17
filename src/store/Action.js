@@ -4,6 +4,7 @@ import TrackPlayer from 'react-native-track-player';
 this.playerRef = null
 this.streamRef = '';
 const startAudio = async (stream) => {
+console.log("🚀 ~ file: Action.js ~ line 7 ~ startAudio ~ stream", stream)
     if (this.streamRef !== stream.radio_stream) {
         await TrackPlayer.reset()
         await TrackPlayer.add({
