@@ -65,7 +65,7 @@ const RadioPlayer = ({ route }) => {
             };
             const { data } = await axios(config)
             setMetaData(data)
-            updateOption(item.id, data.cover, item.title)
+            // updateOption(item.id, data.cover, item.title)
             console.log('AFTER UPDATE')
         } catch (error) {
             console.log("🚀 ~ file: index.js ~ line 58 ~ getMetaData ~ error", error)
