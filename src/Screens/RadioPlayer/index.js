@@ -1,18 +1,17 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Slider from '@react-native-community/slider';
-import { useNavigation, useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import axios from 'axios';
 import React, { useEffect, useState } from "react";
 import { Image, SafeAreaView, ScrollView, StatusBar, StyleSheet, TouchableOpacity, View } from "react-native";
+import HSNZ from "react-native-hsnz-marquee";
 import LinearGradient from 'react-native-linear-gradient';
 import { SvgXml } from "react-native-svg";
 import { Pause, play_black, SeekLeft, SeekRight, SettingIcon, UpArrow } from "../../Assets/Icons";
 import { Text } from "../../Common";
-import { startAudio, stopAudio, pausePodcastPlayer, playPodcastPlayer, updateOption, seekToPodcastPlayer } from '../../store/Action';
-import { Typography } from "../../Styles";
-import TextTicker from 'react-native-text-ticker'
-import HSNZ from "react-native-hsnz-marquee";
+import { startAudio, stopAudio, updateOption } from '../../store/Action';
 import { logoutAction } from '../../store/AuthAction';
+import { Typography } from "../../Styles";
 
 const RadioPlayer = ({ route }) => {
     const [isPlaying, setIsPlaying] = useState(true);
