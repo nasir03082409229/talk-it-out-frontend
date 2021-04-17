@@ -8,10 +8,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import { SvgXml } from "react-native-svg";
 import { Pause, play_black, SeekLeft, SeekRight, SettingIcon, UpArrow } from "../../Assets/Icons";
 import { Text } from "../../Common";
-import { startAudio, stopAudio, pausePodcastPlayer, playPodcastPlayer, seekToPodcastPlayer } from '../../store/Action';
+import { startAudio, stopAudio, pausePodcastPlayer, playPodcastPlayer, updateOption, seekToPodcastPlayer } from '../../store/Action';
 import { Typography } from "../../Styles";
 import TextTicker from 'react-native-text-ticker'
 import HSNZ from "react-native-hsnz-marquee";
+import { logoutAction } from '../../store/AuthAction';
 
 const RadioPlayer = ({ route }) => {
     const [isPlaying, setIsPlaying] = useState(true);
@@ -38,13 +39,13 @@ const RadioPlayer = ({ route }) => {
     const startInterval = () => {
         if (isFocused) {
 
-            console.log('startIntervalstartIntervalstartInterval')
             interval && clearInterval(interval)
-            getMetaData()
-            const intervalRef = setInterval(() => {
-                console.log('INTERVAL=')
+            setTimeout(() => {
                 getMetaData()
-            }, 5000);
+            }, 1000);
+            const intervalRef = setInterval(() => {
+                getMetaData()
+            }, 10000);
             setIntervalstate(intervalRef)
         }
     }
@@ -64,11 +65,14 @@ const RadioPlayer = ({ route }) => {
                 }
             };
             const { data } = await axios(config)
-            console.log("🚀 ~ file: index.js ~ line 57 ~ getMetaData ~ data", data)
             setMetaData(data)
+            updateOption(item.id, data.cover, item.title)
+            console.log('AFTER UPDATE')
         } catch (error) {
             console.log("🚀 ~ file: index.js ~ line 58 ~ getMetaData ~ error", error)
-
+            if (error.response.status == 401) {
+                logoutAction(navigation)
+            }
         }
     }
 

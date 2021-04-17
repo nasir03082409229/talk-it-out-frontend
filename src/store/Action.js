@@ -4,20 +4,29 @@ import TrackPlayer from 'react-native-track-player';
 this.playerRef = null
 this.streamRef = '';
 const startAudio = async (stream) => {
-console.log("🚀 ~ file: Action.js ~ line 7 ~ startAudio ~ stream", stream)
+    console.log("🚀 ~ file: Action.js ~ line 7 ~ startAudio ~ stream", stream.title)
     if (this.streamRef !== stream.radio_stream) {
         await TrackPlayer.reset()
         await TrackPlayer.add({
             id: stream.id,
             url: stream.radio_stream,
             title: stream.title,
-            artist: stream.sub_title,
-            artwork: stream.small_photo
+            // artist: stream.sub_title,
+            // artwork: stream.small_photo
         });
         await TrackPlayer.play();
         this.streamRef = stream.radio_stream
     }
 
+}
+
+const updateOption = async (id, cover, title) => {
+    console.log('titletitletitletitletitle',id,  title)
+    await TrackPlayer.updateMetadataForTrack(id, {
+        artwork: cover,
+        title: title,
+        // artist: 'Artis'
+    })
 }
 const stopAudio = async () => {
     await TrackPlayer.stop()
@@ -66,6 +75,6 @@ const playPodcastPlayer = async () => {
 }
 
 export {
-    startAudio,stopAudio,
+    startAudio, stopAudio, updateOption,
     startPodcastPlayer, seekToPodcastPlayer, pausePodcastPlayer, playPodcastPlayer
 };
