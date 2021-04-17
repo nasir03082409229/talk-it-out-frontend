@@ -17,6 +17,7 @@ import { SvgXml } from "react-native-svg";
 import { CrossDrawer, SwitchActive, HomeDra, Switch, AboutDra, NotifDra, ShareDra, ProfileDra, ForgetPasswordDra, logout } from "../../Assets/Icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { logoutAction } from '../../store/AuthAction';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -150,16 +151,9 @@ const App = ({ navigation }) => {
                                             'Authorization': `Bearer ${access_token}`
                                         }
                                     })
-                                    await AsyncStorage.clear();
                                     navigation.closeDrawer();
-                                    navigation.dispatch(
-                                        CommonActions.reset({
-                                            index: 0,
-                                            routes: [
-                                                { name: 'Login' },
-                                            ],
-                                        })
-                                    );
+                                    logoutAction(navigation);
+
                                 }}
                                 style={styles.draRaow}>
                                 <SvgXml xml={logout} />
