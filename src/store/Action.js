@@ -1,8 +1,8 @@
-import { Player } from '@react-native-community/audio-toolkit';
 import TrackPlayer from 'react-native-track-player';
 
 this.playerRef = null
 this.streamRef = '';
+
 const startAudio = async (stream) => {
     if (this.streamRef !== stream.radio_stream) {
         await TrackPlayer.reset()
@@ -10,10 +10,10 @@ const startAudio = async (stream) => {
             id: stream.id,
             url: stream.radio_stream,
             title: stream.title,
-            // artist: stream.sub_title,
             artwork: stream.small_photo
         });
         await TrackPlayer.play();
+        TrackPlayer.updateOptions({ stopWithApp: true })
         this.streamRef = stream.radio_stream
     }
 
@@ -76,3 +76,4 @@ export {
     startAudio, stopAudio, updateOption,
     startPodcastPlayer, seekToPodcastPlayer, pausePodcastPlayer, playPodcastPlayer
 };
+
