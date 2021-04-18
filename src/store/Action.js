@@ -4,8 +4,6 @@ this.playerRef = null
 this.streamRef = '';
 
 const startAudio = async (stream) => {
-    const state = await TrackPlayer.getState();
-    console.log("🚀 ~ file: Action.js ~ line 8 ~ startAudio ~ stream", stream)
 
     if (this.streamRef !== stream.radio_stream) {
         await TrackPlayer.reset()
@@ -16,7 +14,7 @@ const startAudio = async (stream) => {
             artwork: stream.small_photo
         });
         await TrackPlayer.play();
-        // TrackPlayer.updateOptions({ stopWithApp: true })
+        TrackPlayer.updateOptions({ stopWithApp: true, })
         this.streamRef = stream.radio_stream
     }
 
