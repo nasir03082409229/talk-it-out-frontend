@@ -26,8 +26,10 @@ const RadioPlayer = ({ route }) => {
 
     useEffect(() => {
         startAudio(item)
+        console.log('isFocusedisFocused', isFocused)
         if (!isFocused) {
             clearInterval(interval)
+            return;
         }
         startInterval();
         const unsubscribe = navigation.addListener('blur', e => {
@@ -86,7 +88,7 @@ const RadioPlayer = ({ route }) => {
     }
 
 
-
+console.log('NASIR NASIR')
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />

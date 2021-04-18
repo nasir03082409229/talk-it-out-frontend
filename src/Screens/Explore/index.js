@@ -37,7 +37,8 @@ const Explore = ({ navigation }) => {
             let normalizeRadios = response.data.radios.map(x => ({ ...x, type: 'radio' }))
             setHomeData([...normalizeRadios, ...normalizePodcasts, ...normalizePages,])
         } catch (error) {
-            if (error.response.status == 401) {
+            console.log("🚀 ~ file: index.js ~ line 41 ~ init ~ error", error)
+            if (error?.response?.status == 401) {
                 logoutAction(navigation)
             }
         }
