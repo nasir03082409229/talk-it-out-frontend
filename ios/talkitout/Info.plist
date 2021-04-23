@@ -34,19 +34,19 @@
 		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>localhost</key>
+			<key>aud1.sjamz</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
 				<true/>
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Allow camera access</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow gallery access</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Allow camera access</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Poppins-SemiBold.otf</string>
