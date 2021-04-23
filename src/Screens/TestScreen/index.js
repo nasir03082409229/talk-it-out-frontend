@@ -17,7 +17,6 @@ const App = () => {
 
     const _onImageChange = useCallback(({ nativeEvent }) => {
         const { linkUri } = nativeEvent;
-        console.log(nativeEvent, "🚀 ~ file: index.js ~ line 20 ~ const_onImageChange=useCallback ~ uri", linkUri)
 
         setSelectedMediaUri(linkUri);
     }, []);

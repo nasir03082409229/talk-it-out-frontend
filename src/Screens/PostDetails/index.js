@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { FlatList, RefreshControl, StyleSheet, View, Modal, StatusBar, SafeAreaView, Alert, ScrollView, TextInput, TouchableOpacity, ActivityIndicator, Keyboard } from "react-native";
 import { Text, EditCommentModal } from "../../Common";
 import { logo, } from "../../Assets/images";
@@ -116,9 +116,8 @@ const PostDetails = ({ navigation, route }) => {
         }
     }
 
-    const onPressSendComment = async () => {
+    const onPressSendComment = async (gif_url) => {
         const access_token = await AsyncStorage.getItem('@access_token')
-        console.log("🚀 ~ file: index.js ~ line 57 ~ onPressSendComment ~ access_token", access_token)
         let user = await AsyncStorage.getItem('@user')
         user = JSON.parse(user);
         try {
@@ -128,7 +127,8 @@ const PostDetails = ({ navigation, route }) => {
                 data: {
                     "user_id": user.id,
                     "post_id": post.id,
-                    "comment": commentText
+                    "comment": gif_url ? gif_url : commentText,
+                    "type": gif_url ? 'gif' : 'text'
                 },
                 headers: {
                     'Accept': 'application/json',
@@ -142,6 +142,7 @@ const PostDetails = ({ navigation, route }) => {
 
             console.log("🚀 ~ file: index.js ~ commentList ", commentList)
         } catch (error) {
+            console.log("🚀 ~ file: index.js ~ line 145 ~ onPressSendComment ~ error", error)
             if (error.response.status == 401) {
                 logoutAction(navigation)
             }
@@ -172,7 +173,7 @@ const PostDetails = ({ navigation, route }) => {
         }
     }
 
-    const onPressCommentMenu = (comment_id, comment) => {
+    const onPressCommentMenu = (comment_id, comment, type) => {
 
         Alert.alert(
             "Alert",
@@ -183,11 +184,11 @@ const PostDetails = ({ navigation, route }) => {
                     onPress: () => console.log("Cancel Pressed"),
                     style: "cancel"
                 },
-                {
+                type == 'text' && ({
                     text: "Edit", onPress: () => {
                         setIsEditComment(comment)
                     }
-                },
+                }),
                 {
                     text: "DELETE", onPress: () => {
                         deleteComment(comment_id)
@@ -250,12 +251,16 @@ const PostDetails = ({ navigation, route }) => {
         setIsEditComment(null)
     }
 
-    const renderOptionsDots = (item) => {
+    const renderOptionsDots = (item, type) => {
         return user.id == item.user_id ? <TouchableOpacity
-            onPress={() => onPressCommentMenu(item.id, item)}>
+            onPress={() => onPressCommentMenu(item.id, item, type)}>
             <SvgXml xml={menu_vertical} />
         </TouchableOpacity> : null
     }
+    const _onImageChange = useCallback(({ nativeEvent }) => {
+        const { linkUri } = nativeEvent;
+        onPressSendComment(linkUri)
+    }, []);
 
     return (
         <SafeAreaView style={{ flex: 1, }}>
@@ -324,6 +329,11 @@ const PostDetails = ({ navigation, route }) => {
                         style={{ flex: 1 }}
                         data={commentList ? commentList.data : []}
                         renderItem={({ index, item }) => {
+                            let type = 'text'
+                            if (item.comment.indexOf('https://') == 0 && item.comment.indexOf('.gif') == item.comment.length - 4) {
+                                type = 'gif'
+                            }
+                            console.log(type)
                             return (
                                 <View key={`${index}${item.id}-postdetail`} style={styles.maintimelineview}>
                                     <View style={{ flexDirection: 'row', }}>
@@ -333,10 +343,12 @@ const PostDetails = ({ navigation, route }) => {
                                                 <Text style={styles.titleTxt}>{item.user_name}</Text>
                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                     <Text style={styles.timeTxt}>{moment.utc(item.created_at).fromNow()}</Text>
-                                                    {renderOptionsDots(item)}
+                                                    {renderOptionsDots(item, type)}
                                                 </View>
                                             </View>
-                                            <Text style={styles.commentTxt}>{item.comment}</Text>
+                                            {type == 'text' ?
+                                                <Text style={styles.commentTxt}>{item.comment}</Text> :
+                                                <Image style={styles.gifImage} resizeMode={'contain'} source={{ uri: item.comment }} />}
                                         </View>
                                     </View>
                                 </View>
@@ -349,6 +361,8 @@ const PostDetails = ({ navigation, route }) => {
                 <TextInput
                     value={commentText}
                     onChangeText={(text) => setCommentText(text)}
+                    onImageChange={_onImageChange}
+
                     style={styles.commentinput}
                     placeholder='Write Comment...' />
                 <TouchableOpacity onPress={onPressSendComment} style={styles.sendIcon} >
@@ -376,7 +390,9 @@ const styles = StyleSheet.create({
     timeTxt: { color: '#9B9B9B', fontFamily: Typography.FONT_FAMILY_LIGHT, fontSize: 12, },
     commentTxt: { color: '#4A4A4A', fontFamily: Typography.FONT_FAMILY_LIGHT, fontSize: 12, },
     // mainimg: { resizeMode: 'contain', width: 30, height: 30, marginRight: 10, marginTop: -5, },
-
+    gifImage: {
+        width: 150, height: 150, borderRadius: 5
+    },
     mainSearView: {
         zIndex: +10000, backgroundColor: '#FFF',
         flexDirection: 'row', alignItems: 'center', height: 60, elevation: 10,
