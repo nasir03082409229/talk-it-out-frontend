@@ -305,6 +305,8 @@ const CommentsList = ({ navigation, route }) => {
                     <TextInput
                         value={commentText}
                         onChangeText={(text) => setCommentText(text)}
+                        onImageChange={_onImageChange}
+
                         style={styles.commentinput}
                         placeholder='Write Comment...' />
                     <TouchableOpacity onPress={() => onPressSendComment()} style={styles.sendIcon} >
