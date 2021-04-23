@@ -88,7 +88,7 @@ const RadioPlayer = ({ route }) => {
     }
 
 
-     return (
+    return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor='#2C2939' />
             <ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: '#2C2939', flex: 1, }}>
@@ -150,21 +150,14 @@ const RadioPlayer = ({ route }) => {
                                     maximumTrackTintColor="#707070"
                                 />
                             </View>
-                            <View style={styles.conView}>
-                                <Text style={styles.durationTxt}>1:02:50</Text>
-                                <Text style={styles.durationTxt}>1:02:50</Text>
-                            </View>
+
                             <View style={styles.controlView}>
                                 <View />
-                                <TouchableOpacity style={styles.icoTho}>
-                                    <SvgXml xml={SeekLeft} />
-                                </TouchableOpacity>
+
                                 <TouchableOpacity onPress={() => { toogleStartStopAudio() }} style={styles.middleIco}>
                                     {isPlaying ? <SvgXml xml={Pause} /> : <SvgXml xml={play_black} />}
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.icoTho}>
-                                    <SvgXml xml={SeekRight} />
-                                </TouchableOpacity>
+
                                 <View />
                             </View>
                         </View>
