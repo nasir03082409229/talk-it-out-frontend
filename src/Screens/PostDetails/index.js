@@ -121,7 +121,7 @@ const PostDetails = ({ navigation, route }) => {
         let user = await AsyncStorage.getItem('@user')
         user = JSON.parse(user);
         try {
-            const { data } = await Axios({
+            const { data: resData } = await Axios({
                 url: `https://talkitoutqueen.com/dashboard/api/post-comments`,
                 method: 'put',
                 data: {
@@ -365,7 +365,7 @@ const PostDetails = ({ navigation, route }) => {
 
                     style={styles.commentinput}
                     placeholder='Write Comment...' />
-                <TouchableOpacity onPress={onPressSendComment} style={styles.sendIcon} >
+                <TouchableOpacity onPress={() => onPressSendComment()} style={styles.sendIcon} >
                     <SvgXml xml={SendIcon} />
                 </TouchableOpacity>
             </View>

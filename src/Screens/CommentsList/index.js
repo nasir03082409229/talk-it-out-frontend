@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
 import Axios from 'axios';
 import moment from 'moment';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { ActivityIndicator, FlatList, Image, Keyboard, Alert, RefreshControl, SafeAreaView, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { ArrowLeft, CrossIcon, SendIcon, menu_vertical } from "../../Assets/Icons";
@@ -113,7 +113,7 @@ const CommentsList = ({ navigation, route }) => {
         getUser()
     }
 
-    const onPressSendComment = async () => {
+    const onPressSendComment = async (gif_url) => {
         const access_token = await AsyncStorage.getItem('@access_token')
         let user = await AsyncStorage.getItem('@user')
         user = JSON.parse(user);
@@ -124,7 +124,8 @@ const CommentsList = ({ navigation, route }) => {
                 data: {
                     "user_id": user.id,
                     "post_id": post.id,
-                    "comment": commentText
+                    "comment": gif_url ? gif_url : commentText,
+                    "type": gif_url ? 'gif' : 'text'
                 },
                 headers: {
                     'Accept': 'application/json',
@@ -132,11 +133,13 @@ const CommentsList = ({ navigation, route }) => {
                     'Authorization': `Bearer ${access_token}`
                 }
             })
-            getComments()
+            getComments();
             setCommentText('')
             Keyboard.dismiss()
 
+            console.log("🚀 ~ file: index.js ~ commentList ", commentList)
         } catch (error) {
+            console.log("🚀 ~ file: index.js ~ line 145 ~ onPressSendComment ~ error", error)
             if (error.response.status == 401) {
                 logoutAction(navigation)
             }
@@ -144,7 +147,7 @@ const CommentsList = ({ navigation, route }) => {
 
     }
 
-    const onPressCommentMenu = (comment_id, comment) => {
+    const onPressCommentMenu = (comment_id, comment, type) => {
         Alert.alert(
             "Alert",
             "Are you sure you want to delete comment?",
@@ -154,11 +157,11 @@ const CommentsList = ({ navigation, route }) => {
                     onPress: () => console.log("Cancel Pressed"),
                     style: "cancel"
                 },
-                {
+                type == 'text' && ({
                     text: "Edit", onPress: () => {
                         setIsEditComment(comment)
                     }
-                },
+                }),
                 {
                     text: "DELETE", onPress: () => {
                         deleteComment(comment_id)
@@ -226,10 +229,13 @@ const CommentsList = ({ navigation, route }) => {
     const onPressCancelEditComment = () => {
         setIsEditComment(null)
     }
+    const _onImageChange = useCallback(({ nativeEvent }) => {
+        const { linkUri } = nativeEvent;
+        onPressSendComment(linkUri)
+    }, []);
 
-
-    const renderOptionsDots = (item) => {
-        return user?.id == item.user_id ? <TouchableOpacity onPress={() => onPressCommentMenu(item.id, item)}>
+    const renderOptionsDots = (item, type) => {
+        return user?.id == item.user_id ? <TouchableOpacity onPress={() => onPressCommentMenu(item.id, item, type)}>
             <SvgXml xml={menu_vertical} />
         </TouchableOpacity> : null
     }
@@ -243,7 +249,7 @@ const CommentsList = ({ navigation, route }) => {
                         <SvgXml xml={ArrowLeft} />
                     </TouchableOpacity>
                     <Text style={styles.Createtxt}>{postDetail.title}</Text>
-                    <TouchableOpacity >
+                    <TouchableOpacity onPress={()=> navigation.goBack()}>
                         <SvgXml xml={CrossIcon} />
                     </TouchableOpacity>
                 </View>
@@ -269,8 +275,13 @@ const CommentsList = ({ navigation, route }) => {
                             </TouchableOpacity> : <ActivityIndicator color={'#000'} size={20} style={{ alignSelf: 'center' }} /> : null}
                     </View>)}
                     renderItem={({ index, item }) => {
+                        let type = 'text'
+                        if (item.comment.indexOf('https://') == 0 && item.comment.indexOf('.gif') == item.comment.length - 4) {
+                            type = 'gif'
+                        }
+                        console.log(type)
                         return (
-                            <View key={`${index}${item.id}-postdetail`} style={styles.maintimelineview}>
+                            <View key={`${index}${item.id}-commentlist`} style={styles.maintimelineview}>
                                 <View style={{ flexDirection: 'row', }}>
                                     <Image style={styles.mainimg} source={{ uri: item.user_photo ? item.user_photo : `https://cencup.com/wp-content/uploads/2019/07/avatar-placeholder.png` }} />
                                     <View style={{ flex: 1, }}>
@@ -278,10 +289,12 @@ const CommentsList = ({ navigation, route }) => {
                                             <Text style={styles.titleTxt}>{item.user_name}</Text>
                                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                 <Text style={styles.timeTxt}>{moment.utc(item.created_at).fromNow()}</Text>
-                                                {renderOptionsDots(item)}
+                                                {renderOptionsDots(item, type)}
                                             </View>
                                         </View>
-                                        <Text style={styles.commentTxt}>{item.comment}</Text>
+                                        {type == 'text' ?
+                                            <Text style={styles.commentTxt}>{item.comment}</Text> :
+                                            <Image style={styles.gifImage} resizeMode={'contain'} source={{ uri: item.comment }} />}
                                     </View>
                                 </View>
                             </View>
@@ -294,7 +307,7 @@ const CommentsList = ({ navigation, route }) => {
                         onChangeText={(text) => setCommentText(text)}
                         style={styles.commentinput}
                         placeholder='Write Comment...' />
-                    <TouchableOpacity onPress={onPressSendComment} style={styles.sendIcon} >
+                    <TouchableOpacity onPress={()=>onPressSendComment()} style={styles.sendIcon} >
                         <SvgXml xml={SendIcon} />
                     </TouchableOpacity>
                 </View>
@@ -323,7 +336,9 @@ const styles = StyleSheet.create({
     mainimg: {
         marginRight: 10, width: 40, height: 40, borderRadius: 70,
     },
-
+    gifImage: {
+        width: 150, height: 150, borderRadius: 10
+    },
     mainSearView: {
         // zIndex: +10000,
         backgroundColor: '#FFF',
