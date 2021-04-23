@@ -113,7 +113,7 @@ const CommentsList = ({ navigation, route }) => {
         getUser()
     }
 
-    const onPressSendComment = async (gif_url) => {
+    const onPressSendComment = async (gif_base64) => {
         const access_token = await AsyncStorage.getItem('@access_token')
         let user = await AsyncStorage.getItem('@user')
         user = JSON.parse(user);
@@ -124,8 +124,8 @@ const CommentsList = ({ navigation, route }) => {
                 data: {
                     "user_id": user.id,
                     "post_id": post.id,
-                    "comment": gif_url ? gif_url : commentText,
-                    "type": gif_url ? 'gif' : 'text'
+                    "comment": gif_base64 ? gif_base64 : commentText,
+                    "type": gif_base64 ? 'gif' : 'text'
                 },
                 headers: {
                     'Accept': 'application/json',
@@ -230,8 +230,10 @@ const CommentsList = ({ navigation, route }) => {
         setIsEditComment(null)
     }
     const _onImageChange = useCallback(({ nativeEvent }) => {
-        const { linkUri } = nativeEvent;
-        onPressSendComment(linkUri)
+        const { linkUri, data } = nativeEvent;
+        console.log("🚀 ~ file: index.js ~ line 234 ~ const_onImageChange=useCallback ~ nativeEvent", nativeEvent)
+        onPressSendComment(`data:image/png;base64,${data}`)
+
     }, []);
 
     const renderOptionsDots = (item, type) => {
@@ -275,13 +277,8 @@ const CommentsList = ({ navigation, route }) => {
                             </TouchableOpacity> : <ActivityIndicator color={'#000'} size={20} style={{ alignSelf: 'center' }} /> : null}
                     </View>)}
                     renderItem={({ index, item }) => {
-                        let type = 'text'
-                        if (item.comment.indexOf('https://') == 0 && item.comment.indexOf('.gif') == item.comment.length - 4) {
-                            type = 'gif'
-                        }
-                        console.log(type)
                         return (
-                            <View key={`${index}${item.id}-commentlist`} style={styles.maintimelineview}>
+                            <View key={`${index}${item.id}-postdetail`} style={styles.maintimelineview}>
                                 <View style={{ flexDirection: 'row', }}>
                                     <Image style={styles.mainimg} source={{ uri: item.user_photo ? item.user_photo : `https://cencup.com/wp-content/uploads/2019/07/avatar-placeholder.png` }} />
                                     <View style={{ flex: 1, }}>
@@ -289,10 +286,10 @@ const CommentsList = ({ navigation, route }) => {
                                             <Text style={styles.titleTxt}>{item.user_name}</Text>
                                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                 <Text style={styles.timeTxt}>{moment.utc(item.created_at).fromNow()}</Text>
-                                                {renderOptionsDots(item, type)}
+                                                {renderOptionsDots(item, item.type)}
                                             </View>
                                         </View>
-                                        {type == 'text' ?
+                                        {item.type == 'text' ?
                                             <Text style={styles.commentTxt}>{item.comment}</Text> :
                                             <Image style={styles.gifImage} resizeMode={'contain'} source={{ uri: item.comment }} />}
                                     </View>

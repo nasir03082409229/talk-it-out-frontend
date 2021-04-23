@@ -116,7 +116,7 @@ const PostDetails = ({ navigation, route }) => {
         }
     }
 
-    const onPressSendComment = async (gif_url) => {
+    const onPressSendComment = async (gif_base64) => {
         const access_token = await AsyncStorage.getItem('@access_token')
         let user = await AsyncStorage.getItem('@user')
         user = JSON.parse(user);
@@ -127,8 +127,8 @@ const PostDetails = ({ navigation, route }) => {
                 data: {
                     "user_id": user.id,
                     "post_id": post.id,
-                    "comment": gif_url ? gif_url : commentText,
-                    "type": gif_url ? 'gif' : 'text'
+                    "comment": gif_base64 ? gif_base64 : commentText,
+                    "type": gif_base64 ? 'gif' : 'text'
                 },
                 headers: {
                     'Accept': 'application/json',
@@ -136,6 +136,7 @@ const PostDetails = ({ navigation, route }) => {
                     'Authorization': `Bearer ${access_token}`
                 }
             })
+            console.log('resDataresData', resData)
             getComments();
             setCommentText('')
             Keyboard.dismiss()
@@ -235,7 +236,7 @@ const PostDetails = ({ navigation, route }) => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${access_token}`
                 },
-                data: { "comment": updatedComment, type :'text' }
+                data: { "comment": updatedComment, type: 'text' }
             })
             console.log("DATA", data)
             onPressCancelEditComment()
@@ -258,8 +259,9 @@ const PostDetails = ({ navigation, route }) => {
         </TouchableOpacity> : null
     }
     const _onImageChange = useCallback(({ nativeEvent }) => {
-        const { linkUri } = nativeEvent;
-        onPressSendComment(linkUri)
+        console.log("🚀 ~ file: index.js ~ line 261 ~ const_onImageChange=useCallback ~ nativeEvent", nativeEvent)
+        const { linkUri, data } = nativeEvent;
+        onPressSendComment(`data:image/png;base64,${data}`)
     }, []);
 
     return (
@@ -329,11 +331,6 @@ const PostDetails = ({ navigation, route }) => {
                         style={{ flex: 1 }}
                         data={commentList ? commentList.data : []}
                         renderItem={({ index, item }) => {
-                            let type = 'text'
-                            if (item.comment.indexOf('https://') == 0 && item.comment.indexOf('.gif') == item.comment.length - 4) {
-                                type = 'gif'
-                            }
-                            console.log(type)
                             return (
                                 <View key={`${index}${item.id}-postdetail`} style={styles.maintimelineview}>
                                     <View style={{ flexDirection: 'row', }}>
@@ -343,10 +340,10 @@ const PostDetails = ({ navigation, route }) => {
                                                 <Text style={styles.titleTxt}>{item.user_name}</Text>
                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                     <Text style={styles.timeTxt}>{moment.utc(item.created_at).fromNow()}</Text>
-                                                    {renderOptionsDots(item, type)}
+                                                    {renderOptionsDots(item, item.type)}
                                                 </View>
                                             </View>
-                                            {type == 'text' ?
+                                            {item.type == 'text' ?
                                                 <Text style={styles.commentTxt}>{item.comment}</Text> :
                                                 <Image style={styles.gifImage} resizeMode={'contain'} source={{ uri: item.comment }} />}
                                         </View>
