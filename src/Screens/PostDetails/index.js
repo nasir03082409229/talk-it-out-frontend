@@ -235,7 +235,7 @@ const PostDetails = ({ navigation, route }) => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${access_token}`
                 },
-                data: { "comment": updatedComment }
+                data: { "comment": updatedComment, type :'text' }
             })
             console.log("DATA", data)
             onPressCancelEditComment()

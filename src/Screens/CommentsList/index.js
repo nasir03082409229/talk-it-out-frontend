@@ -213,7 +213,7 @@ const CommentsList = ({ navigation, route }) => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${access_token}`
                 },
-                data: { "comment": updatedComment }
+                data: { "comment": updatedComment, type: 'text' }
             })
             console.log("DATA", data)
             onPressCancelEditComment()
@@ -249,7 +249,7 @@ const CommentsList = ({ navigation, route }) => {
                         <SvgXml xml={ArrowLeft} />
                     </TouchableOpacity>
                     <Text style={styles.Createtxt}>{postDetail.title}</Text>
-                    <TouchableOpacity onPress={()=> navigation.goBack()}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
                         <SvgXml xml={CrossIcon} />
                     </TouchableOpacity>
                 </View>
@@ -307,7 +307,7 @@ const CommentsList = ({ navigation, route }) => {
                         onChangeText={(text) => setCommentText(text)}
                         style={styles.commentinput}
                         placeholder='Write Comment...' />
-                    <TouchableOpacity onPress={()=>onPressSendComment()} style={styles.sendIcon} >
+                    <TouchableOpacity onPress={() => onPressSendComment()} style={styles.sendIcon} >
                         <SvgXml xml={SendIcon} />
                     </TouchableOpacity>
                 </View>
