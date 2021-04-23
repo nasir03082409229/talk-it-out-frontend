@@ -7,9 +7,9 @@ import { Image, SafeAreaView, ScrollView, StatusBar, StyleSheet, TouchableOpacit
 import HSNZ from "react-native-hsnz-marquee";
 import LinearGradient from 'react-native-linear-gradient';
 import { SvgXml } from "react-native-svg";
-import { Pause, play_black, SeekLeft, SeekRight, SettingIcon, UpArrow } from "../../Assets/Icons";
+import { Pause, play_black, SettingIcon, UpArrow } from "../../Assets/Icons";
 import { Text } from "../../Common";
-import { startAudio, stopAudio, updateOption } from '../../store/Action';
+import { startAudio, stopAudio } from '../../store/Action';
 import { logoutAction } from '../../store/AuthAction';
 import { Typography } from "../../Styles";
 
@@ -136,13 +136,6 @@ const RadioPlayer = ({ route }) => {
                         </View>
                         <View>
                             <View style={styles.sliView}>
-                                {/* {isPlaying && <Video
-                                        disableFocus={true}
-                                        playWhenInactive={true}
-                                        playInBackground={true}
-                                        audioOnly
-                                        // style={{ height: 100, width: 100, borderWidth: 2 }}
-                                        source={{ uri: stream }} />} */}
                                 <Slider
                                     minimumValue={0}
                                     maximumValue={1}

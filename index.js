@@ -12,4 +12,4 @@ LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs();//Ignore all log notifications
 import TestScreen from './src/Screens/TestScreen'
 
-AppRegistry.registerComponent(appName, () => Navigator);
+AppRegistry.registerComponent(appName, () => TestScreen);

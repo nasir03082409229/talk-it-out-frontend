@@ -1,35 +1,80 @@
-import React, { useEffect } from 'react';
-import { View, Text } from 'react-native'
-import Video from 'react-native-video'
-import TrackPlayer from 'react-native-track-player';
+import React, { useState, useCallback } from 'react';
+import {
+    SafeAreaView,
+    StyleSheet,
+    ScrollView,
+    View,
+    StatusBar,
+    Platform,
+    TextInput,
+    Image,
+} from 'react-native';
 
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
-const TestScreen = () => {
-    useEffect(() => {
-        start();
-    }, [])
-    return (<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>
-            GO TO HOME
-        </Text>
-    </View>)
-}
+const App = () => {
+    const [selectedMediaUri, setSelectedMediaUri] = useState(null);
 
-const start = async () => {
-    // Set up the player
-    await TrackPlayer.setupPlayer();
+    const _onImageChange = useCallback(({ nativeEvent }) => {
+        const { linkUri } = nativeEvent;
+        console.log(nativeEvent, "🚀 ~ file: index.js ~ line 20 ~ const_onImageChange=useCallback ~ uri", linkUri)
 
-    // Add a track to the queue
-    await TrackPlayer.add({
-        id: 'trackId',
-        url: 'https://aud1.sjamz.com/9111/stream',
-        title: 'Track Title',
-        artist: 'Track Artist',
-    });
+        setSelectedMediaUri(linkUri);
+    }, []);
 
-    // Start playing it
-    await TrackPlayer.play();
+    return (
+        <View style={styles.container}>
+            <StatusBar barStyle="dark-content" />
+            <SafeAreaView style={styles.container}>
+                <ScrollView
+                    contentInsetAdjustmentBehavior="automatic"
+                    contentContainerStyle={styles.scrollViewContent}
+                    style={styles.scrollView}>
+                    <View style={styles.body}>
+                        <View style={styles.mediaContainer}>
+                            {selectedMediaUri && (
+                                <Image source={{ uri: selectedMediaUri }} style={styles.image} />
+                            )}
+                        </View>
+                        <TextInput
+                            onImageChange={_onImageChange}
+                            placeholder={Platform.select({
+                                ios: 'Try to paste an image!',
+                                android: 'Try to use a GIF from your keyboard!',
+                            })}
+                        />
+                    </View>
+                </ScrollView>
+            </SafeAreaView>
+        </View>
+    );
 };
 
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    scrollView: {
+        backgroundColor: Colors.lighter,
+    },
+    scrollViewContent: {
+        flexGrow: 1,
+    },
+    mediaContainer: {
+        flex: 1,
+    },
+    engine: {
+        position: 'absolute',
+        right: 0,
+    },
+    body: {
+        flex: 1,
+        backgroundColor: Colors.white,
+    },
+    image: {
+        width: '100%',
+        aspectRatio: 1,
+    },
+});
 
-export default TestScreen
+export default App;
