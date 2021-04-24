@@ -1,26 +1,34 @@
 import TrackPlayer from 'react-native-track-player';
+import { AppState } from 'react-native'
 
-this.streamRef = '';
+let streamRef = '';
 
 const startAudio = async (stream) => {
+    let playerState = await TrackPlayer.getState();
+    // if 1 means stop
+    // if 3 means playing 
+    // i f 0 means not playing any
+    if (playerState == 0) {
+        streamRef = ''
+    }
 
-    if (this.streamRef !== stream.radio_stream) {
+    if (streamRef !== stream.radio_stream) {
         await TrackPlayer.setupPlayer({
-            iosCategoryMode:'default',
-            iosCategoryOptions:[],
-            waitForBuffer:true
-            });
+            iosCategoryMode: 'default',
+            iosCategoryOptions: [],
+            waitForBuffer: true
+        });
         await TrackPlayer.reset()
         await TrackPlayer.add({
             id: 'trackId',
-            url: {uri :stream.radio_stream},
+            url: { uri: stream.radio_stream },
             title: stream.title,
-            // artwork: stream.small_photo,
-            artist :`${new Date()}`,
+            artwork: stream.small_photo,
+            artist: ``,
         });
         await TrackPlayer.play();
-        // TrackPlayer.updateOptions({ stopWithApp: true, })
-        this.streamRef = stream.radio_stream
+        TrackPlayer.updateOptions({ stopWithApp: true, })
+        streamRef = stream.radio_stream
     }
 
 }
@@ -35,22 +43,22 @@ const updateOption = async (id, cover, title) => {
 const stopAudio = async () => {
     await TrackPlayer.stop()
     await TrackPlayer.reset()
-    this.streamRef = ''
+    streamRef = ''
 }
 
 
 // Podcast Actions 
 
 const startPodcastPlayer = async (stream) => {
-    //console.log('this.streamRef', this.streamRef)
+    //console.log('streamRef', streamRef)
 
-    if (this.streamRef !== stream.podstream) {
+    if (streamRef !== stream.podstream) {
         console.log("🚀 ~ stream.podstream", stream)
         await TrackPlayer.setupPlayer({
-            iosCategoryMode:'default',
-            iosCategoryOptions:[],
-            waitForBuffer:true
-            });
+            iosCategoryMode: 'default',
+            iosCategoryOptions: [],
+            waitForBuffer: true
+        });
         await TrackPlayer.reset()
         await TrackPlayer.add({
             id: 'trackId',
@@ -61,8 +69,10 @@ const startPodcastPlayer = async (stream) => {
             // artist: streamObj.singerName,
             // artwork: stream.podsubtitle
         });
+        TrackPlayer.updateOptions({ stopWithApp: true, })
+
         await TrackPlayer.play();
-        this.streamRef = stream.podstream
+        streamRef = stream.podstream
     }
 
 }

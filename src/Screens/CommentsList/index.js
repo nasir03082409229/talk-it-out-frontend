@@ -243,7 +243,6 @@ const CommentsList = ({ navigation, route }) => {
     }
     return (
         <SafeAreaView style={{ flex: 1, }}>
-
             <StatusBar barStyle={'dark-content'} backgroundColor='#FFF' />
             {postDetail && <View style={{ flex: 1, backgroundColor: '#FFF' }}>
                 <View style={styles.header}>
