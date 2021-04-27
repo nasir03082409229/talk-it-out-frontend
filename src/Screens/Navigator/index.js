@@ -35,7 +35,7 @@ const BottomStackComp = () => {
                     headerShown: false
                 }}
                 initialRouteName="Explore"
-            // initialRouteName="PostTimeLine"
+            initialRouteName="PostTimeLine"
             >
                 <BottomStack.Screen name="Explore" component={Explore} options={MyTransition} />
                 <BottomStack.Screen name="Podcasts" component={SubscriptionPremium} options={MyTransition} />

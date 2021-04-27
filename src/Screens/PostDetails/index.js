@@ -319,7 +319,7 @@ const PostDetails = ({ navigation, route }) => {
 
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 20 }}>
                             <Text style={styles.timeTxt}>{`${postDetail.count_comments} Comments`}</Text>
-                            <TouchableOpacity onPress={() => navigation.navigate('CommentsList', { post: postDetail, commentList, })}>
+                            <TouchableOpacity disabled={loader} onPress={() => navigation.navigate('CommentsList', { post: postDetail, commentList, })}>
                                 <Text style={styles.viewalltxt}>View All</Text>
                             </TouchableOpacity>
                         </View>

@@ -3,12 +3,13 @@ import { useIsFocused } from '@react-navigation/native';
 import Axios from 'axios';
 import moment from 'moment';
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { ActivityIndicator, FlatList, Image, Keyboard, Alert, RefreshControl, SafeAreaView, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, FlatList, Keyboard, Alert, RefreshControl, SafeAreaView, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { ArrowLeft, CrossIcon, SendIcon, menu_vertical, gif_black } from "../../Assets/Icons";
 import { Text, EditCommentModal } from "../../Common";
 import { logoutAction } from '../../store/AuthAction';
 import { Typography } from "../../Styles";
+import Image from 'react-native-fast-image'
 
 import GiphyModal from 'react-native-giphy-modal'
 
@@ -253,7 +254,7 @@ const CommentsList = ({ navigation, route }) => {
                         <SvgXml xml={CrossIcon} />
                     </TouchableOpacity>
                 </View>
-                {commentList && commentList.data.length == 0 ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                {commentList && commentList?.data?.length == 0 ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <View style={{ width: 180, paddingVertical: 5, borderWidth: 1, borderColor: 'black', borderRadius: 5 }}>
                         <Text style={{ color: 'black', textAlign: 'center' }}>No comments found</Text>
                     </View>
