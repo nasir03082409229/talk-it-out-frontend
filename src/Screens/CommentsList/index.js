@@ -2,18 +2,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
 import Axios from 'axios';
 import moment from 'moment';
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { ActivityIndicator, FlatList, Image, Keyboard, Alert, RefreshControl, SafeAreaView, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { SvgXml } from "react-native-svg";
-import { ArrowLeft, CrossIcon, SendIcon, menu_vertical } from "../../Assets/Icons";
+import { ArrowLeft, CrossIcon, SendIcon, menu_vertical, gif_black } from "../../Assets/Icons";
 import { Text, EditCommentModal } from "../../Common";
 import { logoutAction } from '../../store/AuthAction';
 import { Typography } from "../../Styles";
 
+import GiphyModal from 'react-native-giphy-modal'
 
 const CommentsList = ({ navigation, route }) => {
     const { post } = route.params;
     const isFocused = useIsFocused();
+    const giphyModalRef = useRef(null)
 
     const [user, setUser] = useState(null)
     const [interval, setIntervalstate] = useState(null)
@@ -113,7 +115,7 @@ const CommentsList = ({ navigation, route }) => {
         getUser()
     }
 
-    const onPressSendComment = async (gif_base64) => {
+    const onPressSendComment = async (gif_url) => {
         const access_token = await AsyncStorage.getItem('@access_token')
         let user = await AsyncStorage.getItem('@user')
         user = JSON.parse(user);
@@ -124,8 +126,8 @@ const CommentsList = ({ navigation, route }) => {
                 data: {
                     "user_id": user.id,
                     "post_id": post.id,
-                    "comment": gif_base64 ? gif_base64 : commentText,
-                    "type": gif_base64 ? 'gif' : 'text'
+                    "comment": gif_url ? gif_url : commentText,
+                    "type": gif_url ? 'gif' : 'text'
                 },
                 headers: {
                     'Accept': 'application/json',
@@ -229,12 +231,9 @@ const CommentsList = ({ navigation, route }) => {
     const onPressCancelEditComment = () => {
         setIsEditComment(null)
     }
-    const _onImageChange = useCallback(({ nativeEvent }) => {
-        const { linkUri, data } = nativeEvent;
-        console.log("🚀 ~ file: index.js ~ line 234 ~ const_onImageChange=useCallback ~ nativeEvent", nativeEvent)
-        onPressSendComment(`data:image/png;base64,${data}`)
-
-    }, []);
+    const onPressGIFimage = (gif_url) => {
+        onPressSendComment(gif_url)
+    }
 
     const renderOptionsDots = (item, type) => {
         return user?.id == item.user_id ? <TouchableOpacity onPress={() => onPressCommentMenu(item.id, item, type)}>
@@ -298,10 +297,12 @@ const CommentsList = ({ navigation, route }) => {
                     }} />
 
                 <View style={styles.mainSearView}>
+                    <TouchableOpacity onPress={() => giphyModalRef.current.show()} style={{ borderWidth: 1, borderRadius: 7, marginHorizontal: 5 }}>
+                        <SvgXml xml={gif_black} />
+                    </TouchableOpacity>
                     <TextInput
                         value={commentText}
                         onChangeText={(text) => setCommentText(text)}
-                        onImageChange={_onImageChange}
 
                         style={styles.commentinput}
                         placeholder='Write Comment...' />
@@ -315,6 +316,14 @@ const CommentsList = ({ navigation, route }) => {
                 onPressCancelEditComment={onPressCancelEditComment}
                 value={isEditComment.comment}
             />}
+            <GiphyModal
+                ref={giphyModalRef}
+                giphyApiKey={'yKFunXBkmCwFP8Ip6UkvO3cdrG0jkPfV'}
+                onSelectGif={(gifDetail) => {
+                    onPressGIFimage(gifDetail.images.original.url)
+                }}
+
+            />
         </SafeAreaView>
     )
 }
