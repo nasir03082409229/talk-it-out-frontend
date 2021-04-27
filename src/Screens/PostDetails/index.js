@@ -4,7 +4,7 @@ import { Text, EditCommentModal } from "../../Common";
 import { logo, } from "../../Assets/images";
 import {
     LocationIcon, ShareIcon, ArrowLeft, SettingIconHori, ActiveHeart,
-    InActiveHeart, SendIcon, menu_vertical, UploadIcon, SearchIcon
+    InActiveHeart, SendIcon, menu_vertical, UploadIcon, SearchIcon, gif_black
 } from "../../Assets/Icons";
 import { Typography, Colors } from "../../Styles";
 import { SvgXml } from "react-native-svg";
@@ -15,10 +15,12 @@ import moment from 'moment'
 import { useIsFocused } from '@react-navigation/native';
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 import { logoutAction } from "../../store/AuthAction";
+import GiphyModal from 'react-native-giphy-modal'
 
 
 const PostDetails = ({ navigation, route }) => {
-    const menuRef = useRef()
+    const giphyModalRef = useRef(null)
+
     const { post, isFromTimeline, post_id } = route.params;
     const [loader, setLoader] = useState(false)
     const [postDetail, setPostDetail] = useState(null)
@@ -116,7 +118,7 @@ const PostDetails = ({ navigation, route }) => {
         }
     }
 
-    const onPressSendComment = async (gif_base64) => {
+    const onPressSendComment = async (gif_url) => {
         const access_token = await AsyncStorage.getItem('@access_token')
         let user = await AsyncStorage.getItem('@user')
         user = JSON.parse(user);
@@ -127,8 +129,8 @@ const PostDetails = ({ navigation, route }) => {
                 data: {
                     "user_id": user.id,
                     "post_id": post.id,
-                    "comment": gif_base64 ? gif_base64 : commentText,
-                    "type": gif_base64 ? 'gif' : 'text'
+                    "comment": gif_url ? gif_url : commentText,
+                    "type": gif_url ? 'gif' : 'text'
                 },
                 headers: {
                     'Accept': 'application/json',
@@ -258,11 +260,9 @@ const PostDetails = ({ navigation, route }) => {
             <SvgXml xml={menu_vertical} />
         </TouchableOpacity> : null
     }
-    const _onImageChange = useCallback(({ nativeEvent }) => {
-        console.log("🚀 ~ file: index.js ~ line 261 ~ const_onImageChange=useCallback ~ nativeEvent", nativeEvent)
-        const { linkUri, data } = nativeEvent;
-        onPressSendComment(`data:image/png;base64,${data}`)
-    }, []);
+    const onPressGIFimage = (gif_url) => {
+        onPressSendComment(gif_url)
+    }
 
     return (
         <SafeAreaView style={{ flex: 1, }}>
@@ -355,10 +355,12 @@ const PostDetails = ({ navigation, route }) => {
                 </ScrollView> : <ActivityIndicator color={'#fff'} size={20} style={{ alignSelf: 'center' }} />}
             </View>
             <View style={styles.mainSearView}>
+                <TouchableOpacity onPress={() => giphyModalRef.current.show()} style={{ borderWidth: 1, borderRadius: 7, marginHorizontal: 5 }}>
+                    <SvgXml xml={gif_black} />
+                </TouchableOpacity>
                 <TextInput
                     value={commentText}
                     onChangeText={(text) => setCommentText(text)}
-                    onImageChange={_onImageChange}
 
                     style={styles.commentinput}
                     placeholder='Write Comment...' />
@@ -373,6 +375,14 @@ const PostDetails = ({ navigation, route }) => {
                 onPressCancelEditComment={onPressCancelEditComment}
                 value={isEditComment.comment}
             />}
+            <GiphyModal
+                ref={giphyModalRef}
+                giphyApiKey={'yKFunXBkmCwFP8Ip6UkvO3cdrG0jkPfV'}
+                onSelectGif={(gifDetail) => {
+                    onPressGIFimage(gifDetail.images.original.url)
+                }}
+
+            />
         </SafeAreaView>
     )
 }

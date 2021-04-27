@@ -1,79 +1,63 @@
-import React, { useState, useCallback } from 'react';
-import {
-    SafeAreaView,
-    StyleSheet,
-    ScrollView,
-    View,
-    StatusBar,
-    Platform,
-    TextInput,
-    Image,
-} from 'react-native';
-
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+import React, { useRef, useState } from 'react'
+import { StyleSheet, View, Text, TouchableOpacity, } from 'react-native'
+import GiphyModal from 'react-native-giphy-modal'
+import Image from 'react-native-fast-image'
 
 const App = () => {
-    const [selectedMediaUri, setSelectedMediaUri] = useState(null);
-
-    const _onImageChange = useCallback(({ nativeEvent }) => {
-        const { linkUri } = nativeEvent;
-
-        setSelectedMediaUri(linkUri);
-    }, []);
+    // ref
+    const [url, setURL] = useState('')
+    const giphyModalRef = useRef(null)
 
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="dark-content" />
-            <SafeAreaView style={styles.container}>
-                <ScrollView
-                    contentInsetAdjustmentBehavior="automatic"
-                    contentContainerStyle={styles.scrollViewContent}
-                    style={styles.scrollView}>
-                    <View style={styles.body}>
-                        <View style={styles.mediaContainer}>
-                            {selectedMediaUri && (
-                                <Image source={{ uri: selectedMediaUri }} style={styles.image} />
-                            )}
-                        </View>
-                        <TextInput
-                            onImageChange={_onImageChange}
-                            placeholder={Platform.select({
-                                ios: 'Try to paste an image!',
-                                android: 'Try to use a GIF from your keyboard!',
-                            })}
-                        />
-                    </View>
-                </ScrollView>
-            </SafeAreaView>
+            <TouchableOpacity
+                onPress={() => {
+                    giphyModalRef.current.show()
+                }}
+                style={styles.button}
+            >
+                <Text style={styles.buttonText}>Open Giphy Modal</Text>
+            </TouchableOpacity>
+            {url ? <Image
+                resizeMode='contain'
+                style={{ width: 200, height: 200, borderWidth: 1 }}
+                source={{ uri: url }} /> : null}
+
+            <GiphyModal
+                ref={giphyModalRef}
+                giphyApiKey={'yKFunXBkmCwFP8Ip6UkvO3cdrG0jkPfV'}
+                onSelectGif={(gifDetail) => {
+                    setURL(gifDetail.images.original.url)
+
+                }}
+
+            />
         </View>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#f2f2f2',
+        alignContent: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
-    scrollView: {
-        backgroundColor: Colors.lighter,
+    buttonText: {
+        color: '#512DA8',
+        fontSize: 18,
+        paddingHorizontal: 8,
+        paddingVertical: 5,
     },
-    scrollViewContent: {
-        flexGrow: 1,
+    button: {
+        backgroundColor: 'white',
+        borderRadius: 5,
     },
-    mediaContainer: {
+    contentContainer: {
         flex: 1,
+        alignItems: 'center',
     },
-    engine: {
-        position: 'absolute',
-        right: 0,
-    },
-    body: {
-        flex: 1,
-        backgroundColor: Colors.white,
-    },
-    image: {
-        width: '100%',
-        aspectRatio: 1,
-    },
-});
+})
 
-export default App;
+export default App

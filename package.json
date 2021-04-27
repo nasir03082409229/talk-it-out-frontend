@@ -26,6 +26,7 @@
     "react-native-device-info": "^8.0.5",
     "react-native-fast-image": "^8.3.4",
     "react-native-gesture-handler": "^1.9.0",
+    "react-native-giphy-modal": "^1.0.4",
     "react-native-hsnz-marquee": "^1.0.4",
     "react-native-image-crop-picker": "^0.36.0",
     "react-native-image-keyboard": "^2.0.0",
