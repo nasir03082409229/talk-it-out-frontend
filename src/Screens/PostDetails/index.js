@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { FlatList, RefreshControl, StyleSheet, View, Modal, StatusBar, SafeAreaView, Alert, ScrollView, TextInput, TouchableOpacity, ActivityIndicator, Keyboard } from "react-native";
-import { Text, EditCommentModal } from "../../Common";
+import { Text, EditCommentModal , RNGifModal} from "../../Common";
 import { logo, } from "../../Assets/images";
 import {
     LocationIcon, ShareIcon, ArrowLeft, SettingIconHori, ActiveHeart,
@@ -15,7 +15,7 @@ import moment from 'moment'
 import { useIsFocused } from '@react-navigation/native';
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 import { logoutAction } from "../../store/AuthAction";
-import GiphyModal from 'react-native-giphy-modal'
+
 
 
 const PostDetails = ({ navigation, route }) => {
@@ -375,7 +375,7 @@ const PostDetails = ({ navigation, route }) => {
                 onPressCancelEditComment={onPressCancelEditComment}
                 value={isEditComment.comment}
             />}
-            <GiphyModal
+            <RNGifModal
                 ref={giphyModalRef}
                 giphyApiKey={'yKFunXBkmCwFP8Ip6UkvO3cdrG0jkPfV'}
                 onSelectGif={(gifDetail) => {
