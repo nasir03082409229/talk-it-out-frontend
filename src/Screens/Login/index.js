@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Image, StatusBar, SafeAreaView, StyleSheet, ScrollView, TextInput, ActivityIndicator, TouchableOpacity } from "react-native";
+import { View, Image, StatusBar, SafeAreaView, StyleSheet, ScrollView, TextInput, ActivityIndicator, TouchableOpacity, Platform } from "react-native";
 import { Text } from "../../Common";
 import { logo } from "../../Assets/images";
 import { SignInLeftArrow } from "../../Assets/Icons";
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     subText: { paddingTop: 10, textAlign: 'center', fontSize: 14, color: 'white', fontFamily: Typography.FONT_FAMILY_SEMI_BOLD, },
     logoView: { height: 240, flex: 1, flexDirection: 'row', justifyContent: 'center', paddingVertical: 100 },
     talkTxt: { textAlign: 'center', color: '#fff', fontFamily: Typography.FONT_FAMILY_EXTRA_BOLD, fontSize: 33 },
-    itOutTxt: { textAlign: 'center', color: '#fff', fontFamily: Typography.FONT_FAMILY_BOLD, fontSize: 25, marginLeft: 8, marginTop: -22, },
+    itOutTxt: { textAlign: 'center', color: '#fff', fontFamily: Typography.FONT_FAMILY_BOLD, fontSize: 25, marginLeft: 8, marginTop: Platform.OS == 'android'? -27 : -10, },
     loginTxt: { paddingLeft: 15, fontSize: 18, color: '#fff', fontFamily: Typography.FONT_FAMILY_SEMI_BOLD, },
     inputView: { marginVertical: 10, borderRadius: 60, height: 55, backgroundColor: 'rgba(0,0,0,0.3)', justifyContent: 'center' },
     input: { paddingLeft: 25, fontSize: 14, color: '#FFF' },
