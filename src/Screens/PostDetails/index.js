@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { FlatList, RefreshControl, StyleSheet, View, Modal, StatusBar, SafeAreaView, Alert, ScrollView, TextInput, TouchableOpacity, ActivityIndicator, Keyboard } from "react-native";
+import { FlatList, RefreshControl, StyleSheet, View, Modal, StatusBar, SafeAreaView, Alert, Platform,  ScrollView, TextInput, TouchableOpacity, ActivityIndicator, Keyboard } from "react-native";
 import { Text, EditCommentModal, RNGifModal } from "../../Common";
 import { logo, } from "../../Assets/images";
 import {
@@ -266,9 +266,9 @@ const PostDetails = ({ navigation, route }) => {
 
     const onPressShare = () => {
         Share.open({
-            title: 'App link',
-            message: 'Please install this app and stay safe', 
-            url: 'https://play.google.com/store/apps/details?id=nic.goi.aarogyasetu&hl=en'
+            title: 'Thanks for the support and welcome to Talk it out',
+            message: `follow link to download our app\nAsndroid App: market://details?id=com.talkitout\niOS App: itms-apps://itunes.apple.com/us/app/id1562023335?mt=8`, 
+          
         })
 
     }

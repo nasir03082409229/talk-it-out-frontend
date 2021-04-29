@@ -18,7 +18,7 @@ import { CrossDrawer, SwitchActive, HomeDra, Switch, AboutDra, NotifDra, ShareDr
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { logoutAction } from '../../store/AuthAction';
-
+import Share from 'react-native-share'
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -99,6 +99,15 @@ const App = ({ navigation }) => {
         //     })
         // );
     }
+
+    const onPressShare = () => {
+        Share.open({
+            title: 'Thanks for the support and welcome to Talk it out',
+            message: `follow link to download our app\nAsndroid App: market://details?id=com.talkitout\niOS App: itms-apps://itunes.apple.com/us/app/id1562023335?mt=8`, 
+          
+        })
+
+    }
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#2C2939' }}>
             <NavigationContainer>
@@ -136,7 +145,7 @@ const App = ({ navigation }) => {
                                 <SvgXml style={{ marginLeft: -5 }} xml={ProfileDra} />
                                 <Text style={styles.draTxt}>PROFILE</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.draRaow}>
+                            <TouchableOpacity onPress={onPressShare} style={styles.draRaow}>
                                 <SvgXml xml={ShareDra} />
                                 <Text style={styles.draTxt}>SHARE APP</Text>
                             </TouchableOpacity>
