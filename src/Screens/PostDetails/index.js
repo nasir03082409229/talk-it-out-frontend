@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { FlatList, RefreshControl, StyleSheet, View, Modal, StatusBar, SafeAreaView, Alert, ScrollView, TextInput, TouchableOpacity, ActivityIndicator, Keyboard } from "react-native";
-import { Text, EditCommentModal , RNGifModal} from "../../Common";
+import { Text, EditCommentModal, RNGifModal } from "../../Common";
 import { logo, } from "../../Assets/images";
 import {
     LocationIcon, ShareIcon, ArrowLeft, SettingIconHori, ActiveHeart,
@@ -15,7 +15,7 @@ import moment from 'moment'
 import { useIsFocused } from '@react-navigation/native';
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 import { logoutAction } from "../../store/AuthAction";
-
+import Share from 'react-native-share'
 
 
 const PostDetails = ({ navigation, route }) => {
@@ -264,6 +264,14 @@ const PostDetails = ({ navigation, route }) => {
         onPressSendComment(gif_url)
     }
 
+    const onPressShare = () => {
+        Share.open({
+            title: 'App link',
+            message: 'Please install this app and stay safe', 
+            url: 'https://play.google.com/store/apps/details?id=nic.goi.aarogyasetu&hl=en'
+        })
+
+    }
     return (
         <SafeAreaView style={{ flex: 1, }}>
             <StatusBar barStyle={'dark-content'} backgroundColor='#FFF' />
@@ -312,7 +320,7 @@ const PostDetails = ({ navigation, route }) => {
                             <TouchableOpacity style={styles.heartIcon} onPress={() => onPressHeart(postDetail)}>
                                 <SvgXml xml={postDetail.is_liked !== 'false' ? ActiveHeart : InActiveHeart} />
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.shareIcon}>
+                            <TouchableOpacity onPress={onPressShare} style={styles.shareIcon}>
                                 <SvgXml xml={ShareIcon} />
                             </TouchableOpacity>
                         </View>
