@@ -25,7 +25,7 @@ const App = () => {
 
             <GiphyModal
                 ref={giphyModalRef}
-                giphyApiKey={'yKFunXBkmCwFP8Ip6UkvO3cdrG0jkPfV'}
+                giphyApiKey={'8vpN8mMZcalln4d8DhkOrgNB4CBQOXey'}
                 onSelectGif={(gifDetail) => {
                     setURL(gifDetail.images.original.url)
 
