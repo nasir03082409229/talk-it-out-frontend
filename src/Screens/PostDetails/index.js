@@ -267,7 +267,7 @@ const PostDetails = ({ navigation, route }) => {
     const onPressShare = () => {
         Share.open({
             title: 'Thanks for the support and welcome to Talk it out',
-            message: `follow link to download our app\nAsndroid App: https://play.google.com/store/apps/details?id=com.talkitout \niOS App: https://apps.apple.com/us/app/talk-it-out-queen/id1562023335`, 
+            message: `follow link to download our app\n Android App: https://play.google.com/store/apps/details?id=com.talkitout \niOS App: https://apps.apple.com/us/app/talk-it-out-queen/id1562023335`, 
           
         })
 
