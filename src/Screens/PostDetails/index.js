@@ -416,7 +416,7 @@ const styles = StyleSheet.create({
     commentinput: { paddingLeft: 10, flex: 1, },
     emoji: { width: 25, height: 25, },
     sendIcon: { marginRight: 10, marginLeft: 10, width: 40, alignItems: 'center', justifyContent: 'center', height: 40, borderRadius: 30, backgroundColor: '#FF6265' },
-    img: { marginVertical: 10, borderRadius: 2, width: '100%', height: 170, resizeMode: 'contain', },
+    img: { marginVertical: 10, borderRadius: 2, width: '100%', height: 400,maxHeight : 400,  resizeMode: 'contain', },
 
     locationView: { marginHorizontal: 20, flexDirection: 'row' },
 
