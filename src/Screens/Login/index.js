@@ -96,11 +96,20 @@ const Login = ({ navigation }) => {
                 <View style={{ paddingHorizontal: 25 }}>
                     <Text style={styles.loginTxt}>LOGIN</Text>
                     <View style={styles.inputView}>
-                        <TextInput value={email} onChangeText={(text) => setEmail(text)} placeholder={'Email'} placeholderTextColor={'#707070'} style={styles.input} />
+                        <TextInput  value={email} onChangeText={(text) => setEmail(text)} placeholder={'Email'} placeholderTextColor={'#707070'} style={styles.input} />
                     </View>
                     {emailError.length > 0 && <Text style={{ fontSize: 12, color: 'red', paddingLeft: 10 }}>{emailError}</Text>}
                     <View style={styles.inputView}>
-                        <TextInput secureTextEntry value={password} onChangeText={(text) => setPassword(text)} secureTextEntry placeholder={'Password'} placeholderTextColor={'#707070'} style={styles.input} />
+                        <TextInput
+                        keyboardType="default"
+                            secureTextEntry
+                            value={password}
+                            onChangeText={(text) => setPassword(text)}
+                            placeholder={'Password'}
+                            placeholderTextColor={'#707070'}
+                            style={styles.input}
+                            // style={{ color: '#fff'}}
+                        />
                     </View>
                     {passwordError.length > 0 && <Text style={{ fontSize: 12, color: 'red', paddingLeft: 10 }}>{passwordError}</Text>}
                     <TouchableOpacity onPress={() => { onPressLogin() }} style={styles.signInView}>
@@ -122,7 +131,7 @@ const styles = StyleSheet.create({
     subText: { paddingTop: 10, textAlign: 'center', fontSize: 14, color: 'white', fontFamily: Typography.FONT_FAMILY_SEMI_BOLD, },
     logoView: { height: 240, flex: 1, flexDirection: 'row', justifyContent: 'center', paddingVertical: 100 },
     talkTxt: { textAlign: 'center', color: '#fff', fontFamily: Typography.FONT_FAMILY_EXTRA_BOLD, fontSize: 33 },
-    itOutTxt: { textAlign: 'center', color: '#fff', fontFamily: Typography.FONT_FAMILY_BOLD, fontSize: 25, marginLeft: 8, marginTop: Platform.OS == 'android'? -27 : -10, },
+    itOutTxt: { textAlign: 'center', color: '#fff', fontFamily: Typography.FONT_FAMILY_BOLD, fontSize: 25, marginLeft: 8, marginTop: Platform.OS == 'android' ? -27 : -10, },
     loginTxt: { paddingLeft: 15, fontSize: 18, color: '#fff', fontFamily: Typography.FONT_FAMILY_SEMI_BOLD, },
     inputView: { marginVertical: 10, borderRadius: 60, height: 55, backgroundColor: 'rgba(0,0,0,0.3)', justifyContent: 'center' },
     input: { paddingLeft: 25, fontSize: 14, color: '#FFF' },

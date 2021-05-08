@@ -1,5 +1,5 @@
 import { CommonActions, NavigationContainer, } from '@react-navigation/native';
-import { View, StyleSheet, TouchableOpacity, Image, Touchable, StatusBar, ScrollView } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Image, Touchable, StatusBar, ScrollView , Linking} from "react-native";
 import { createStackNavigator, HeaderStyleInterpolators, TransitionSpecs } from '@react-navigation/stack';
 import React, { useState, useEffect } from 'react';
 import {
@@ -137,7 +137,7 @@ const App = ({ navigation }) => {
                                 <Text style={styles.draTxt}>NOTIFICATION</Text>
                                 <SvgXml style={[{ marginTop: -15, }, active ? { marginLeft: 18, } : null]} xml={active ? SwitchActive : Switch} />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => { navigation.navigate('ForgetPassword') }} style={styles.draRaow}>
+                            <TouchableOpacity onPress={() => { Linking.openURL('https://talkitoutqueen.com/dashboard/password/reset') }} style={styles.draRaow}>
                                 <SvgXml xml={ForgetPasswordDra} />
                                 <Text style={styles.draTxt}>FORGET PASSWORD</Text>
                             </TouchableOpacity>
