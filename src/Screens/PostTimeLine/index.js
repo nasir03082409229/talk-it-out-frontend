@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FlatList, StyleSheet, RefreshControl, View, StatusBar, SafeAreaView, ScrollView, ActivityIndicator, TextInput, TouchableOpacity } from "react-native";
-import { Text } from "../../Common";
+import { Text, Poll } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { InActiveHeart, PlusIcon, ActiveHeart, MessageIcon, SearchIcon, } from "../../Assets/Icons";
 import { Typography, Colors } from "../../Styles";
@@ -10,6 +10,9 @@ import moment from 'moment'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Image from "react-native-fast-image";
 import { logoutAction } from "../../store/AuthAction";
+
+
+
 const PostTimeLine = ({ navigation }) => {
     const [postData, setPostData] = useState(null);
     const [loader, setLoader] = useState(false);
@@ -85,6 +88,7 @@ const PostTimeLine = ({ navigation }) => {
                         <SvgXml xml={SearchIcon} />
                     </TouchableOpacity>
                 </View>
+                <Poll />
                 {postData ? <FlatList
                     refreshControl={
                         <RefreshControl
