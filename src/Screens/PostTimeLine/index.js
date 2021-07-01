@@ -106,7 +106,7 @@ const PostTimeLine = ({ navigation }) => {
     pollData && (postAndPollData = [...postAndPollData, ...pollData])
     if (postAndPollData.length > 0) {
         postAndPollData.sort((a, b) => {
-            return new Date(a.created_at) - new Date(b.created_at);
+            return new Date(b.created_at) - new Date(a.created_at);
         })
     }
 

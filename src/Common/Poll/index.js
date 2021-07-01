@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from 'axios';
 import React from "react";
-import { StyleSheet, TouchableOpacity , View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import RNPoll from "react-native-poll";
 import { Text } from "..";
 import { logoutAction } from "../../store/AuthAction";
@@ -41,21 +41,20 @@ const Poll = ({ poll }) => {
             }
         }
     }
-
-    return <View
-        style={styles.maintimelineview}>
-        <Text style={styles.Createtxt}>{poll.question}</Text>
-        <RNPoll
-            hasBeenVoted={poll.is_voted == 'false' ? false : true}
-            totalVotes={answers.reduce((a, b) => a + b, poll.is_voted == 'false' ? 1 : 0)}
-            choices={choices}
-            onChoicePress={(selectedChoice) => {
-
-                submitVote({ poll_id: poll.id, answer_id: selectedChoice.id })
-            }
-            }
-        />
-    </View>
+    return (
+        <View style={styles.maintimelineview}>
+            <Text style={styles.Createtxt}>{poll?.question}</Text>
+            <RNPoll
+                votedChoiceByID={poll?.voted_index}
+                hasBeenVoted={poll.is_voted == 'false' ? false : true}
+                totalVotes={answers.reduce((a, b) => a + b, poll.is_voted == 'false' ? 1 : 0)}
+                choices={choices}
+                onChoicePress={(selectedChoice) => {
+                    submitVote({ poll_id: poll.id, answer_id: selectedChoice.id })
+                }
+                }
+            />
+        </View>)
 }
 
 const styles = StyleSheet.create({
