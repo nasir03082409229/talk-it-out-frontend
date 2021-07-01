@@ -15,12 +15,14 @@ import { logoutAction } from "../../store/AuthAction";
 
 const PostTimeLine = ({ navigation }) => {
     const [postData, setPostData] = useState(null);
+    const [pollData, setPollData] = useState(null);
     const [loader, setLoader] = useState(false);
 
     console.log("🚀 ~ file: index.js ~ line 14 ~ PostTimeLine ~ postData", postData)
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
             initState()
+
             // do something
         });
 
@@ -29,7 +31,7 @@ const PostTimeLine = ({ navigation }) => {
 
     const initState = async () => {
         setLoader(true)
-
+        getPollList();
         try {
             const access_token = await AsyncStorage.getItem('@access_token')
             console.log("~ access_token", access_token)
@@ -51,6 +53,29 @@ const PostTimeLine = ({ navigation }) => {
             }
         }
 
+    }
+
+    const getPollList = async () => {
+        setLoader(true)
+
+        try {
+            const access_token = await AsyncStorage.getItem('@access_token')
+            const { data } = await Axios({
+                url: 'https://talkitoutqueen.com/dashboard/api/polls', method: 'get',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                }
+            })
+            setPollData([...data.data])
+            setLoader(false)
+        } catch (error) {
+            setLoader(false)
+            if (error.response.status == 401) {
+                logoutAction(navigation)
+            }
+        }
     }
 
     const onPressHeart = async (item, index) => {
@@ -76,6 +101,19 @@ const PostTimeLine = ({ navigation }) => {
         }
     }
 
+    let postAndPollData = []
+    postData && (postAndPollData = [...postData])
+    pollData && (postAndPollData = [...postAndPollData, ...pollData])
+    if (postAndPollData.length > 0) {
+        postAndPollData.sort((a, b) => {
+            return new Date(a.created_at) - new Date(b.created_at);
+        })
+    }
+
+    console.log('PostData', postData)
+    console.log('PollData', pollData)
+    console.log('postAndPollData', postAndPollData)
+    
     return (
         <SafeAreaView style={{ flex: 1, }}>
             <StatusBar barStyle={'dark-content'} backgroundColor='#FFF' />
@@ -88,8 +126,7 @@ const PostTimeLine = ({ navigation }) => {
                         <SvgXml xml={SearchIcon} />
                     </TouchableOpacity>
                 </View>
-                <Poll />
-                {postData ? <FlatList
+                {postAndPollData ? <FlatList
                     refreshControl={
                         <RefreshControl
                             refreshing={loader}
@@ -99,11 +136,12 @@ const PostTimeLine = ({ navigation }) => {
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ paddingBottom: 130 }}
                     style={{ flex: 1 }}
-                    data={postData}
+                    data={postAndPollData}
                     renderItem={({ index, item }) => {
                         console.log("🚀 ~ file: index.js ~ line 56 ~ PostTimeLine ~ item", item)
                         return (
-                            <TouchableOpacity
+
+                            item.poll ? <Poll poll={item} /> : <TouchableOpacity
                                 key={`${index.toString() + 'post'}`}
                                 onPress={() => navigation.navigate('PostDetails', { post: item, isFromTimeline: true })}
                                 style={styles.maintimelineview}>

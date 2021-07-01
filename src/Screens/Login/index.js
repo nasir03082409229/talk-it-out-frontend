@@ -100,7 +100,7 @@ const Login = ({ navigation }) => {
                     </View>
                     {emailError.length > 0 && <Text style={{ fontSize: 12, color: 'red', paddingLeft: 10 }}>{emailError}</Text>}
                     <View style={styles.inputView}>
-                        <TextInput secureTextEntry value={password} onChangeText={(text) => setPassword(text)} secureTextEntry placeholder={'Password'} placeholderTextColor={'#707070'} style={styles.input} />
+                        <TextInput secureTextEntry value={password} onChangeText={(text) => setPassword(text)}  placeholder={'Password'} placeholderTextColor={'#707070'} style={styles.input} />
                     </View>
                     {passwordError.length > 0 && <Text style={{ fontSize: 12, color: 'red', paddingLeft: 10 }}>{passwordError}</Text>}
                     <TouchableOpacity onPress={() => { onPressLogin() }} style={styles.signInView}>

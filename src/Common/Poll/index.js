@@ -1,36 +1,61 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Axios from 'axios';
 import React from "react";
-import { StyleSheet, View, TouchableOpacity, } from "react-native";
-import { Colors, Typography } from "../../Styles";
-import { Text, Touchable } from "..";
-import { MessageIcon } from '../../Assets/Icons'
-import { SvgXml } from 'react-native-svg'
-import Image from 'react-native-fast-image';
-import LinearGradient from 'react-native-linear-gradient'
-import * as Progress from 'react-native-progress';
-import RNPoll, { IChoice } from "react-native-poll";
+import { StyleSheet, TouchableOpacity , View } from "react-native";
+import RNPoll from "react-native-poll";
+import { Text } from "..";
+import { logoutAction } from "../../store/AuthAction";
+import { Typography } from "../../Styles";
 
 
-const Poll = ({ }) => {
+const Poll = ({ poll }) => {
+    let choices = JSON.parse(poll.answers);
+    let answers = JSON.parse(poll.poll);
+    choices = choices.map((x, i) => {
+        return {
+            id: i + 1,
+            choice: x,
+            votes: answers[i]
+        }
+    })
 
-    return <TouchableOpacity
+    const submitVote = async ({ poll_id, answer_id }) => {
+        try {
+            const access_token = await AsyncStorage.getItem('@access_token')
+            let user = await AsyncStorage.getItem('@user');
+            user = JSON.parse(user)
+            const { data } = await Axios({
+                url: 'https://talkitoutqueen.com/dashboard/api/savepoll',
+                method: 'post',
+                data: { "poll_id": poll_id, "user_id": user.id, "answer_id": answer_id },
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                }
+            })
+            console.log("submitVotesubmitVotesubmitVote", data)
+        } catch (error) {
+            if (error.response.status == 401) {
+                logoutAction(navigation)
+            }
+        }
+    }
+
+    return <View
         style={styles.maintimelineview}>
-        <Text style={styles.titleTxt}>{`What you like in TakeitOut App?`}</Text>
+        <Text style={styles.Createtxt}>{poll.question}</Text>
         <RNPoll
-            totalVotes={30}
+            hasBeenVoted={poll.is_voted == 'false' ? false : true}
+            totalVotes={answers.reduce((a, b) => a + b, poll.is_voted == 'false' ? 1 : 0)}
+            choices={choices}
+            onChoicePress={(selectedChoice) => {
 
-            choices={[
-                { id: 1, choice: "Nike", votes: 12 },
-                { id: 2, choice: "Adidas", votes: 1 },
-                { id: 3, choice: "Puma", votes: 3 },
-                { id: 4, choice: "Reebok", votes: 5 },
-                { id: 5, choice: "Under Armour", votes: 9 },
-            ]}
-            onChoicePress={(selectedChoice) =>
-                console.log("SelectedChoice: ", selectedChoice)
+                submitVote({ poll_id: poll.id, answer_id: selectedChoice.id })
+            }
             }
         />
-
-    </TouchableOpacity>
+    </View>
 }
 
 const styles = StyleSheet.create({
@@ -42,7 +67,7 @@ const styles = StyleSheet.create({
 
 
     header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 20, },
-    Createtxt: { color: '#4A4A4A', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 18, },
+    Createtxt: { marginBottom: -20, color: '#4A4A4A', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 18, },
     titleTxt: { color: '#4A4A4A', fontFamily: Typography.FONT_FAMILY_REGULAR, fontSize: 12, },
     timeTxt: { color: '#9B9B9B', fontFamily: Typography.FONT_FAMILY_LIGHT, fontSize: 10, },
     img: { marginVertical: 10, borderRadius: 2, width: '100%', height: 170, resizeMode: 'contain', },
