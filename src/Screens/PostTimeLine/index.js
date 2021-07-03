@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FlatList, StyleSheet, RefreshControl, View, StatusBar, SafeAreaView, ScrollView, ActivityIndicator, TextInput, TouchableOpacity } from "react-native";
-import { Text } from "../../Common";
+import { Text, Poll } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { InActiveHeart, PlusIcon, ActiveHeart, MessageIcon, SearchIcon, } from "../../Assets/Icons";
 import { Typography, Colors } from "../../Styles";
@@ -170,21 +170,7 @@ const PostTimeLine = ({ navigation }) => {
                                 }
                             })
                             return (
-                                <View style={styles.maintimelineview} key={index + 'poll'}>
-                                    <TouchableOpacity>
-                                        <Text style={styles.Createtxt}>{poll?.question}</Text>
-                                    </TouchableOpacity>
-                                    <RNPoll
-                                        votedChoiceByID={poll?.voted_index}
-                                        hasBeenVoted={poll.is_voted == 'false' ? false : true}
-                                        totalVotes={answers.reduce((a, b) => a + b, poll.is_voted == 'false' ? 1 : 0)}
-                                        choices={choices}
-                                        onChoicePress={(selectedChoice) => {
-                                            submitVote({ poll_id: poll.id, answer_id: selectedChoice.id })
-                                        }
-                                        }
-                                    />
-                                </View>
+                                <Poll poll={item} />
                             )
                         } else {
                             return (

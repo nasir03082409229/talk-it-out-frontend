@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from 'axios';
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import RNPoll from "react-native-poll";
 import { Text } from "..";
@@ -9,6 +9,8 @@ import { Typography } from "../../Styles";
 
 
 const Poll = ({ poll }) => {
+    const [isCollapsible, setIsCollapsible] = useState(false)
+
     let choices = JSON.parse(poll.answers);
     let answers = JSON.parse(poll.poll);
     choices = choices.map((x, i) => {
@@ -42,9 +44,11 @@ const Poll = ({ poll }) => {
         }
     }
     return (
-        <View style={styles.maintimelineview}>
-            <Text style={styles.Createtxt}>{poll?.question}</Text>
-            <RNPoll
+        <View style={styles.maintimelineview} key={'index' + 'poll'}>
+            <TouchableOpacity onPress={() => setIsCollapsible(!isCollapsible)}>
+                <Text style={styles.Createtxt}>{poll?.question}</Text>
+            </TouchableOpacity>
+            {!isCollapsible && <RNPoll
                 votedChoiceByID={poll?.voted_index}
                 hasBeenVoted={poll.is_voted == 'false' ? false : true}
                 totalVotes={answers.reduce((a, b) => a + b, poll.is_voted == 'false' ? 1 : 0)}
@@ -53,7 +57,7 @@ const Poll = ({ poll }) => {
                     submitVote({ poll_id: poll.id, answer_id: selectedChoice.id })
                 }
                 }
-            />
+            />}
         </View>)
 }
 
