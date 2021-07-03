@@ -127,12 +127,8 @@ const PostTimeLine = ({ navigation }) => {
 
     let postAndPollData = []
     postData && (postAndPollData = [...postData])
-    pollData && (postAndPollData = [...postAndPollData, ...pollData])
-    if (postAndPollData.length > 0) {
-        postAndPollData.sort((a, b) => {
-            return new Date(b.created_at) - new Date(a.created_at);
-        })
-    }
+    pollData && (postAndPollData = [...pollData, ...postAndPollData,])
+
 
     console.log('PostData', postData)
     console.log('PollData', pollData)
@@ -174,8 +170,10 @@ const PostTimeLine = ({ navigation }) => {
                                 }
                             })
                             return (
-                                <View style={styles.maintimelineview}>
-                                    <Text style={styles.Createtxt}>{poll?.question}</Text>
+                                <View style={styles.maintimelineview} key={index + 'poll'}>
+                                    <TouchableOpacity>
+                                        <Text style={styles.Createtxt}>{poll?.question}</Text>
+                                    </TouchableOpacity>
                                     <RNPoll
                                         votedChoiceByID={poll?.voted_index}
                                         hasBeenVoted={poll.is_voted == 'false' ? false : true}
