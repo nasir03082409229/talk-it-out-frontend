@@ -76,7 +76,7 @@ const CommentsList = ({ navigation, route }) => {
             setCommentList({ ...commentList })
 
         } catch (error) {
-            if (error.response.status == 401) {
+            if (error?.response?.status == 401) {
                 logoutAction(navigation)
             }
         }
@@ -102,7 +102,7 @@ const CommentsList = ({ navigation, route }) => {
             setCommentList(newCommentData)
 
         } catch (error) {
-            if (error.response.status == 401) {
+            if (error?.response?.status == 401) {
                 logoutAction(navigation)
             }
         }
@@ -142,7 +142,7 @@ const CommentsList = ({ navigation, route }) => {
             console.log("🚀 ~ file: index.js ~ commentList ", commentList)
         } catch (error) {
             console.log("🚀 ~ file: index.js ~ line 145 ~ onPressSendComment ~ error", error)
-            if (error.response.status == 401) {
+            if (error?.response?.status == 401) {
                 logoutAction(navigation)
             }
         }
@@ -190,7 +190,7 @@ const CommentsList = ({ navigation, route }) => {
             })
             getComments()
         } catch (error) {
-            if (error.response.status == 401) {
+            if (error?.response?.status == 401) {
                 logoutAction(navigation)
             }
         }
@@ -222,7 +222,7 @@ const CommentsList = ({ navigation, route }) => {
             getComments()
 
         } catch (error) {
-            if (error.response.status == 401) {
+            if (error?.response?.status == 401) {
                 logoutAction(navigation)
             }
         }

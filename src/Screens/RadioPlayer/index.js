@@ -71,7 +71,7 @@ const RadioPlayer = ({ route }) => {
             console.log('AFTER UPDATE')
         } catch (error) {
             console.log("🚀 ~ file: index.js ~ line 58 ~ getMetaData ~ error", error)
-            if (error.response.status == 401) {
+            if (error?.response?.status == 401) {
                 logoutAction(navigation)
             }
         }

@@ -1,20 +1,15 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
-import { FlatList, RefreshControl, StyleSheet, View, Modal, StatusBar, SafeAreaView, Alert, ScrollView, TextInput, TouchableOpacity, ActivityIndicator, Keyboard } from "react-native";
-import { Text, EditCommentModal , RNGifModal} from "../../Common";
-import { logo, } from "../../Assets/images";
-import {
-    LocationIcon, ShareIcon, ArrowLeft, SettingIconHori, ActiveHeart,
-    InActiveHeart, SendIcon, menu_vertical, UploadIcon, SearchIcon, gif_black
-} from "../../Assets/Icons";
-import { Typography, Colors } from "../../Styles";
-import { SvgXml } from "react-native-svg";
-import Image from 'react-native-fast-image'
-import Axios from 'axios'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import moment from 'moment'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
-import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
+import Axios from 'axios';
+import moment from 'moment';
+import React, { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, Alert, FlatList, Keyboard, RefreshControl, SafeAreaView, ScrollView, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import Image from 'react-native-fast-image';
+import { SvgXml } from "react-native-svg";
+import { ActiveHeart, ArrowLeft, gif_black, InActiveHeart, LocationIcon, menu_vertical, SendIcon, SettingIconHori, ShareIcon } from "../../Assets/Icons";
+import { EditCommentModal, RNGifModal, Text } from "../../Common";
 import { logoutAction } from "../../store/AuthAction";
+import { Typography } from "../../Styles";
 
 
 
@@ -112,7 +107,7 @@ const PostDetails = ({ navigation, route }) => {
             setCommentList({ ...data })
             setLoader(false)
         } catch (error) {
-            if (error.response.status == 401) {
+            if (error?.response?.status == 401) {
                 logoutAction(navigation)
             }
         }
@@ -146,7 +141,7 @@ const PostDetails = ({ navigation, route }) => {
             console.log("🚀 ~ file: index.js ~ commentList ", commentList)
         } catch (error) {
             console.log("🚀 ~ file: index.js ~ line 145 ~ onPressSendComment ~ error", error)
-            if (error.response.status == 401) {
+            if (error?.response?.status == 401) {
                 logoutAction(navigation)
             }
         }
@@ -170,7 +165,7 @@ const PostDetails = ({ navigation, route }) => {
             postDetail.is_liked = postDetail.is_liked == 'true' ? 'false' : 'true'
             setPostDetail({ ...postDetail })
         } catch (error) {
-            if (error.response.status == 401) {
+            if (error?.response?.status == 401) {
                 logoutAction(navigation)
             }
         }
@@ -218,7 +213,7 @@ const PostDetails = ({ navigation, route }) => {
             })
             getComments()
         } catch (error) {
-            if (error.response.status == 401) {
+            if (error?.response?.status == 401) {
                 logoutAction(navigation)
             }
         }
@@ -244,7 +239,7 @@ const PostDetails = ({ navigation, route }) => {
             onPressCancelEditComment()
             getComments()
         } catch (error) {
-            if (error.response.status == 401) {
+            if (error?.response?.status == 401) {
                 logoutAction(navigation)
             }
         }

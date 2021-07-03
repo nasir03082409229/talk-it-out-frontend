@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FlatList, StyleSheet, RefreshControl, View, StatusBar, SafeAreaView, ScrollView, ActivityIndicator, TextInput, TouchableOpacity } from "react-native";
-import { Text, Poll } from "../../Common";
+import { Text } from "../../Common";
 import { logo, } from "../../Assets/images";
 import { InActiveHeart, PlusIcon, ActiveHeart, MessageIcon, SearchIcon, } from "../../Assets/Icons";
 import { Typography, Colors } from "../../Styles";
@@ -10,6 +10,7 @@ import moment from 'moment'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Image from "react-native-fast-image";
 import { logoutAction } from "../../store/AuthAction";
+import RNPoll from "react-native-poll";
 
 
 
@@ -48,7 +49,7 @@ const PostTimeLine = ({ navigation }) => {
             setLoader(false)
         } catch (error) {
             setLoader(false)
-            if (error.response.status == 401) {
+            if (error?.response?.status == 401) {
                 logoutAction(navigation)
             }
         }
@@ -72,7 +73,7 @@ const PostTimeLine = ({ navigation }) => {
             setLoader(false)
         } catch (error) {
             setLoader(false)
-            if (error.response.status == 401) {
+            if (error?.response?.status == 401) {
                 logoutAction(navigation)
             }
         }
@@ -95,7 +96,30 @@ const PostTimeLine = ({ navigation }) => {
             postData[index].is_liked = postData[index].is_liked == 'true' ? 'false' : 'true'
             setPostData([...postData])
         } catch (error) {
-            if (error.response.status == 401) {
+            if (error?.response?.status == 401) {
+                logoutAction(navigation)
+            }
+        }
+    }
+
+    const submitVote = async ({ poll_id, answer_id }) => {
+        try {
+            const access_token = await AsyncStorage.getItem('@access_token')
+            let user = await AsyncStorage.getItem('@user');
+            user = JSON.parse(user)
+            const { data } = await Axios({
+                url: 'https://talkitoutqueen.com/dashboard/api/savepoll',
+                method: 'post',
+                data: { "poll_id": poll_id, "user_id": user.id, "answer_id": answer_id },
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                }
+            })
+            console.log("submitVotesubmitVotesubmitVote", data)
+        } catch (error) {
+            if (error?.response?.status == 401) {
                 logoutAction(navigation)
             }
         }
@@ -113,7 +137,7 @@ const PostTimeLine = ({ navigation }) => {
     console.log('PostData', postData)
     console.log('PollData', pollData)
     console.log('postAndPollData', postAndPollData)
-    
+
     return (
         <SafeAreaView style={{ flex: 1, }}>
             <StatusBar barStyle={'dark-content'} backgroundColor='#FFF' />
@@ -138,40 +162,67 @@ const PostTimeLine = ({ navigation }) => {
                     style={{ flex: 1 }}
                     data={postAndPollData}
                     renderItem={({ index, item }) => {
-                        console.log("🚀 ~ file: index.js ~ line 56 ~ PostTimeLine ~ item", item)
-                        return (
-
-                            item.poll ? <Poll poll={item} /> : <TouchableOpacity
-                                key={`${index.toString() + 'post'}`}
-                                onPress={() => navigation.navigate('PostDetails', { post: item, isFromTimeline: true })}
-                                style={styles.maintimelineview}>
-                                <View style={styles.titletimeview}>
-                                    <Text style={styles.titleTxt}>{item.title}</Text>
-                                    <Text style={styles.timeTxt}>{moment(item.created_at).fromNow()}</Text>
-                                    <Image style={styles.img}
-                                        source={{ uri: item.image }} />
-
+                        if (item.poll) {
+                            let poll = item;
+                            let choices = JSON.parse(poll.answers);
+                            let answers = JSON.parse(poll.poll);
+                            choices = choices.map((x, i) => {
+                                return {
+                                    id: i + 1,
+                                    choice: x,
+                                    votes: answers[i]
+                                }
+                            })
+                            return (
+                                <View style={styles.maintimelineview}>
+                                    <Text style={styles.Createtxt}>{poll?.question}</Text>
+                                    <RNPoll
+                                        votedChoiceByID={poll?.voted_index}
+                                        hasBeenVoted={poll.is_voted == 'false' ? false : true}
+                                        totalVotes={answers.reduce((a, b) => a + b, poll.is_voted == 'false' ? 1 : 0)}
+                                        choices={choices}
+                                        onChoicePress={(selectedChoice) => {
+                                            submitVote({ poll_id: poll.id, answer_id: selectedChoice.id })
+                                        }
+                                        }
+                                    />
                                 </View>
-                                <View style={styles.lowerview}>
-                                    <View style={styles.imgdetailview}>
-                                        <Image style={styles.mainimg} source={{ uri: item.creator_photo }} />
-                                        <View>
-                                            <Text style={styles.titleTxt}>{item.created_by}</Text>
-                                            <Text style={styles.timeTxt}>{moment(item.created_at).fromNow()}</Text>
+                            )
+                        } else {
+                            return (
+                                <TouchableOpacity
+                                    key={`${index.toString() + 'post'}`}
+                                    onPress={() => navigation.navigate('PostDetails', { post: item, isFromTimeline: true })}
+                                    style={styles.maintimelineview}>
+                                    <View style={styles.titletimeview}>
+                                        <Text style={styles.titleTxt}>{item.title}</Text>
+                                        <Text style={styles.timeTxt}>{moment(item.created_at).fromNow()}</Text>
+                                        <Image style={styles.img}
+                                            source={{ uri: item.image }} />
+
+                                    </View>
+                                    <View style={styles.lowerview}>
+                                        <View style={styles.imgdetailview}>
+                                            <Image style={styles.mainimg} source={{ uri: item.creator_photo }} />
+                                            <View>
+                                                <Text style={styles.titleTxt}>{item.created_by}</Text>
+                                                <Text style={styles.timeTxt}>{moment(item.created_at).fromNow()}</Text>
+                                            </View>
+                                        </View>
+
+                                        <View style={{ flexDirection: 'row', }}>
+                                            <TouchableOpacity onPress={() => navigation.navigate('PostDetails', { post: item, isFromTimeline: true })}>
+                                                <SvgXml xml={MessageIcon} />
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={() => onPressHeart(item, index)}>
+                                                <SvgXml style={{ marginLeft: 10, }} xml={item.is_liked !== 'false' ? ActiveHeart : InActiveHeart} />
+                                            </TouchableOpacity>
                                         </View>
                                     </View>
+                                </TouchableOpacity>
+                            )
+                        }
 
-                                    <View style={{ flexDirection: 'row', }}>
-                                        <TouchableOpacity onPress={() => navigation.navigate('PostDetails', { post: item, isFromTimeline: true })}>
-                                            <SvgXml xml={MessageIcon} />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => onPressHeart(item, index)}>
-                                            <SvgXml style={{ marginLeft: 10, }} xml={item.is_liked !== 'false' ? ActiveHeart : InActiveHeart} />
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
-                        )
                     }} /> : <ActivityIndicator color={'#fff'} size={20} style={{ alignSelf: 'center' }} />}
             </View>
         </SafeAreaView>
