@@ -6,5 +6,6 @@ import BottomBar from "./BottomBar";
 // import RadioPlayer from "./RadioPlayer";
 import EditCommentModal from "./EditCommentModal";
 import RNGifModal from "./RNGifModal";
+import Poll from "./Poll";
 
-export { Text, Touchable, Button, BottomBar,  EditCommentModal , RNGifModal};
+export { Text, Touchable, Button, BottomBar, EditCommentModal, RNGifModal, Poll };

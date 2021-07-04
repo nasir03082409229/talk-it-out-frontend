@@ -1,21 +1,16 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
-import { FlatList, RefreshControl, StyleSheet, View, Modal, StatusBar, SafeAreaView, Alert, Platform,  ScrollView, TextInput, TouchableOpacity, ActivityIndicator, Keyboard } from "react-native";
-import { Text, EditCommentModal, RNGifModal } from "../../Common";
-import { logo, } from "../../Assets/images";
-import {
-    LocationIcon, ShareIcon, ArrowLeft, SettingIconHori, ActiveHeart,
-    InActiveHeart, SendIcon, menu_vertical, UploadIcon, SearchIcon, gif_black
-} from "../../Assets/Icons";
-import { Typography, Colors } from "../../Styles";
-import { SvgXml } from "react-native-svg";
-import Image from 'react-native-fast-image'
-import Axios from 'axios'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import moment from 'moment'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
-import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
+import Axios from 'axios';
+import moment from 'moment';
+import React, { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, Alert, FlatList, Keyboard, RefreshControl, SafeAreaView, ScrollView, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import Image from 'react-native-fast-image';
+import Share from 'react-native-share';
+import { SvgXml } from "react-native-svg";
+import { ActiveHeart, ArrowLeft, gif_black, InActiveHeart, LocationIcon, menu_vertical, SendIcon, SettingIconHori, ShareIcon } from "../../Assets/Icons";
+import { EditCommentModal, RNGifModal, Text } from "../../Common";
 import { logoutAction } from "../../store/AuthAction";
-import Share from 'react-native-share'
+import { Typography } from "../../Styles";
 
 
 const PostDetails = ({ navigation, route }) => {
@@ -267,8 +262,8 @@ const PostDetails = ({ navigation, route }) => {
     const onPressShare = () => {
         Share.open({
             title: 'Thanks for the support and welcome to Talk it out',
-            message: `follow link to download our app\n Android App: https://play.google.com/store/apps/details?id=com.talkitout \niOS App: https://apps.apple.com/us/app/talk-it-out-queen/id1562023335`, 
-          
+            message: `follow link to download our app\n Android App: https://play.google.com/store/apps/details?id=com.talkitout \niOS App: https://apps.apple.com/us/app/talk-it-out-queen/id1562023335`,
+
         })
 
     }
@@ -416,7 +411,7 @@ const styles = StyleSheet.create({
     commentinput: { paddingLeft: 10, flex: 1, },
     emoji: { width: 25, height: 25, },
     sendIcon: { marginRight: 10, marginLeft: 10, width: 40, alignItems: 'center', justifyContent: 'center', height: 40, borderRadius: 30, backgroundColor: '#FF6265' },
-    img: { marginVertical: 10, borderRadius: 2, width: '100%', height: 400,maxHeight : 400,  resizeMode: 'contain', },
+    img: { marginVertical: 10, borderRadius: 2, width: '100%', height: 400, maxHeight: 400, resizeMode: 'contain', },
 
     locationView: { marginHorizontal: 20, flexDirection: 'row' },
 
