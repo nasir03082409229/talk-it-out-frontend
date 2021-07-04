@@ -33,7 +33,7 @@ const AboutUs = ({ navigation }) => {
             }
 
         } catch (error) {
-            if (error.response.status == 401) {
+            if (error?.response?.status == 401) {
                 logoutAction(navigation)
             }
         }
@@ -97,5 +97,4 @@ const styles = StyleSheet.create({
 
 
 })
-
 export default AboutUs;

@@ -57,7 +57,7 @@ const Profile = ({ navigation }) => {
             await AsyncStorage.setItem('@user', JSON.stringify(userDetailRes.data.data));
             setIsEdit(!isEdit)
         } catch (error) {
-            if (error.response.status == 401) {
+            if (error?.response?.status == 401) {
                 logoutAction(navigation)
             }
         }
