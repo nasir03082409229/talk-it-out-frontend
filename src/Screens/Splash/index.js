@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { View, Image, StatusBar } from "react-native";
-import { Text, Poll } from "../../Common";
+import { Text } from "../../Common";
 import { logo } from "../../Assets/images";
 import { Typography, Colors } from "../../Styles";
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -40,7 +40,6 @@ const Splash = ({ navigation }) => {
             flex: 1, justifyContent: 'space-around', alignItems: 'center'
         }}>
             <StatusBar backgroundColor='#2C2939' />
-            {/* <Poll /> */}
             <Image
                 style={{
                     flex: 1, width: '100%', height: '100%'

@@ -8,4 +8,4 @@ import EditCommentModal from "./EditCommentModal";
 import RNGifModal from "./RNGifModal";
 import Poll from "./Poll";
 
-export { Text, Touchable, Button, BottomBar,  EditCommentModal , RNGifModal, Poll};
+export { Text, Touchable, Button, BottomBar, EditCommentModal, RNGifModal, Poll };

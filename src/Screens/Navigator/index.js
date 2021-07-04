@@ -1,5 +1,5 @@
 import { CommonActions, NavigationContainer, } from '@react-navigation/native';
-import { View, StyleSheet, TouchableOpacity, Image, Touchable, StatusBar, ScrollView } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Image, Touchable, StatusBar, ScrollView , Linking} from "react-native";
 import { createStackNavigator, HeaderStyleInterpolators, TransitionSpecs } from '@react-navigation/stack';
 import React, { useState, useEffect } from 'react';
 import {
@@ -18,7 +18,7 @@ import { CrossDrawer, SwitchActive, HomeDra, Switch, AboutDra, NotifDra, ShareDr
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { logoutAction } from '../../store/AuthAction';
-
+import Share from 'react-native-share'
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -99,6 +99,15 @@ const App = ({ navigation }) => {
         //     })
         // );
     }
+
+    const onPressShare = () => {
+        Share.open({
+            title: 'Thanks for the support and welcome to Talk it out',
+            message: `follow link to download our app\n Android App: https://play.google.com/store/apps/details?id=com.talkitout \niOS App: https://apps.apple.com/us/app/talk-it-out-queen/id1562023335`, 
+          
+        })
+
+    }
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#2C2939' }}>
             <NavigationContainer>
@@ -128,7 +137,7 @@ const App = ({ navigation }) => {
                                 <Text style={styles.draTxt}>NOTIFICATION</Text>
                                 <SvgXml style={[{ marginTop: -15, }, active ? { marginLeft: 18, } : null]} xml={active ? SwitchActive : Switch} />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => { navigation.navigate('ForgetPassword') }} style={styles.draRaow}>
+                            <TouchableOpacity onPress={() => { Linking.openURL('https://talkitoutqueen.com/dashboard/password/reset') }} style={styles.draRaow}>
                                 <SvgXml xml={ForgetPasswordDra} />
                                 <Text style={styles.draTxt}>FORGET PASSWORD</Text>
                             </TouchableOpacity>
@@ -136,7 +145,7 @@ const App = ({ navigation }) => {
                                 <SvgXml style={{ marginLeft: -5 }} xml={ProfileDra} />
                                 <Text style={styles.draTxt}>PROFILE</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.draRaow}>
+                            <TouchableOpacity onPress={onPressShare} style={styles.draRaow}>
                                 <SvgXml xml={ShareDra} />
                                 <Text style={styles.draTxt}>SHARE APP</Text>
                             </TouchableOpacity>

@@ -5,12 +5,12 @@ import moment from 'moment';
 import React, { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Alert, FlatList, Keyboard, RefreshControl, SafeAreaView, ScrollView, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import Image from 'react-native-fast-image';
+import Share from 'react-native-share';
 import { SvgXml } from "react-native-svg";
 import { ActiveHeart, ArrowLeft, gif_black, InActiveHeart, LocationIcon, menu_vertical, SendIcon, SettingIconHori, ShareIcon } from "../../Assets/Icons";
 import { EditCommentModal, RNGifModal, Text } from "../../Common";
 import { logoutAction } from "../../store/AuthAction";
 import { Typography } from "../../Styles";
-
 
 
 const PostDetails = ({ navigation, route }) => {
@@ -107,7 +107,7 @@ const PostDetails = ({ navigation, route }) => {
             setCommentList({ ...data })
             setLoader(false)
         } catch (error) {
-            if (error?.response?.status == 401) {
+            if (error.response.status == 401) {
                 logoutAction(navigation)
             }
         }
@@ -141,7 +141,7 @@ const PostDetails = ({ navigation, route }) => {
             console.log("🚀 ~ file: index.js ~ commentList ", commentList)
         } catch (error) {
             console.log("🚀 ~ file: index.js ~ line 145 ~ onPressSendComment ~ error", error)
-            if (error?.response?.status == 401) {
+            if (error.response.status == 401) {
                 logoutAction(navigation)
             }
         }
@@ -165,7 +165,7 @@ const PostDetails = ({ navigation, route }) => {
             postDetail.is_liked = postDetail.is_liked == 'true' ? 'false' : 'true'
             setPostDetail({ ...postDetail })
         } catch (error) {
-            if (error?.response?.status == 401) {
+            if (error.response.status == 401) {
                 logoutAction(navigation)
             }
         }
@@ -213,7 +213,7 @@ const PostDetails = ({ navigation, route }) => {
             })
             getComments()
         } catch (error) {
-            if (error?.response?.status == 401) {
+            if (error.response.status == 401) {
                 logoutAction(navigation)
             }
         }
@@ -239,7 +239,7 @@ const PostDetails = ({ navigation, route }) => {
             onPressCancelEditComment()
             getComments()
         } catch (error) {
-            if (error?.response?.status == 401) {
+            if (error.response.status == 401) {
                 logoutAction(navigation)
             }
         }
@@ -259,6 +259,14 @@ const PostDetails = ({ navigation, route }) => {
         onPressSendComment(gif_url)
     }
 
+    const onPressShare = () => {
+        Share.open({
+            title: 'Thanks for the support and welcome to Talk it out',
+            message: `follow link to download our app\n Android App: https://play.google.com/store/apps/details?id=com.talkitout \niOS App: https://apps.apple.com/us/app/talk-it-out-queen/id1562023335`,
+
+        })
+
+    }
     return (
         <SafeAreaView style={{ flex: 1, }}>
             <StatusBar barStyle={'dark-content'} backgroundColor='#FFF' />
@@ -307,7 +315,7 @@ const PostDetails = ({ navigation, route }) => {
                             <TouchableOpacity style={styles.heartIcon} onPress={() => onPressHeart(postDetail)}>
                                 <SvgXml xml={postDetail.is_liked !== 'false' ? ActiveHeart : InActiveHeart} />
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.shareIcon}>
+                            <TouchableOpacity onPress={onPressShare} style={styles.shareIcon}>
                                 <SvgXml xml={ShareIcon} />
                             </TouchableOpacity>
                         </View>
@@ -403,7 +411,7 @@ const styles = StyleSheet.create({
     commentinput: { paddingLeft: 10, flex: 1, },
     emoji: { width: 25, height: 25, },
     sendIcon: { marginRight: 10, marginLeft: 10, width: 40, alignItems: 'center', justifyContent: 'center', height: 40, borderRadius: 30, backgroundColor: '#FF6265' },
-    img: { marginVertical: 10, borderRadius: 2, width: '100%', height: 170, resizeMode: 'contain', },
+    img: { marginVertical: 10, borderRadius: 2, width: '100%', height: 400, maxHeight: 400, resizeMode: 'contain', },
 
     locationView: { marginHorizontal: 20, flexDirection: 'row' },
 
